@@ -1,0 +1,371 @@
+"""
+Comprehensive curated dataset of 12 Student Digital Wellness Resources
+and 3 Practical Student Setup Guides.
+Checked and verified against official product specs as of November 2026.
+"""
+
+RESOURCES = [
+    {
+        "name": "Cold Turkey Blocker",
+        "slug": "cold-turkey-blocker",
+        "tagline": "The most strict desktop distraction blocker for uninterrupted deep study.",
+        "description": "Cold Turkey is widely regarded by students as the hardest blocker to bypass. It operates at the system kernel level on Windows and macOS, allowing scheduled deep work blocks across apps, websites, and games without loophole overrides.",
+        "category": "focus_blocker",
+        "developer_or_team": "Felix Belzile",
+        "official_url": "https://getcoldturkey.com",
+        "repository_url": None,
+        "platforms": ["macOS", "Windows"],
+        "pricing_type": "Freemium",
+        "price_details": "Free version includes basic domain/app blocking and basic timers. Pro is a single one-time lifetime payment of $39 (student discounts frequently 20% off). No recurring subscriptions.",
+        "purpose": "Enforce unbreakable study sessions by blocking distracting applications, web domains, and system settings during study sprints.",
+        "privacy_rating": "A+",
+        "privacy_details": "100% on-device operation. Requires zero account creation, zero email login, and sends no user analytics or browsing telemetry.",
+        "accessibility_features": "High contrast theme, full keyboard navigation shortcuts, clean system font scaling.",
+        "limitations": "Desktop only (no iOS or Android companion app). Frozen Turkey mode cannot be undone even by restarting the machine or terminating tasks.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9
+    },
+    {
+        "name": "Freedom",
+        "slug": "freedom",
+        "tagline": "Synchronized distraction blocking across all laptops, phones, and tablets.",
+        "description": "Freedom blocks distractions across all your devices simultaneously. If you start a study session on your Mac, your iPhone and iPad automatically lock down distracting apps and sites in tandem, eliminating device-hopping procrastination.",
+        "category": "focus_blocker",
+        "developer_or_team": "Freedom Labs Inc.",
+        "official_url": "https://freedom.to",
+        "repository_url": None,
+        "platforms": ["iOS", "Android", "macOS", "Windows", "Chrome", "Firefox"],
+        "pricing_type": "Paid",
+        "price_details": "Paid service: $3.33/month billed annually ($39.99/year) or $8.99 monthly. Free trial provides 7 block sessions. Not free for long-term use.",
+        "purpose": "Prevent multi-device bypass by coordinating synchronized blocking schedules across mobile and desktop environments.",
+        "privacy_rating": "B+",
+        "privacy_details": "Uses local VPN profile on iOS/Android to filter domain traffic locally. Account required for sync. Minimal telemetry on session completion.",
+        "accessibility_features": "VoiceOver and TalkBack support, custom ambient focus sounds (cafe, library, rain).",
+        "limitations": "Strictly requires paid subscription after 7 trial sessions; local VPN loopback can occasionally conflict with campus Wi-Fi authentication portals.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.7
+    },
+    {
+        "name": "One Sec",
+        "slug": "one-sec",
+        "tagline": "Transforms subconscious phone addiction through intentional breathing friction.",
+        "description": "One Sec intervenes before you open addictive apps like Instagram, TikTok, or YouTube by forcing you to take a slow, guided breath. Studies in PNAS show it reduces social media opens by over 57% by breaking dopamine habit loops.",
+        "category": "screen_time",
+        "developer_or_team": "Frederik Riedel",
+        "official_url": "https://one-sec.app",
+        "repository_url": None,
+        "platforms": ["iOS", "Android", "macOS"],
+        "pricing_type": "Freemium",
+        "price_details": "Free forever for 1 target app automation. Pro is $2.99/month, $19.99/year, or $39.99 lifetime (student family sharing supported).",
+        "purpose": "Break subconscious compulsive app-opening habits by introducing mindful pause and deep breathing friction.",
+        "privacy_rating": "A",
+        "privacy_details": "Privacy by design. Operates entirely on-device via Apple Shortcuts / Android Accessibility; no app usage statistics or personal data leave the device.",
+        "accessibility_features": "Haptic pulse cues for breathing pacing, visual expansion animations, high-contrast dark mode.",
+        "limitations": "Setup on iOS requires configuring Apple Shortcuts automation; determined users can still tap through after the mandatory breath.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.8
+    },
+    {
+        "name": "Forest",
+        "slug": "forest",
+        "tagline": "Gamified Pomodoro timer that grows a virtual forest as you study.",
+        "description": "Forest turns study sessions into a gamified focus exercise. When you start studying, you plant a virtual seed that grows into a tree over 25-120 minutes. If you switch to another app, your tree withers and dies.",
+        "category": "focus_blocker",
+        "developer_or_team": "Seekrtech Co., Ltd.",
+        "official_url": "https://forestapp.cc",
+        "repository_url": None,
+        "platforms": ["iOS", "Android", "Chrome"],
+        "pricing_type": "Freemium",
+        "price_details": "iOS: $3.99 upfront paid purchase. Android: Free download with ads and in-app purchase ($1.99) for Pro tree species. Chrome extension is free.",
+        "purpose": "Provide visual and emotional incentives to remain focused on studying through virtual tree growth and real-tree planting partnerships.",
+        "privacy_rating": "B",
+        "privacy_details": "Account optional for solo study, required for study group rooms. Syncs planting logs and friend rankings to cloud servers.",
+        "accessibility_features": "Relaxing ambient audio (forest rain, camp fire, white noise), large countdown timer.",
+        "limitations": "Relies purely on psychological guilt and gamification; does not strictly block phone settings or browser navigation on desktop.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.6
+    },
+    {
+        "name": "Opal",
+        "slug": "opal",
+        "tagline": "Next-gen Screen Time companion with Deep Focus app lockouts.",
+        "description": "Opal utilizes Apple's Screen Time API to provide automated daily focus schedules, real-time focus scoring, and 'Deep Focus' mode, which prevents you from canceling block sessions or deleting apps until the timer finishes.",
+        "category": "screen_time",
+        "developer_or_team": "Opal Technologies Inc.",
+        "official_url": "https://opal.so",
+        "repository_url": None,
+        "platforms": ["iOS", "macOS"],
+        "pricing_type": "Freemium",
+        "price_details": "Free version offers daily screen time metrics and basic manual sessions. Pro is $9.99/month or $99/year (student discounts available) for recurring schedules and Deep Focus.",
+        "purpose": "Help students gain awareness of screen time and lock down distracting social apps during classes and study blocks.",
+        "privacy_rating": "B+",
+        "privacy_details": "Leverages Apple Screen Time framework; usage data is processed on-device. Cloud profile syncs milestones and focus score leaderboards.",
+        "accessibility_features": "Dynamic Island live activity widgets, Apple Watch companion, clean minimalist iOS aesthetic.",
+        "limitations": "High Pro subscription pricing; Deep Focus lockout mode cannot be canceled even for legitimate sudden school needs unless a break was pre-configured.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.5
+    },
+    {
+        "name": "Unhook - Remove YouTube Distractions",
+        "slug": "unhook",
+        "tagline": "Transforms YouTube into a distraction-free educational library.",
+        "description": "Unhook is an open-source browser extension that hides the YouTube home feed, recommended videos sidebar, comments, trends, and Shorts, leaving only the search bar and the specific video you intentionally searched for.",
+        "category": "browser_extension",
+        "developer_or_team": "Unhook Community",
+        "official_url": "https://unhook.app",
+        "repository_url": "https://github.com",
+        "platforms": ["Chrome", "Firefox", "Edge", "Brave"],
+        "pricing_type": "100% Free",
+        "price_details": "100% completely free and open source. No paid tiers, no premium upsells, no donation popups.",
+        "purpose": "Eliminate addictive algorithmic rabbit holes on YouTube so students can watch lecture recordings and tutorials without distraction.",
+        "privacy_rating": "A+",
+        "privacy_details": "Zero data collection, zero external API requests, zero tracking scripts. Code is open source and runs entirely in local browser CSS/JS.",
+        "accessibility_features": "High-contrast dark mode support, individual toggle switches for feeds, comments, and shorts.",
+        "limitations": "Browser-only extension (desktop browsers and Firefox for Android); cannot control the native YouTube mobile application on iOS or Android.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9
+    },
+    {
+        "name": "uBlock Origin",
+        "slug": "ublock-origin",
+        "tagline": "The gold-standard open-source content blocker and privacy shield.",
+        "description": "uBlock Origin is an ultra-efficient content blocker that strips away deceptive web ads, popups, tracking beacons, and auto-playing videos. It also features an element picker allowing students to permanently zap distracting page sidebars.",
+        "category": "privacy_safety",
+        "developer_or_team": "Raymond Hill (gorhill)",
+        "official_url": "https://ublockorigin.com",
+        "repository_url": "https://github.com/gorhill/uBlock",
+        "platforms": ["Firefox", "Chrome", "Edge", "Brave"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open-source (GPLv3). Raymond Hill strictly refuses all donations and commercial sponsorships.",
+        "purpose": "Safeguard privacy, accelerate study research loading speeds, and strip predatory ads and trackers from academic websites.",
+        "privacy_rating": "A+",
+        "privacy_details": "Zero telemetry. Stores filter rules entirely locally in browser storage. Refuses telemetry connections.",
+        "accessibility_features": "Keyboard accessible, high-contrast matrix view, clean readable statistics dashboard.",
+        "limitations": "Google Chrome Manifest V3 updates have degraded dynamic filtering capabilities on Chrome; best experienced on Firefox.",
+        "verified_date": "2026-11-16",
+        "student_rating": 5.0
+    },
+    {
+        "name": "StayFree - Screen Time & App Blocker",
+        "slug": "stayfree",
+        "tagline": "Cross-platform screen time analytics with PIN-locked limits.",
+        "description": "StayFree provides transparent cross-platform screen time tracking, daily limits, and website blocking. It includes PIN security so you can have an accountability buddy lock your settings to prevent impulsive overriding.",
+        "category": "screen_time",
+        "developer_or_team": "StayFree Apps Ltd.",
+        "official_url": "https://stayfreeapps.com",
+        "repository_url": None,
+        "platforms": ["Android", "iOS", "Windows", "macOS", "Chrome"],
+        "pricing_type": "Freemium",
+        "price_details": "Generous free tier includes all core tracking and limits. Premium is $1.99/month or $11.99/year for cloud sync and advanced export.",
+        "purpose": "Provide accurate usage diagnostics and enforce PIN-protected app limits to curb doomscrolling.",
+        "privacy_rating": "A",
+        "privacy_details": "Stores usage metrics locally on-device by default. Cloud sync is strictly opt-in. Does not sell user behavioral data to advertisers.",
+        "accessibility_features": "Color-coded usage categories, large text accessibility, dark mode, CSV data export.",
+        "limitations": "On Android, aggressive OEM battery management (Samsung, Xiaomi, Oppo) will terminate background tracking unless manually whitelisted.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.7
+    },
+    {
+        "name": "LeechBlock NG",
+        "slug": "leechblock-ng",
+        "tagline": "Highly customizable browser time-banking and blocker.",
+        "description": "LeechBlock NG is a free, lightweight browser extension designed to block time-wasting sites on fixed schedules (e.g. 9am to 5pm) or after a set time allowance (e.g. 15 minutes of Reddit per day).",
+        "category": "browser_extension",
+        "developer_or_team": "James Anderson (Proginosko)",
+        "official_url": "https://www.proginosko.com/leechblock",
+        "repository_url": "https://github.com/proginosko/LeechBlockNG",
+        "platforms": ["Firefox", "Chrome", "Edge"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open source. Completely free for all features with zero monetization.",
+        "purpose": "Implement strict time allowances and time-banking rules across desktop web browsers.",
+        "privacy_rating": "A+",
+        "privacy_details": "Zero telemetry. All block sets, timers, and access control settings are stored in local browser storage.",
+        "accessibility_features": "Simple tabular interface, keyboard navigation, password/math equation override option.",
+        "limitations": "Browser-level only; does not block desktop apps or mobile devices. Determined users can switch to an alternate browser if not locked down.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.7
+    },
+    {
+        "name": "Olauncher (Minimal AF Launcher)",
+        "slug": "olauncher",
+        "tagline": "Minimalist open-source Android home screen with zero clutter.",
+        "description": "Olauncher replaces the vibrant, notification-badged home screen of Android phones with a serene, text-only launcher. By stripping away colorful icons and widgets, it immediately drops mindless phone pickups.",
+        "category": "focus_blocker",
+        "developer_or_team": "Tanuj M.",
+        "official_url": "https://olauncher.app",
+        "repository_url": "https://github.com/tanujnotes/Olauncher",
+        "platforms": ["Android"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open-source (GPLv3). No ads, no in-app purchases, available on Google Play and F-Droid.",
+        "purpose": "Dramatically lower phone distraction by removing addictive visual icons and replacing them with a plain text list.",
+        "privacy_rating": "A+",
+        "privacy_details": "Requires zero internet permission (`INTERNET` permission is completely omitted from the Android manifest). 100% private.",
+        "accessibility_features": "Custom font sizing, high-contrast monochrome mode, rapid alphabetical search gestures.",
+        "limitations": "Android exclusive. Apple iOS does not allow replacing the native Springboard home screen launcher.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9
+    },
+    {
+        "name": "Sleep as Android & Apple Sleep Routine",
+        "slug": "sleep-as-android-apple-sleep",
+        "tagline": "Circadian sleep tracker with captive QR-code wake-up tasks.",
+        "description": "Sleep as Android (and Apple's native Sleep Focus) automate bedtime device dimming, blue light reduction, and enforce captive wake-up tasks (scanning a QR code in the bathroom or solving math problems) to ensure you actually get out of bed.",
+        "category": "bedtime_routine",
+        "developer_or_team": "Urbandroid & Apple Inc.",
+        "official_url": "https://sleep.urbandroid.org",
+        "repository_url": None,
+        "platforms": ["Android", "iOS"],
+        "pricing_type": "Freemium",
+        "price_details": "Apple Sleep Focus is 100% free built into iOS. Sleep as Android offers a 14-day free trial, followed by a $9.99 lifetime unlock for CAPTCHA tasks.",
+        "purpose": "Automate healthy circadian bedtime routines, suppress late-night notifications, and prevent groggy snooze loops.",
+        "privacy_rating": "A",
+        "privacy_details": "On-device processing for audio sleep tracking and movement sensors; health data is encrypted and remains strictly local unless Google/Apple Health sync is enabled.",
+        "accessibility_features": "Gentle sunrise light alarm simulation, custom vibration patterns, soothing binaural lullabies.",
+        "limitations": "Requires placing the phone near your bed for sonar tracking; aggressive wake-up CAPTCHA tasks can be frustrating during genuine emergencies.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.6
+    },
+    {
+        "name": "Signal Private Messenger",
+        "slug": "signal",
+        "tagline": "Encrypted, distraction-free study collaboration without dopamine feeds.",
+        "description": "Signal is an open-source, encrypted communications app that allows student project teams and study groups to chat without algorithmic reels, stories, advertisements, or tracking scripts that disrupt focus.",
+        "category": "privacy_safety",
+        "developer_or_team": "Signal Technology Foundation",
+        "official_url": "https://signal.org",
+        "repository_url": "https://github.com/signalapp",
+        "platforms": ["iOS", "Android", "macOS", "Windows", "Linux"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open-source, backed by an independent 501(c)(3) nonprofit. Zero ads, zero trackers, zero paid subscriptions.",
+        "purpose": "Provide safe, distraction-free communication for academic groups without commercial data harvesting.",
+        "privacy_rating": "A+",
+        "privacy_details": "End-to-end encryption by default using the Signal Protocol. Collects zero metadata (only unix timestamp of account creation and last connection).",
+        "accessibility_features": "Full screen-reader compatibility, customizable text sizes, voice note speed adjustments (1x, 1.5x, 2x).",
+        "limitations": "Requires phone number verification during initial sign-up; all project group members must download the app.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9
+    }
+]
+
+GUIDES = [
+    {
+        "slug": "unbreakable-apple-downtime",
+        "title": "The Unbreakable iOS & macOS Downtime Protocol",
+        "summary": "How to set up Apple Screen Time so you cannot bypass the 15-minute ignore limit when cramming for exams or winding down at night.",
+        "category": "Screen Time & Bedtime",
+        "target_platforms": ["iOS", "macOS"],
+        "estimated_minutes": 10,
+        "difficulty": "Beginner",
+        "steps": [
+            {
+                "step_number": 1,
+                "title": "Establish an External Accountability Passcode",
+                "description": "Go to Settings > Screen Time > Lock Screen Time Settings. Have a roommate, parent, or study partner set a 4-digit PIN you do not know, or write a random PIN on paper and place it inside a sealed envelope across the room.",
+                "tip": "Never use your device unlock PIN, as muscle memory will override it."
+            },
+            {
+                "step_number": 2,
+                "title": "Configure Scheduled Downtime",
+                "description": "In Screen Time > Downtime, turn on 'Scheduled'. Set downtime from 10:30 PM to 7:00 AM every school night. Toggle 'Block at Downtime' ON.",
+                "tip": "During downtime, only phone calls and pre-selected essential apps (Maps, Notes, Calculator) remain open."
+            },
+            {
+                "step_number": 3,
+                "title": "Enforce App Category Limits with Hard Block",
+                "description": "Navigate to App Limits > Add Limit. Select 'Social' and 'Games'. Set daily limit to 45 minutes and critically toggle 'Block at End of Limit' to ON. This disables the 'Ignore Limit for 15 Minutes' bypass option.",
+                "tip": "Without the passcode, iOS will show an impassable time limit screen."
+            },
+            {
+                "step_number": 4,
+                "title": "Automate Circadian Grayscale Transition",
+                "description": "Open Apple Shortcuts > Automation > Create Personal Automation > Time of Day (e.g. 10:00 PM). Add action 'Set Color Filters' to ON. Colors become black & white, neutralizing dopamine pulls from late-night feeds.",
+                "tip": "Triple-click the side button via Accessibility Shortcuts to toggle it back when reading diagrams."
+            }
+        ],
+        "key_takeaways": [
+            "Passcode separation is essential to prevent self-sabotage.",
+            "Enforcing 'Block at End of Limit' eliminates the 15-minute ignore loophole.",
+            "Grayscale strips visual dopamine from video feeds and photos."
+        ]
+    },
+    {
+        "slug": "distraction-free-desktop-station",
+        "title": "Distraction-Free Deep Work Desktop Station",
+        "summary": "Configure Windows or macOS for high-intensity study sprints: neutralize YouTube feeds, block predatory popups, and lock down deep work intervals.",
+        "category": "Focus & Browser",
+        "target_platforms": ["macOS", "Windows", "Chrome", "Firefox"],
+        "estimated_minutes": 12,
+        "difficulty": "Intermediate",
+        "steps": [
+            {
+                "step_number": 1,
+                "title": "Install Unhook Extension for Clean Research",
+                "description": "Install the Unhook extension on your primary browser. Open YouTube and enable: Hide Home Feed, Hide Recommended Videos Sidebar, and Hide Shorts. YouTube is now a pure search engine for lecture materials without recommended clickbait.",
+                "tip": "You can still search for and watch any video without distraction."
+            },
+            {
+                "step_number": 2,
+                "title": "Deploy uBlock Origin & Custom Distraction Filters",
+                "description": "Install uBlock Origin. Open its dashboard, click the 'Element Zapper' (lightning bolt) or 'Element Picker' (dropper) to select and permanently hide sticky headers, distracting news widgets, or comment sections on study websites.",
+                "tip": "uBlock Origin uses zero memory overhead compared to commercial adblockers."
+            },
+            {
+                "step_number": 3,
+                "title": "Set Up Cold Turkey Blocker with Locked Pomodoros",
+                "description": "Download Cold Turkey Blocker. Create a blocklist containing your top 5 distraction sites (Reddit, Twitter, Steam, Discord). Set a 90-minute study timer with 'Lock' enabled.",
+                "tip": "Once locked, even restarting your PC will not disable the block."
+            },
+            {
+                "step_number": 4,
+                "title": "Configure OS Focus Assist / Do Not Disturb",
+                "description": "On Windows: Settings > System > Focus > Start Focus Session (links to Spotify study playlist and mutes notifications). On Mac: Control Center > Focus > Set a 90-minute Deep Work filter.",
+                "tip": "Whitelisting close family emergency phone calls ensures safety while muting group chats."
+            }
+        ],
+        "key_takeaways": [
+            "Unhook transforms YouTube from an entertainment trap into an academic asset.",
+            "Cold Turkey provides the highest bypass resistance of any desktop tool.",
+            "OS-level Focus modes suppress notification distraction triggers."
+        ]
+    },
+    {
+        "slug": "circadian-bedtime-wind-down",
+        "title": "Circadian Bedtime Wind-Down & Phone Detox",
+        "summary": "A scientifically grounded device routine to stop bedtime doomscrolling, lower blue-light exposure, and ensure restorative sleep before exams.",
+        "category": "Bedtime Routine",
+        "target_platforms": ["Android", "iOS"],
+        "estimated_minutes": 8,
+        "difficulty": "Beginner",
+        "steps": [
+            {
+                "step_number": 1,
+                "title": "Schedule Sunset Blue-Light Filtration",
+                "description": "On iOS: Settings > Display & Brightness > Night Shift > Scheduled (Sunset to Sunrise) and set Color Temperature to 'More Warm'. On Android: Settings > Display > Night Light / Eye Comfort Shield > Schedule.",
+                "tip": "Blue light suppresses melatonin synthesis; warming screen temperature protects your sleep drive."
+            },
+            {
+                "step_number": 2,
+                "title": "Configure Bedtime Do Not Disturb Automation",
+                "description": "Enable Bedtime Mode / Sleep Focus. Set it to activate 45 minutes before your target sleep time (e.g. 11:15 PM). Set phone wallpaper to dim and restrict lock screen notification wakeups.",
+                "tip": "Allow 'Repeated Calls' to ring through so urgent family matters can always reach you."
+            },
+            {
+                "step_number": 3,
+                "title": "Establish an Out-of-Reach Charging Zone",
+                "description": "Buy a 3-meter phone charging cord or move your existing charger across the bedroom (on a desk or dresser) rather than on your bedside table.",
+                "tip": "Physical separation breaks the impulse to reach for your phone during micro-awakenings."
+            },
+            {
+                "step_number": 4,
+                "title": "Activate Captive QR-Code Wake-Up Alarm",
+                "description": "Use Sleep as Android or Alarmy. Print a small QR code and tape it next to your bathroom sink or coffee machine. Set the morning alarm to require scanning that specific code to shut off.",
+                "tip": "Physical movement to the bathroom immediately dispels morning sleep inertia."
+            }
+        ],
+        "key_takeaways": [
+            "Melatonin production begins 1-2 hours before sleep; warm display filters preserve this window.",
+            "Keeping the phone physically away from the bed prevents 2 AM insomnia scrolling.",
+            "Captive QR alarms physically move you out of bed to prevent snooze spirals."
+        ]
+    }
+]

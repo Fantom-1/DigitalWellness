@@ -1,0 +1,946 @@
+=== 00_Ground-Zero_Overview_Roadmap.docx ===
+GROUND-ZERO
+Implementation Plan — Overview & Roadmap
+Feasibility Review, Scope Cuts, and Phased Delivery Plan
+Prepared for Yash Khedekar  |  July 2026  |  v1.0
+
+1. What This Document Is
+The original concept doc describes Ground-Zero correctly at the philosophy level: a Wikipedia + IMDB + PCPartPicker for AI models, not a model host or inference proxy. That framing is sound and should not change. What needs to change is the assumption, implicit in the original doc, that all of it gets built at once. It does not. This document cuts the idea down to a buildable v0.1, sequences the rest, and flags every place where the original spec is more ambitious than a solo or 2–3 person team can execute in a semester.
+Bottom line:  The idea is good and the moat argument (data + provenance + explainability, not UI) is correct. The risk is not the concept — it's sequencing. Build the boring parts (schema, ingestion, one connector) before the exciting parts (ranking engine, LLM intent parsing).
+2. Reality Check on the Original Spec
+Before planning modules, here is a direct assessment of the claims and structures in the source document.
+2.1 What's solid
+Layered architecture (ingestion → normalize → DB → search/rank → frontend) is the correct shape and matches how real data-aggregator products (PCPartPicker, similarweb, G2) are built.
+PostgreSQL + pgvector + JSONB is the right database choice for this problem. You get relational integrity for the 90% of fields that are structured, JSONB for the long tail of source-specific fields, and vector search for semantic ranking, all in one engine — no need for a separate vector DB (Pinecone/Weaviate/Qdrant) at this scale.
+Wikipedia-style proposal → review → merge contribution model is the correct trust mechanism, and version history + verification levels is what makes the data defensible long-term.
+"LLM used once, for intent parsing, everything else deterministic" is the right cost and reliability posture. This keeps inference cost near-zero per search and keeps ranking explainable and debuggable.
+2.2 What's underspecified or unrealistic as written
+"Continuously ingest from HuggingFace, Ollama, OpenRouter, GitHub, official labs, and papers" is 5 connectors before v1 ships. Each connector needs its own auth, rate-limit handling, schema mapping, and dedup logic. Realistic v0.1 scope is one connector (HuggingFace Hub API — by far the richest metadata source) plus manual seeding for 50–100 flagship models.
+The ranking formula ("Final Score = Intent Match + Hardware Match + Capability Match + Cost Match + Freshness + Popularity + Community Trust + Official Verification + Benchmark Score") has 9 terms with no defined weights, scales, or normalization. As written this is a slogan, not an algorithm. Section 4 of the Ranking Engine document fixes this with a concrete, tunable formula.
+Natural-language intent parsing ("Need a coding model under 12GB VRAM" → structured filters) needs a fallback path for when the LLM mis-parses or the user's query has no clear intent. The original doc doesn't address failure modes; this is added in the Search Engine document.
+"Daily update database, serve from local DB" is right for cost and latency, but a fixed daily cron for every source is wasteful (some sources like OpenRouter pricing change hourly; some like a paper's citation count barely move weekly). Recommend per-source refresh intervals, not one global scheduler cadence.
+There is no comparison engine in the original doc, despite the PCPartPicker analogy implying one (PCPartPicker's core loop is side-by-side spec comparison). This is added as its own module because it reuses the ranking engine's normalized scores and is a natural v0.2 feature, not v0.1.
+No mention of authentication, moderation roles, or abuse handling for the community contribution system. A public edit-suggestion system without spam/abuse controls will get gamed within weeks of any real traffic (fake benchmark numbers, self-promotional model entries). Addressed in the Contribution & Versioning document.
+3. Recommended Scope Cuts for v0.1
+Original Spec Item
+v0.1 Decision
+Reason
+5 source connectors
+1 connector (HF Hub) + manual seed data
+Each connector is 3–5 days of real work incl. schema mapping + dedup
+Full 9-term ranking formula
+4-term formula (Intent, Hardware, Cost, Freshness) first, expand later
+Weights need real usage data to tune; ship simple + correct before ship complex + wrong
+LLM intent parsing
+Keep, but add structured-filter UI as fallback/primary input
+Don't make natural language the only way to search on day one
+Full contribution/PR workflow with roles
+Read-only v0.1, "report an issue" form only, no live editing
+Moderation tooling is a bigger project than the core product; ship value before opening write access
+Comparison engine
+Defer to v0.2
+Depends on ranking engine + a populated catalog to be useful
+Public API exposure
+Defer to v0.3+
+Only valuable once the catalog has real depth and traffic
+4. Final Tech Stack
+Layer
+Choice
+Why
+Database
+PostgreSQL 16 + pgvector + JSONB
+As proposed — correct choice, no change
+Backend / API
+FastAPI (Python)
+Best ecosystem overlap with ingestion/ML code (embeddings, HF client libs); async support for connector jobs
+Ingestion / connectors
+Python, APScheduler or Celery + Redis for scheduling
+Same language as backend; avoids a second runtime for jobs
+Frontend
+React + Vite + TypeScript + Tailwind
+Matches your existing stack familiarity (Ledger, portfolio site); fast dev loop
+Search
+Postgres full-text (tsvector) first, pgvector semantic layer second
+Don't reach for Elasticsearch/Meilisearch until Postgres FTS demonstrably can't keep up
+Hosting (MVP)
+Railway or Render (backend+DB), Vercel (frontend)
+Zero/low-cost tiers sufficient for a pre-traffic MVP; avoids AWS complexity this early
+LLM for intent parsing
+Claude Haiku via Anthropic API (or a self-hosted small model later)
+Cheap, fast, sufficient for structured-filter extraction; not a reasoning-heavy task
+Change from original:  The source doc doesn't commit to a backend language. FastAPI is recommended over Node/Express specifically because ingestion connectors will do embedding generation, HTML/JSON scraping, and light NLP — Python's library ecosystem is meaningfully better here than Node's.
+
+5. Module Breakdown
+The system is split into 6 modules, each documented separately. This overview is the map; each linked document is the territory.
+#
+Module Document
+Owns
+1
+Database Schema
+All tables, relationships, indexes, migrations strategy
+2
+Backend & Ingestion
+API layer, connectors, normalization, scheduler, validation
+3
+Search Engine
+Intent parsing, structured filtering, full-text + semantic search
+4
+Ranking Engine
+Scoring formula, weight calibration, explainability, anti-gaming
+5
+Comparison Engine (v0.2)
+Side-by-side model diffing, delta scoring, recommendation deltas
+6
+Frontend
+React app structure, pages, components, design system
+7
+Contribution & Versioning
+Edit proposals, review workflow, verification levels, roles
+6. Phased Roadmap
+Phase 0 — Foundation (Weeks 1–2)
+Finalize schema (Database doc), stand up Postgres + pgvector locally and on Railway.
+Build FastAPI skeleton with health check, auth stub, and one CRUD endpoint (models).
+Seed 30–50 flagship models manually via a seed script (GPT, Claude, Gemini, Llama, Qwen, Mistral, DeepSeek families) — this de-risks the frontend/search work from day one without waiting on a connector.
+Phase 1 — Core Catalog (Weeks 3–5)
+Build the HuggingFace connector: pull model cards, tags, license, params, downloads for open-weight models.
+Build the normalization layer (canonical slug generation, name deduplication, capability tag mapping).
+Ship read-only frontend: model list, model detail page, basic filter sidebar (no search yet).
+Phase 2 — Search & Rank (Weeks 6–8)
+Postgres full-text search on name/description/tags.
+Ship v1 ranking formula (4 terms) with fixed weights; add "why this result" explainability string per result.
+Add LLM-based intent parsing as an alternative input mode on top of the structured filter UI.
+Phase 3 — Community Layer (Weeks 9–12)
+"Report incorrect data" form → stored as pending proposal, reviewed manually (no UI for review yet, just an admin script/table).
+Add verification-level badges (Official / Verified / Community / Experimental) to every field shown.
+Phase 4 — Expansion (Month 4+)
+Second connector (OpenRouter, for pricing/deployment data), pgvector semantic ranking layer, comparison engine, public API.
+7. Team & Effort Estimate
+Track
+Solo dev, part-time (hrs/wk ~15–20)
+3-person team, part-time
+Phase 0
+2 weeks
+1 week
+Phase 1
+3 weeks
+1.5 weeks
+Phase 2
+3 weeks
+1.5 weeks
+Phase 3
+4 weeks
+2 weeks
+Total to community-layer MVP
+~12 weeks
+~6 weeks
+Honest risk flag:  The single biggest failure mode for this project is not technical — it's data depth. A model index with 50 entries and stale prices looks like a toy. The connector and normalization pipeline (Phase 1) is the highest-leverage, least glamorous work and should not be delayed in favor of building ranking/UI polish first.
+8. Open Decisions Requiring Your Input
+Team size: is this solo, or do Harsh/Sutikshan (Saksham teammates) join? Changes the roadmap column to use above.
+Monetization/API-exposure plans: affects whether rate-limiting and API-key infra should be built into Phase 0 or deferred entirely.
+Target launch audience: ML practitioners (technical filters matter most) vs. general devs picking an API (pricing/ease-of-use matters most). This shifts ranking weight priorities in the Ranking Engine document.
+
+========================================
+
+=== 01_Ground-Zero_Database_Schema.docx ===
+GROUND-ZERO
+Database Schema Module
+PostgreSQL + pgvector + JSONB — Full Table Design
+Module 1 of 7  |  v1.0
+
+1. Engine & Extensions
+PostgreSQL 16, as proposed in the original doc. Required extensions:
+CREATE EXTENSION IF NOT EXISTS vector;      -- pgvector, for embeddingsCREATE EXTENSION IF NOT EXISTS pg_trgm;     -- fuzzy/trigram search on namesCREATE EXTENSION IF NOT EXISTS "uuid-ossp"; -- UUID generation
+Change from original:  Added pg_trgm. The original doc only lists pgvector + JSONB. Trigram search is what makes "Llama-4-Scout" and "llama 4 scout" and typo'd queries resolve to the same canonical record before semantic search ever runs — cheap and high-value.
+2. Core Table: models
+The canonical entity. Every other table hangs off model_id.
+Column
+Type
+Notes
+id
+UUID PK
+default uuid_generate_v4()
+slug
+TEXT UNIQUE NOT NULL
+canonical URL-safe id, e.g. llama-4-scout
+name
+TEXT NOT NULL
+display name
+developer
+TEXT
+e.g. Meta, Mistral AI
+organization_id
+UUID FK → organizations.id
+normalized org record, not free text
+description
+TEXT
+
+category
+TEXT
+LLM / VLM / Embedding / ASR / Diffusion / Agent-framework
+sub_category
+TEXT
+e.g. instruction-tuned, base, MoE
+architecture
+TEXT
+transformer / MoE / mamba / hybrid
+parameter_count
+BIGINT
+in raw params, nullable if undisclosed
+parameter_count_display
+TEXT
+e.g. "27B", "8x7B (MoE)" — for cases raw count misleads
+context_window
+INTEGER
+tokens
+release_date
+DATE
+
+license
+TEXT
+normalized license key, see licenses table
+open_weight
+BOOLEAN
+renamed from "open_source" — see note below
+offline_capable
+BOOLEAN
+
+commercial_use_allowed
+BOOLEAN
+
+website_url
+TEXT
+
+repository_url
+TEXT
+
+paper_url
+TEXT
+
+documentation_url
+TEXT
+
+embedding
+VECTOR(768)
+description embedding for semantic search
+status
+TEXT
+active / deprecated / retired
+last_verified_at
+TIMESTAMPTZ
+
+created_at
+TIMESTAMPTZ
+default now()
+updated_at
+TIMESTAMPTZ
+default now(), trigger-maintained
+Terminology fix:  "open_source" is renamed to open_weight. Almost no model in this space is open-source in the OSI sense (training data + code + weights); what's actually being described is open-weight availability (Llama, Gemma, Mistral, etc.). Using the precise term avoids a credibility hit with the exact audience — ML practitioners — this product targets.
+2.1 organizations
+Column
+Type
+Notes
+id
+UUID PK
+
+name
+TEXT UNIQUE NOT NULL
+e.g. Meta, Mistral AI, Google DeepMind
+type
+TEXT
+lab / startup / big-tech / academic / open-collective
+website_url
+TEXT
+
+country
+TEXT
+
+Added because the original schema stores developer/organization as free text on the models table, which will fragment ("Meta", "Meta AI", "Meta Platforms" as three different strings). A normalized table is required for any org-level rollup (e.g. "show all Mistral models").
+3. capabilities (one-to-many via join)
+Table
+Column
+Type
+Notes
+capability_types
+id
+SMALLINT PK
+fixed lookup table
+capability_types
+name
+TEXT UNIQUE
+Text Generation, Code, Vision, OCR, Speech, Translation, Embeddings, Reasoning, Math, Agents, Function Calling, Long Context
+model_capabilities
+model_id
+UUID FK
+
+model_capabilities
+capability_id
+SMALLINT FK
+
+model_capabilities
+proficiency
+SMALLINT
+1–5 self/community-rated strength in this capability — added field
+Addition:  proficiency was not in the original spec (capability was boolean-by-presence). Without a strength signal, "has coding capability" can't distinguish a model that's excellent at code from one that merely doesn't refuse to try. This field is what the ranking engine's Capability Match term actually needs.
+4. deployment
+Column
+Type
+Notes
+id
+UUID PK
+
+model_id
+UUID FK
+
+provider
+TEXT
+e.g. Together AI, Groq, Fireworks, Ollama, self-host
+method
+TEXT
+official-api / third-party-api / local-gguf / local-mlx / local-onnx / docker / vllm / lmstudio
+is_official
+BOOLEAN
+
+quantizations_available
+TEXT[]
+e.g. {Q4_K_M, Q8_0, fp16}
+setup_url
+TEXT
+deep link to install/run guide
+5. pricing
+Column
+Type
+Notes
+id
+UUID PK
+
+model_id
+UUID FK
+
+provider
+TEXT
+
+input_cost_per_mtok
+NUMERIC(10,4)
+cost per 1M input tokens
+output_cost_per_mtok
+NUMERIC(10,4)
+cost per 1M output tokens
+currency
+TEXT
+default USD
+free_tier_available
+BOOLEAN
+added — high-signal filter for hobbyists
+updated_at
+TIMESTAMPTZ
+
+6. hardware_requirements
+Column
+Type
+Notes
+model_id
+UUID FK
+
+quantization
+TEXT
+requirements differ per quantization — original schema had one flat row per model, which is wrong
+min_ram_gb
+NUMERIC
+
+recommended_ram_gb
+NUMERIC
+
+min_vram_gb
+NUMERIC
+
+recommended_vram_gb
+NUMERIC
+
+disk_size_gb
+NUMERIC
+
+cpu_supported
+BOOLEAN
+
+gpu_supported
+BOOLEAN
+
+apple_silicon_supported
+BOOLEAN
+
+os_support
+TEXT[]
+{windows, linux, mac}
+Fix:  The original hardware table has one row per model. In practice, VRAM need for Llama 3 70B at Q4 quantization (~40GB) vs fp16 (~140GB) differs by 3.5x. Keying this table on (model_id, quantization) instead of model_id alone is required for the numbers to mean anything.
+
+7. benchmarks
+Column
+Type
+Notes
+id
+UUID PK
+
+model_id
+UUID FK
+
+benchmark_name
+TEXT
+FK → benchmark_definitions, not free text
+score
+NUMERIC
+
+score_type
+TEXT
+percentage / elo / pass@1 / raw
+harness_version
+TEXT
+renamed from "version" — which eval harness/version produced this number
+evaluated_by
+TEXT
+official / third-party-reproduction / self-reported
+date
+DATE
+
+source_url
+TEXT
+
+benchmark_definitions (new, lookup table)
+id, name (MMLU, GPQA-Diamond, HumanEval, SWE-bench Verified, LMSYS Arena Elo, MATH, GSM8K…), category (knowledge/code/math/agentic/reasoning), higher_is_better (BOOLEAN).
+Why this was added:  Benchmark names and score scales are not comparable across sources unless normalized centrally. Without a lookup table, "HumanEval" entered by three different contributors as "HumanEval", "Human Eval", "humaneval-pass1" silently fragments the data the ranking engine depends on.
+8. links
+Collapsed from the original's flat "one link type per concept" description into a typed join table — avoids adding a new nullable column to models every time a new link type appears (Discord, Reddit, changelog, model card, etc.).
+Column
+Type
+Notes
+model_id
+UUID FK
+
+link_type
+TEXT
+official_site / github / paper / huggingface / ollama / openrouter / docs / discord / changelog
+url
+TEXT
+
+9. tags
+Table
+Columns
+Notes
+tags
+id, name, category
+category groups tags for UI (performance / cost / use-case / trust)
+model_tags
+model_id, tag_id, source
+source = auto-derived / official / community
+10. versions (lineage)
+Column
+Type
+Notes
+id
+UUID PK
+
+model_id
+UUID FK
+the specific variant, e.g. Gemma 3 27B
+parent_model_id
+UUID FK, nullable
+e.g. points to Gemma 3 (family record)
+relation_type
+TEXT
+size-variant / fine-tune / distillation / quantization / successor-of
+Fix:  The original doc shows lineage as a strict downward arrow chain (Gemma 3 → 4B → 12B → 27B). Real lineage is a graph, not a chain: fine-tunes branch off any size variant, and "successor-of" (Gemma 2 → Gemma 3) is a different relation than "size-variant-of" (Gemma 3 → Gemma 3 27B). relation_type captures this; parent_model_id alone cannot.
+11. sources (provenance)
+Column
+Type
+Notes
+id
+UUID PK
+
+model_id
+UUID FK
+
+field_name
+TEXT
+which column this provenance record covers
+field_value
+TEXT
+snapshot of the value at time of capture
+source_type
+TEXT
+huggingface_api / official_blog / paper / community_submission / manual_seed
+source_url
+TEXT
+
+verification_level
+TEXT
+official / verified / community / experimental
+captured_at
+TIMESTAMPTZ
+
+12. Contribution & Versioning Tables (summary)
+Full workflow detail lives in the Contribution & Versioning module; the schema is listed here for completeness since it lives in the same database.
+edit_proposals — id, model_id, field_name, proposed_value, submitted_by, status (pending/approved/rejected), reviewed_by, reviewed_at, reason.
+field_history — id, model_id, field_name, old_value, new_value, changed_by, changed_at, proposal_id (nullable, null = system/ingestion change).
+users — id, username, email, role (admin/maintainer/contributor/viewer), reputation_score, created_at.
+13. Indexing Strategy
+Index
+Type
+Purpose
+models(slug)
+UNIQUE B-tree
+canonical lookup
+models(name) gin_trgm_ops
+GIN trigram
+fuzzy name search, typo tolerance
+models(embedding) ivfflat
+pgvector IVFFlat
+semantic similarity search
+models(category, open_weight, offline_capable)
+composite B-tree
+the most common structured filter combination
+model_capabilities(capability_id, model_id)
+composite
+"all models with capability X" queries
+pricing(model_id, provider)
+composite
+fast price lookup per provider
+hardware_requirements(model_id, quantization)
+composite unique
+enforce one row per variant, fast lookup
+14. Migration Strategy
+Use Alembic (Python, pairs with FastAPI) for schema migrations — not raw SQL files. Every schema change is a versioned, reversible migration.
+Seed data (Phase 0's 30–50 flagship models) ships as a separate idempotent seed script, not baked into migrations — keeps schema history clean and re-runnable in any environment.
+Never delete a model row on ingestion mismatch; set status = 'retired'. Hard deletes break every FK'd child table's history and any external links users may have bookmarked.
+
+========================================
+
+=== 02_Ground-Zero_Backend_Ingestion.docx ===
+GROUND-ZERO
+Backend & Ingestion Module
+API Layer, Source Connectors, Normalization, Scheduling
+Module 2 of 7  |  v1.0
+
+1. Service Boundaries
+Two logical services sharing one database, deployed as two processes even if they start in one repo:
+Service
+Responsibility
+Runs
+API service
+Serves reads to the frontend: model list/detail, search, filters, comparisons
+Always-on web process (FastAPI + Uvicorn)
+Ingestion service
+Connector jobs, normalization, validation, writes
+Scheduled worker process (APScheduler/Celery)
+Why split:  The original doc's pipeline diagram implies one monolithic flow. Splitting reads from writes early means a slow or failing connector job never affects site latency — ingestion writes to the DB, API only ever reads from it.
+2. API Layer
+2.1 Core endpoints (v0.1)
+Method & Path
+Purpose
+GET /models
+list + filter (query params: category, capability, license, offline, max_vram, etc.)
+GET /models/{slug}
+full model detail incl. capabilities, pricing, hardware, benchmarks, links
+GET /models/{slug}/versions
+lineage graph for a model family
+GET /search?q=
+structured + full-text search entry point
+GET /organizations/{id}
+org rollup page
+POST /reports
+"report incorrect data" submission (v0.1: no live editing, see Module 7)
+GET /health
+liveness/readiness for hosting platform
+2.2 Response contract
+Every field on a model detail response carries its verification_level and source alongside the value — not as a separate call. This is a direct requirement of the trust model in the original doc ("users can judge reliability of each field") and must be designed into the API from day one, not retrofitted.
+{  "vram_min_gb": {    "value": 8,    "verification_level": "official",    "source_url": "https://...",    "last_verified_at": "2026-06-20"  }}
+3. Source Connectors
+3.1 v0.1 scope: one connector
+Build only the HuggingFace Hub connector first. It is the single richest metadata source (model cards, tags, license, downloads, sometimes benchmark links) and covers the largest share of open-weight models. Every other connector in the original list (Ollama, OpenRouter, GitHub, papers) is deferred to Phase 4+.
+3.2 Connector interface contract
+Every connector, regardless of source, must implement the same interface so the normalizer doesn't need source-specific branching:
+class SourceConnector(Protocol):    source_name: str    def fetch(self, since: datetime | None) -> list[RawRecord]: ...    def rate_limit(self) -> RateLimitSpec: ...    def to_canonical(self, raw: RawRecord) -> CanonicalModelDraft: ...
+3.3 Per-source refresh cadence
+Source
+Field Volatility
+Recommended Refresh
+HuggingFace model cards
+Low–medium (new models, occasional edits)
+Every 12 hours
+Pricing (future: OpenRouter)
+High
+Every 1–2 hours
+Benchmarks (future: papers/leaderboards)
+Low
+Weekly
+GitHub stars/activity (future)
+Medium
+Daily
+Change from original:  The original doc proposes one "Daily" cadence for the whole pipeline. A single global schedule either wastes calls on slow-moving data or under-refreshes fast-moving data (pricing). Cadence should be a per-connector config value from day one — trivial to add now, painful to retrofit later.
+4. Normalization Layer
+4.1 Canonical ID resolution
+The hardest real problem in this module is not fetching data — it's deciding whether two records from different sources (or two records from the same source in different runs) refer to the same model.
+Slugify the incoming name (lowercase, strip punctuation, collapse whitespace to hyphens).
+Check for exact slug match against existing models.
+If no exact match, run a trigram similarity check (pg_trgm) against existing slugs/names above a similarity threshold (start at 0.85, tune from false-positive rate).
+If still no match, check known alias table (many models have shipped under 2–3 names — e.g. a paper name vs. a productized name) before creating a new record.
+Only create a new canonical model record if all three checks miss.
+Risk flagged:  Fuzzy matching alone will misfire on legitimately distinct models with similar names (e.g. different size variants). Treat trigram match as a candidate flag for human review in early phases, not an auto-merge trigger, until the alias table has enough real-world coverage to be trusted.
+4.2 Field-level merge policy
+When two sources disagree on a field (e.g. HuggingFace says one license string, the official site says another), the normalizer does not silently overwrite. Policy:
+Higher verification_level always wins (official > verified > community > experimental).
+Equal verification_level → keep both in the sources/provenance table, surface the conflict as a flagged field for manual review, and keep the most recently captured value as the displayed value in the interim.
+Never let an ingestion job silently overwrite a field that a human maintainer manually verified within the last 90 days — write a conflict record instead.
+5. Validation Layer
+Runs between normalization and DB write. Rejects or flags:
+Missing required fields (slug, name, category).
+Nonsensical numeric values (negative VRAM, release_date in the future, parameter_count of 0).
+Broken/unreachable URLs for website, repository, and paper links (checked async, doesn't block the write, but flags the field as needing attention).
+Duplicate slug collisions (should be impossible given §4.1, but validated defensively anyway).
+6. Scheduler
+APScheduler is sufficient for one connector at Phase 1–2 scale; migrate to Celery + Redis only once there are 3+ connectors or the ingestion volume needs distributed workers. Don't adopt Celery on day one — it's infrastructure overhead the v0.1 scope doesn't justify.
+Job
+Cadence
+Failure handling
+huggingface_sync
+every 12h
+retry 3x with backoff; alert (log + optional webhook) on 3rd failure; never crash the whole scheduler process
+link_health_check
+daily
+flags broken URLs, doesn't retry aggressively — low priority
+embedding_refresh
+on any description change
+triggered, not scheduled — recompute embedding only for changed rows
+7. Auth (v0.1 minimal)
+No user accounts needed for v0.1 read-only site.
+"Report an issue" form (Module 7) can be anonymous + rate-limited by IP for v0.1; full account system arrives with live editing in Phase 3.
+Admin/ingestion endpoints protected by a single API key in environment config — not a full auth system yet.
+8. Error Handling & Observability
+Structured logging (JSON logs) from day one — cheap to add now, painful to retrofit when debugging a failed 2am ingestion run.
+Every connector run writes a row to an ingestion_runs table (source, started_at, finished_at, records_fetched, records_created, records_updated, records_failed, error_summary) — gives visibility into pipeline health without needing a separate observability platform yet.
+Sentry (free tier) or plain log aggregation is enough at this stage; don't reach for Datadog/full APM pre-traffic.
+
+========================================
+
+=== 03_Ground-Zero_Search_Engine.docx ===
+GROUND-ZERO
+Search Engine Module
+Structured Filters, Full-Text Search, Semantic Layer, Intent Parsing
+Module 3 of 7  |  v1.0
+
+1. Design Principle
+The original doc's search pipeline (sentence → intent parser → structured query → SQL filters → semantic ranking) is directionally correct and is kept. The change is making the structured filter UI a first-class, default input mode — not just a byproduct of parsing natural language.
+Why this matters:  Natural language search is a nice-to-have, not the primary interface, for this product's actual users: ML practitioners who already know they want "open-weight, offline, under 12GB VRAM, good at code" and would rather click 4 filters than type a sentence and hope the parser gets it right. Ship the filter UI as the default; layer natural language on top.
+2. Three-Tier Search Architecture
+Tier
+Mechanism
+Handles
+1. Structured filters
+Direct SQL WHERE clauses on indexed columns
+Category, capability, license, VRAM, price range, offline/online — the majority of real queries
+2. Full-text search
+Postgres tsvector on name + description + tags
+Free-text queries like "reasoning model" or a partial model name
+3. Semantic search
+pgvector cosine similarity on description embeddings
+Fuzzy intent like "something like GPT-4 but cheaper" or queries with no keyword overlap
+Tier 1 always runs first and narrows the candidate set. Tiers 2 and 3 only re-rank within whatever Tier 1 already allowed through. This mirrors the original doc's "SQL filters first, semantic ranking after" instruction and is the right call — semantic search over the whole catalog with no filtering wastes compute and produces worse results than filter-then-rank.
+3. Intent Parsing (Natural Language Input)
+3.1 Pipeline
+User query (free text)  -> LLM call (Claude Haiku, low-cost, single call)  -> Structured JSON: {task, offline, max_vram_gb, license, sort}  -> Validate against known enum values  -> If valid: run as Tier 1+2+3 pipeline  -> If invalid/low-confidence: fall back to full-text search on raw query
+3.2 Fallback handling (missing from original spec)
+The source doc shows the happy path only. Three failure modes must be handled explicitly:
+LLM returns a filter value that doesn't map to any known enum (e.g. invents a category) — drop that filter, keep the rest, log for review.
+LLM call itself fails or times out (API outage, rate limit) — fall back immediately to Tier 2 full-text search on the raw query string. Never block the search on the LLM being available.
+Query has no extractable intent (e.g. "asdf" or a single ambiguous word) — return full-text + semantic results ranked by popularity, don't return an empty state.
+Cost note:  One Haiku call per free-text search is inexpensive at low-to-medium traffic, but cache aggressively: identical or near-identical queries (case/whitespace-normalized) should hit a query-cache table before calling the LLM again.
+4. Structured Filter Schema
+Filter
+Type
+Maps to
+task
+enum
+capability_types.name
+offline
+boolean
+models.offline_capable
+license_type
+enum
+models.license
+max_vram_gb
+numeric
+hardware_requirements.min_vram_gb <= X
+max_price_per_mtok
+numeric
+pricing.output_cost_per_mtok <= X
+min_context_window
+numeric
+models.context_window >= X
+commercial_use
+boolean
+models.commercial_use_allowed
+sort
+enum
+quality / cost / freshness / popularity — feeds Ranking Engine weighting
+5. Full-Text Search Implementation
+ALTER TABLE models ADD COLUMN search_vector tsvector  GENERATED ALWAYS AS (    setweight(to_tsvector('english', coalesce(name,'')), 'A') ||    setweight(to_tsvector('english', coalesce(description,'')), 'B') ||    setweight(to_tsvector('english', coalesce(developer,'')), 'C')  ) STORED;CREATE INDEX idx_models_search ON models USING GIN(search_vector);
+Weighted so a name match ranks above a description match ranks above a developer match — searching "llama" should surface Llama models before models merely mentioning Llama in their description (e.g. a comparison benchmark).
+6. Semantic Search Implementation
+Embedding model: a small open embedding model (e.g. bge-small or nomic-embed) run locally during ingestion — no need for a paid embedding API at this scale, keeps ingestion cost near-zero.
+Embed the concatenation of name + description + capability tags, not just raw description — improves recall for queries like "good at agentic coding tasks".
+IVFFlat index with lists tuned to catalog size (start at lists=100 for a few thousand rows; retune as the catalog grows past ~50k rows).
+SELECT *, 1 - (embedding <=> query_embedding) AS similarityFROM modelsWHERE <Tier 1 filters>ORDER BY embedding <=> query_embeddingLIMIT 50;
+7. Search Result Assembly
+Final candidate list from Tiers 1–3 is handed to the Ranking Engine (Module 4) for scoring — the search engine's job ends at producing a filtered, roughly-relevant candidate set of ~20–50 models; it does not decide final order. This separation keeps each module testable independently.
+8. What Was Cut From v0.1
+Typo-tolerant natural language beyond what the LLM parser + trigram matching already provides — no separate spell-check layer needed yet.
+Multi-turn conversational refinement ("no, cheaper than that") — v0.1 is single-shot query → results. Conversational refinement is a v0.3+ feature once there's a session/filter-state model in the frontend to support it.
+
+========================================
+
+=== 04_Ground-Zero_Ranking_Engine.docx ===
+GROUND-ZERO
+Ranking Engine Module
+Scoring Formula, Weight Calibration, Explainability, Anti-Gaming
+Module 4 of 7  |  v1.0
+
+1. Fixing the Original Formula
+The original doc's formula — Final Score = Intent Match + Hardware Match + Capability Match + Cost Match + Freshness + Popularity + Community Trust + Official Verification + Benchmark Score — names good signal categories but defines no weights, no scale, and no normalization. Nine unweighted terms summed together means whichever term happens to produce the largest raw numbers dominates by accident, not by design. This is not a ranking algorithm yet; it's a list of ingredients.
+v0.1 fix:  Cut to 4 terms with explicit weights and a defined 0–100 scale per term. Ship this, collect real usage signal, then expand back toward the full 9-term model in v0.2+ once there's data to calibrate the additional weights against — guessing weights for Popularity or Community Trust with zero usage data is worse than not including them yet.
+2. v0.1 Formula (4 terms)
+final_score = (0.40 * intent_match)            + (0.25 * hardware_match)            + (0.20 * cost_match)            + (0.15 * freshness) -- all terms normalized to a 0-100 scale before weighting
+Term
+Weight
+Definition
+intent_match
+0.40
+Capability + task alignment: does this model do what the user asked for, and how well (uses the capabilities.proficiency field from the DB schema)
+hardware_match
+0.25
+How well the model's min/recommended VRAM+RAM fits the user's stated or inferred hardware constraint; 100 if comfortably fits, scaled down as it approaches the ceiling, 0 if it doesn't fit at all
+cost_match
+0.20
+Inverse-scaled against the user's stated budget or a sensible default ceiling if none given; free/local models score 100 by definition when offline was requested
+freshness
+0.15
+Recency of release_date and last_verified_at, log-decayed — a 2-year-old model isn't worthless, just decayed
+2.1 Why these four and in this order
+Intent match is weighted highest because a fast, cheap, fresh model that can't do the task is useless — correctness gates everything else.
+Hardware match outweighs cost because for the "offline coding model" persona this product is designed around, a model that doesn't fit in VRAM isn't a worse option, it's not an option.
+Benchmark score is deliberately excluded from v0.1's formula, not because it's unimportant, but because benchmark comparability across models requires the benchmark_definitions normalization from Module 1 to actually be populated and trustworthy first — wiring in noisy/incomparable benchmark numbers as a scored term risks producing rankings that look precise but are actually garbage-in-garbage-out. Show benchmark scores on the model detail page in v0.1; don't rank by them yet.
+3. v0.2+ Expansion (Restoring the Full 9-Term Model)
+Once real usage data exists (click-through on results, "report incorrect" volume per field, actual benchmark coverage), reintroduce the remaining terms with data-informed weights rather than guesses:
+Term
+Planned v0.2+ weight
+Prerequisite before enabling
+benchmark_score
+0.10 (redistributed from others)
+benchmark_definitions table populated for ≥70% of catalog with official/verified-level scores
+community_trust
+0.05
+Enough contribution volume (Module 7) to compute a meaningful trust signal per model, not per empty table
+official_verification
+folded into intent_match as a multiplier, not a separate additive term
+Avoids double-counting — verification level already gates which value is displayed (Module 1 §4.2), so it shouldn't also double as an independent score term
+popularity
+0.05, capped influence
+Explicitly capped low and monitored — see §5, Anti-Gaming
+4. Explainability
+Every ranked result carries a human-readable breakdown, not just a final number — this is explicitly called for in the original doc's design ("Explain Ranking" step) and is preserved as a hard requirement, not an optional nice-to-have.
+{  "model": "llama-4-scout",  "final_score": 87,  "breakdown": [    {"term": "intent_match", "score": 92, "weight": 0.40, "reason": "Strong coding capability (4.5/5), task match"},    {"term": "hardware_match", "score": 85, "weight": 0.25, "reason": "Fits comfortably in 8GB VRAM at Q4"},    {"term": "cost_match", "score": 100, "weight": 0.20, "reason": "Free, runs locally"},    {"term": "freshness", "score": 70, "weight": 0.15, "reason": "Released 4 months ago"}  ]}
+The frontend renders this as a short plain-language sentence per result ("Ranked #1 because it fits your 8GB VRAM, is free, and scores well for coding"), not the raw JSON — see Module 6.
+5. Anti-Gaming (Missing from Original Spec)
+The original doc doesn't address what happens when the catalog gets real traffic and real contributors, some acting in bad faith. This is not optional to think about — any public, community-editable ranking system will be targeted (self-promotion, competitor sabotage, fake benchmark submissions) within weeks of getting visible traffic.
+Popularity, if/when added, must be based on aggregate, hard-to-fake signals (search-result click-through over time, not raw "views") and capped in weight (0.05 max as noted above) specifically because raw popularity is the easiest signal to manipulate.
+Community-submitted benchmark scores or capability ratings are never immediately live — they enter as pending proposals (Module 7's review workflow) and only affect ranking after maintainer approval or reaching a minimum corroboration threshold from multiple independent contributors.
+Rate-limit and fingerprint anonymous "report incorrect data" submissions per Module 2 §7 to prevent submission flooding from skewing the community_trust signal once it exists.
+Log every ranking result set server-side (query, candidate set, final order, weights used at that time) so any future "why did model X suddenly rank higher" investigation is answerable from data, not guesswork.
+6. Cold-Start Problem (Missing from Original Spec)
+At launch, most models will have zero community signal, sparse benchmark coverage, and unverified hardware numbers pulled only from a single source. The ranking formula must degrade gracefully, not just work well once the catalog matures.
+Missing terms are excluded from the weighted average and the remaining weights are re-normalized to sum to 1.0, rather than treating a missing value as 0 — a model with no cost data shouldn't be penalized as if it costs infinity.
+Every model detail page and result card shows a small "data completeness" indicator (e.g. 6/9 fields verified) so users can calibrate their own trust in a thin ranking rather than being misled by false precision.
+7. Weight Tuning Process (Post-Launch)
+Instrument click-through and "was this helpful" feedback on search results from week one, even before there's enough data to act on.
+After ~4–6 weeks of real usage, review whether top-ranked results are getting clicked/used, or whether users are consistently scrolling past the #1 result to pick #3 or #4 — the latter is a strong signal a weight is miscalibrated.
+Adjust weights incrementally (no more than ±0.05 per term per iteration) and re-measure — avoid large swings based on small sample sizes.
+
+========================================
+
+=== 05_Ground-Zero_Comparison_Engine.docx ===
+GROUND-ZERO
+Comparison Engine Module
+Side-by-Side Model Diffing (New Module, v0.2)
+Module 5 of 7  |  v1.0
+
+1. Why This Module Exists
+The original doc positions Ground-Zero as "the Wikipedia + IMDB + PCPartPicker for AI models" but never designs a comparison feature, despite PCPartPicker's entire core loop being side-by-side spec comparison to justify a build decision. This module fills that gap. It is scheduled for v0.2 (Phase 4 in the Overview roadmap) because it depends on two things v0.1 doesn't yet have: a reasonably deep catalog (comparing 2 of 30 models is a much weaker feature than comparing 2 of 2,000) and the Ranking Engine's normalized 0–100 scores to make the comparison meaningful rather than just a raw spec dump.
+2. Core Interaction
+User selects 2–4 models (from search results, a model detail page's "compare" button, or a direct /compare?ids= URL).
+Comparison view shows every shared field side by side: capabilities, hardware requirements, pricing, license, benchmarks, ranking sub-scores.
+Differences are visually highlighted (not just listed) — the value that's better in a given row is marked, using the same normalized scale the Ranking Engine already computes, so "better" isn't a separate subjective judgment invented by this module.
+3. Data Requirements
+Requirement
+Source
+Status
+Normalized 0–100 sub-scores per model (intent, hardware, cost, freshness)
+Ranking Engine (Module 4)
+Must exist and be queryable per-model, not just per-search-result
+Comparable hardware rows across quantizations
+Database Module §6 (hardware_requirements keyed by quantization)
+Ready as designed
+Comparable benchmark rows
+Database Module §7 (benchmark_definitions lookup)
+Needs ≥70% catalog coverage to avoid comparing models with mismatched benchmark availability
+4. API Design
+GET /compare?ids=llama-4-scout,mistral-small-3,qwen3-14b {  "models": [...],  "fields": [    {"field": "min_vram_gb", "values": {"llama-4-scout": 8, "mistral-small-3": 12, "qwen3-14b": 16},     "best": "llama-4-scout", "direction": "lower_is_better"},    {"field": "intent_match_score", "values": {...}, "best": "qwen3-14b", "direction": "higher_is_better"}  ]}
+direction (lower_is_better / higher_is_better) is stored per field type centrally, not guessed client-side — avoids the frontend incorrectly highlighting a lower price as "worse" or a higher VRAM requirement as "better."
+5. Recommendation Delta
+Beyond a raw diff table, the comparison engine generates one short plain-language recommendation sentence using the same deterministic scoring already computed — no additional LLM call needed for this, keeping it fast and free to run:
+Example output:  "Qwen3 14B scores highest for your stated coding task, but needs 16GB VRAM vs. Llama 4 Scout's 8GB. If hardware is the binding constraint, Llama 4 Scout is the better fit despite the lower intent-match score."
+This sentence is templated, not freely generated: pick the highest-scoring model overall, identify the single largest trade-off dimension (usually hardware or cost) against the next-best alternative, and fill a fixed sentence template. Keeps output predictable and cheap; avoids LLM hallucination risk in a comparison that's meant to be trustworthy.
+6. Constraints & Scope for v0.2
+Max 4 models per comparison — more becomes an unreadable table on both desktop and (especially) mobile.
+No comparison across incompatible categories (e.g. comparing an LLM to a diffusion image model) — the UI should warn and suggest same-category comparison, since most fields wouldn't be comparable anyway.
+Comparison URLs are shareable/bookmarkable (ids in query string) — this is a natural, high-value SEO and sharing surface ("Llama 4 Scout vs Mistral Small 3" is exactly the kind of query people search for) and should be server-rendered for that reason, not a client-only SPA route.
+7. Explicit Non-Goals for This Module
+Not a general "build your own filter table" pivot-table tool — that's a different, more complex feature with unclear demand; comparison stays fixed to the fields already modeled.
+Not a benchmark-running service — Ground-Zero indexes and displays benchmark results, it never runs models or benchmarks itself, consistent with the original doc's "never host, never proxy inference" philosophy.
+
+========================================
+
+=== 06_Ground-Zero_Frontend.docx ===
+GROUND-ZERO
+Frontend Module
+React Architecture, Pages, Components, Design System
+Module 6 of 7  |  v1.0
+
+1. Stack
+Piece
+Choice
+Notes
+Framework
+React 18 + Vite + TypeScript
+matches your existing stack from Ledger and the portfolio site
+Styling
+Tailwind CSS
+fast iteration, consistent design tokens
+Data fetching
+TanStack Query (React Query)
+caching + loading/error states for API calls, avoids hand-rolled fetch logic
+Routing
+React Router
+standard, sufficient for this app's route complexity
+State (filters, comparison selection)
+URL search params + light Zustand store
+filters belong in the URL so results are shareable/bookmarkable, not buried in client-only state
+2. Page Map (v0.1)
+Route
+Purpose
+Key components
+/
+Landing + primary search entry point
+SearchBar (structured + NL toggle), FeaturedModels, CategoryShortcuts
+/models
+Full catalog with filter sidebar
+FilterSidebar, ResultGrid, ResultCard, SortControl
+/models/:slug
+Model detail page
+SpecTable, CapabilityBadges, ProvenanceIndicator, DeploymentOptions, PricingTable, VersionLineage, CompareButton
+/compare?ids=
+v0.2 — side-by-side comparison
+ComparisonTable, RecommendationDelta (see Module 5)
+/organizations/:id
+Org rollup
+OrgHeader, ModelListByOrg
+3. Key Component Behaviors
+3.1 SearchBar
+Defaults to structured filter mode (dropdowns/chips for task, VRAM, license, offline), with a toggle to "describe what you need" free-text mode that hits the intent-parsing endpoint — per Module 3's decision to make structured filters the primary interface, not natural language.
+Filter state syncs to URL query params on every change (debounced), so refresh and back-button behave correctly and results are shareable.
+3.2 ResultCard
+Shows: name, developer/org, 1-line description, top 3 capability badges, final_score with a compact visual bar, and a one-sentence explainability string generated from the Ranking Engine's breakdown (Module 4 §4) — not the raw JSON, a templated plain sentence ("Best fit for coding tasks under 8GB VRAM").
+A small data-completeness chip (see Module 4 §6) so thin/unverified entries don't get silently presented with false confidence.
+3.3 ProvenanceIndicator
+Every field on the model detail page that has a verification_level renders a small colored dot/badge (official = solid navy, verified = solid blue, community = outline, experimental = dashed outline) with a hover tooltip showing source_url and last_verified_at. This is the direct UI expression of the trust system called for in the original doc and should not be treated as a cosmetic afterthought — it is the product's core differentiator.
+4. Design Direction
+Given your stated preference for distinctive, editorial design over generic SaaS templates (as seen in the portfolio site's GitHub-UI-inspired direction), the recommended visual language for Ground-Zero:
+Data-dense, technical-reference aesthetic (closer to a well-designed API docs site or PCPartPicker itself) rather than a marketing-site look — the audience is technical and values scanability over decoration.
+Monospace accents for technical values (VRAM, parameter counts, prices) mixed with a clean sans body font — signals precision without looking like a spreadsheet.
+Avoid heavy card-shadow, gradient-button, generic-SaaS patterns; favor flat color blocks, clear borders, and a restrained palette with one strong accent color reserved for scores/ranking only, so the eye learns to associate that color with "this is a ranked signal."
+5. Performance Considerations
+Server-render (or statically generate) model detail pages and comparison pages for SEO — "model X vs model Y" and "best model for X" are exactly the search queries this product should rank for; a pure client-side SPA forfeits that traffic.
+Virtualize the /models grid once the catalog exceeds a few hundred entries (react-window or similar) rather than rendering the full result set on every filter change.
+Given SEO needs, evaluate Next.js instead of pure Vite+React before Phase 1 frontend work starts — flagged here as an open decision since it changes hosting (Vercel becomes a stronger fit) and data-fetching patterns (server components vs. React Query) but doesn't change component design.
+Open decision:  Vite+React (simpler, faster dev loop, client-only) vs. Next.js (built-in SSR/SSG, better default SEO). Recommend Next.js given the comparison/detail pages are meant to be discoverable via search — flagged for your decision since it's a stack change from what the Overview doc initially lists.
+6. What Was Cut From v0.1 Frontend Scope
+Comparison page (ships with Module 5 in v0.2).
+User accounts / saved searches / "my shortlist" features — no login system exists until Phase 3's contribution layer needs one; don't build account UI ahead of that need.
+Any live in-browser editing UI for community contributions — v0.1 ships only a simple "report an issue" modal form, per Module 2 §7 and Module 7's phased rollout.
+
+========================================
+
+=== 07_Ground-Zero_Contribution_Versioning.docx ===
+GROUND-ZERO
+Contribution & Versioning Module
+Edit Proposals, Review Workflow, Verification Levels, Roles
+Module 7 of 7  |  v1.0
+
+1. What the Original Spec Got Right
+The proposal → validation → maintainer review → merge model, framed as "exactly like a pull request," is the correct trust mechanism and is kept as designed. The gap is that the original doc describes the workflow but not the roles, abuse handling, or rollout sequencing needed to actually launch it safely.
+2. Phased Rollout (Not All-At-Once)
+Phase
+What's live
+Why sequenced this way
+v0.1
+Read-only site. Anonymous "report an issue" form only — flags a field as disputed, doesn't propose a replacement value.
+Zero moderation infrastructure needed; still gives maintainers a signal on which fields are wrong without exposing an edit surface to abuse.
+v0.1.5
+"Report an issue" form upgraded to accept a suggested replacement value + source URL, still requires no account.
+Low-effort way to start collecting real correction data before building full account/role infrastructure.
+v0.2 / Phase 3
+Full account system, edit_proposals workflow, maintainer review queue UI, version history visible on model pages.
+Only worth the build cost once there's a userbase and enough traffic that self-service moderation actually saves more time than it costs.
+Why this matters:  The original doc's full workflow (roles, proposals, merges, version history) is a real project in itself — comparable in scope to the core catalog. Building it before the catalog has traffic means building moderation tooling for a community that doesn't exist yet. Sequence it after v0.1 proves people actually want the product.
+3. Roles
+Role
+Permissions
+Viewer (default, no account)
+Browse, search, compare, submit anonymous "report an issue"
+Contributor (registered account)
+Submit edit proposals with suggested values + sources; track own submission history
+Maintainer (invited/promoted)
+Approve/reject proposals; directly edit fields with immediate effect; assign verification_level
+Admin
+Manage users/roles; manage connector configs; access ingestion_runs and conflict logs
+Promotion path: Contributor → Maintainer should be based on an accepted-proposal track record (e.g. 10+ approved proposals with no rejections for factual errors), not a manual-only invite, so the review bottleneck doesn't fall entirely on one person as the catalog grows.
+4. Edit Proposal Workflow
+Contributor submits proposal  -> field_name, proposed_value, source_url, justification  -> Validation layer (Module 2 sec. 5) checks basic sanity  -> Enters edit_proposals as status='pending'  -> Maintainer reviews: approve / reject / request more info  -> On approve: models table updated, field_history row written,     sources/provenance row written with verification_level='community'     (or 'verified' if maintainer confirms the source directly)  -> Contributor notified of outcome
+Every approved change is visible on the model's public version history — who proposed it, who approved it, when, and why — exactly matching the original doc's transparency requirement.
+5. Verification Levels (Recap + UI Contract)
+Level
+Meaning
+Who can set it
+Official
+Published directly by the model's creator/organization
+Only via a confirmed official source (verified domain match or maintainer manual confirmation)
+Verified
+Confirmed by a maintainer against a reliable independent source
+Maintainer only
+Community
+Added/corrected by a contributor, reviewed but not independently source-confirmed
+Set automatically on maintainer-approved contributor proposals
+Experimental
+Reported but not yet reviewed at all
+Default for anonymous "report an issue" submissions (v0.1/v0.1.5)
+6. Abuse & Spam Handling (Missing from Original Spec)
+Rate-limit anonymous submissions per IP (v0.1/v0.1.5) — e.g. max 10 report submissions per hour per IP, generous enough for genuine use, tight enough to blunt scripted spam.
+Registered-account proposal rate limits scale with reputation — new accounts capped low (prevents mass fake-account submission floods), track record raises the cap.
+Any proposal that would change a field already at official or verified level requires a stronger justification bar (a live source URL check, not just free text) before it's even queued for maintainer review — makes it harder to bury a false correction to a well-verified field among a batch of legitimate ones.
+Self-submitted model entries (an organization or developer adding their own model) are flagged distinctly in the UI ("submitted by creator") rather than blended in as anonymous community data — transparency about self-interest, not a ban on it.
+7. Rollback & Audit
+field_history is append-only and never edited/deleted — it is the audit trail the trust model depends on.
+Any maintainer can revert a field to a prior field_history value in one action; the revert itself is logged as a new history entry, not a silent rewrite.
+Admins can review a per-user contribution history to catch a bad-faith account operating across many small "reasonable-looking" edits rather than one obvious act of vandalism.
+8. What Was Deliberately Left Out
+Public leaderboards for top contributors — gameable and encourages volume over accuracy; if added later, weight it by approval rate, not raw submission count.
+Full wiki-style direct-edit-then-review-after model (edit goes live immediately, gets reverted if wrong) — too high-risk for a product whose entire value proposition is data trustworthiness; propose-then-review is slower but correct for this specific use case, unlike a general wiki where speed matters more.
+
+========================================
+

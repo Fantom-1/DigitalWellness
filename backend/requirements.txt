@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+SQLAlchemy[asyncio]
+asyncpg
+pgvector
+alembic
+huggingface-hub
+apscheduler
+python-dotenv
+google-generativeai
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+beautifulsoup4
+requests
