@@ -1,8 +1,21 @@
 import os
 import json
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+
+try:
+    from google import genai
+    from google.genai import types
+    GENAI_AVAILABLE = True
+except ImportError:
+    try:
+        import google.generativeai as genai
+        types = None
+        GENAI_AVAILABLE = False
+    except ImportError:
+        genai = None
+        types = None
+        GENAI_AVAILABLE = False
+
 from seed_data import RESOURCES, GUIDES
 
 env_path = os.path.join(os.path.dirname(__file__), ".env")
@@ -57,7 +70,14 @@ You MUST respond strictly in valid JSON format with this exact structure:
 
 class WellnessAdvisor:
     def __init__(self):
-        self.client = genai.Client(api_key=api_key) if api_key else None
+        if api_key and GENAI_AVAILABLE and hasattr(genai, "Client"):
+            try:
+                self.client = genai.Client(api_key=api_key)
+            except Exception as e:
+                print(f"Warning: Failed to initialize Gemini Client: {e}")
+                self.client = None
+        else:
+            self.client = None
 
     async def get_advice(self, user_message: str, history: list = None, preferred_platform: str = None) -> dict:
         context_query = user_message

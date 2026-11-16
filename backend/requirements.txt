@@ -9,6 +9,7 @@ alembic
 huggingface-hub
 apscheduler
 python-dotenv
+google-genai
 google-generativeai
 passlib[bcrypt]
 python-jose[cryptography]
