@@ -5,8 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, or_, cast, String
 from sqlalchemy.dialects.postgresql import JSONB
 
-from database import get_db, engine, Base
+from database import get_db, engine, Base, AsyncSessionLocal
 from models import WellnessResource, SetupGuide, StudentSubmission
+from seed_data import RESOURCES, GUIDES
 from schemas import (
     WellnessResourceResponse,
     ResourceListResponse,
@@ -17,6 +18,7 @@ from schemas import (
     ChatResponse
 )
 from wellness_advisor import wellness_advisor
+from sqlalchemy import text
 
 from contextlib import asynccontextmanager
 
@@ -24,6 +26,62 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        for col_sql in [
+            "ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS image_url TEXT;",
+            "ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS video_tutorial_url TEXT;",
+            "ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS documentation_url TEXT;",
+            "ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS extension_url TEXT;",
+            "ALTER TABLE setup_guides ADD COLUMN IF NOT EXISTS video_url TEXT;",
+        ]:
+            try:
+                await conn.execute(text(col_sql))
+            except Exception:
+                pass
+
+    async with AsyncSessionLocal() as session:
+        for r in RESOURCES:
+            existing = await session.execute(select(WellnessResource).where(WellnessResource.slug == r["slug"]))
+            if not existing.scalar_one_or_none():
+                session.add(WellnessResource(
+                    name=r["name"],
+                    slug=r["slug"],
+                    tagline=r["tagline"],
+                    description=r["description"],
+                    category=r["category"],
+                    developer_or_team=r["developer_or_team"],
+                    official_url=r["official_url"],
+                    repository_url=r["repository_url"],
+                    platforms=r["platforms"],
+                    pricing_type=r["pricing_type"],
+                    price_details=r["price_details"],
+                    purpose=r["purpose"],
+                    privacy_rating=r["privacy_rating"],
+                    privacy_details=r["privacy_details"],
+                    accessibility_features=r["accessibility_features"],
+                    limitations=r["limitations"],
+                    verified_date=r["verified_date"],
+                    student_rating=r["student_rating"],
+                    image_url=r.get("image_url"),
+                    video_tutorial_url=r.get("video_tutorial_url"),
+                    documentation_url=r.get("documentation_url"),
+                    extension_url=r.get("extension_url")
+                ))
+        for g in GUIDES:
+            existing_g = await session.execute(select(SetupGuide).where(SetupGuide.slug == g["slug"]))
+            if not existing_g.scalar_one_or_none():
+                session.add(SetupGuide(
+                    slug=g["slug"],
+                    title=g["title"],
+                    summary=g["summary"],
+                    category=g["category"],
+                    target_platforms=g["target_platforms"],
+                    estimated_minutes=g["estimated_minutes"],
+                    difficulty=g["difficulty"],
+                    video_url=g.get("video_url"),
+                    steps=g["steps"],
+                    key_takeaways=g["key_takeaways"]
+                ))
+        await session.commit()
     yield
 
 app = FastAPI(
