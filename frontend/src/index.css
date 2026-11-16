@@ -13,6 +13,71 @@
   }
 }
 
+/* ========================================================
+   Apple macOS-Style Minimalist & Auto-Hiding Scrollbars
+   Invisible by default, smoothly reveals subtle pill on scroll or hover.
+   ======================================================== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Visible-when-required auto-scrollbar */
+.apple-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.25s ease;
+}
+
+.apple-scrollbar:hover,
+.apple-scrollbar:focus,
+.apple-scrollbar:active {
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.apple-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.apple-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.apple-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+  transition: background-color 0.25s ease;
+}
+
+.apple-scrollbar:hover::-webkit-scrollbar-thumb,
+.apple-scrollbar:focus-within::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.apple-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
 @layer components {
   /* Comet border spinner */
   .comet-spinner {
@@ -61,7 +126,7 @@
     z-index: 0;
   }
 
-  /* When the text area is focused, we boost the glow via a wrapper class */
+  /* Boosted glow on focus */
   .panel-focused .comet-spinner {
     background: conic-gradient(
       from 0deg,

@@ -22,6 +22,8 @@ class WellnessResourceBase(BaseModel):
     limitations: str
     verified_date: str
     student_rating: Optional[float] = 4.8
+    image_url: Optional[str] = None
+    video_tutorial_url: Optional[str] = None
 
 class WellnessResourceResponse(WellnessResourceBase):
     id: UUID
@@ -42,6 +44,7 @@ class SetupGuideResponse(BaseModel):
     target_platforms: List[str]
     estimated_minutes: int
     difficulty: str
+    video_url: Optional[str] = None
     steps: List[dict]
     key_takeaways: List[str]
 

@@ -4,12 +4,16 @@ import os
 from database import engine, Base, AsyncSessionLocal
 from models import WellnessResource, SetupGuide
 from seed_data import RESOURCES, GUIDES
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, text
 
 async def seed():
     print("Connecting to database and creating tables if missing...")
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Ensure new columns exist on existing tables
+        await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS image_url TEXT;"))
+        await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS video_tutorial_url TEXT;"))
+        await conn.execute(text("ALTER TABLE setup_guides ADD COLUMN IF NOT EXISTS video_url TEXT;"))
 
     async with AsyncSessionLocal() as session:
         # Clear existing wellness data to prevent duplicates
@@ -39,6 +43,8 @@ async def seed():
                 limitations=r["limitations"],
                 verified_date=r["verified_date"],
                 student_rating=r["student_rating"],
+                image_url=r.get("image_url"),
+                video_tutorial_url=r.get("video_tutorial_url"),
                 embedding=None
             )
             session.add(resource)
@@ -53,6 +59,7 @@ async def seed():
                 target_platforms=g["target_platforms"],
                 estimated_minutes=g["estimated_minutes"],
                 difficulty=g["difficulty"],
+                video_url=g.get("video_url"),
                 steps=g["steps"],
                 key_takeaways=g["key_takeaways"]
             )

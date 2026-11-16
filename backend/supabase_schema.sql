@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS wellness_resources (
     limitations TEXT NOT NULL,
     verified_date VARCHAR(50) NOT NULL DEFAULT '2026-11-16',
     student_rating NUMERIC(2, 1) DEFAULT 4.8,
+    image_url TEXT,
+    video_tutorial_url TEXT,
     embedding vector(768)
 );
 
@@ -49,6 +51,7 @@ CREATE TABLE IF NOT EXISTS setup_guides (
     target_platforms JSONB NOT NULL DEFAULT '[]'::jsonb,
     estimated_minutes INTEGER DEFAULT 10,
     difficulty VARCHAR(50) DEFAULT 'Beginner',
+    video_url TEXT,
     steps JSONB NOT NULL DEFAULT '[]'::jsonb,
     key_takeaways JSONB NOT NULL DEFAULT '[]'::jsonb
 );

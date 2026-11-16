@@ -32,9 +32,11 @@ with open(output_path, "w", encoding="utf-8") as f:
         limitations = r["limitations"].replace("'", "''")
         verified_date = r["verified_date"].replace("'", "''")
         student_rating = r["student_rating"]
+        img_url = f"'{r['image_url']}'" if r.get('image_url') else "NULL"
+        vid_url = f"'{r['video_tutorial_url']}'" if r.get('video_tutorial_url') else "NULL"
         
         f.write(
-            f"INSERT INTO wellness_resources (slug, name, tagline, description, category, developer_or_team, official_url, repository_url, platforms, pricing_type, price_details, purpose, privacy_rating, privacy_details, accessibility_features, limitations, verified_date, student_rating) VALUES ('{slug}', '{name}', '{tagline}', '{desc}', '{cat}', '{dev}', '{off_url}', {rep_url}, '{platforms}'::jsonb, '{pricing_type}', '{price_details}', '{purpose}', '{privacy_rating}', '{privacy_details}', '{accessibility}', '{limitations}', '{verified_date}', {student_rating});\n"
+            f"INSERT INTO wellness_resources (slug, name, tagline, description, category, developer_or_team, official_url, repository_url, platforms, pricing_type, price_details, purpose, privacy_rating, privacy_details, accessibility_features, limitations, verified_date, student_rating, image_url, video_tutorial_url) VALUES ('{slug}', '{name}', '{tagline}', '{desc}', '{cat}', '{dev}', '{off_url}', {rep_url}, '{platforms}'::jsonb, '{pricing_type}', '{price_details}', '{purpose}', '{privacy_rating}', '{privacy_details}', '{accessibility}', '{limitations}', '{verified_date}', {student_rating}, {img_url}, {vid_url});\n"
         )
         
     f.write("\n\n")
@@ -46,11 +48,12 @@ with open(output_path, "w", encoding="utf-8") as f:
         platforms = json.dumps(g["target_platforms"]).replace("'", "''")
         est_min = g["estimated_minutes"]
         diff = g["difficulty"].replace("'", "''")
+        guide_vid = f"'{g['video_url']}'" if g.get('video_url') else "NULL"
         steps = json.dumps(g["steps"]).replace("'", "''")
         takeaways = json.dumps(g["key_takeaways"]).replace("'", "''")
         
         f.write(
-            f"INSERT INTO setup_guides (slug, title, summary, category, target_platforms, estimated_minutes, difficulty, steps, key_takeaways) VALUES ('{slug}', '{title}', '{summary}', '{category}', '{platforms}'::jsonb, {est_min}, '{diff}', '{steps}'::jsonb, '{takeaways}'::jsonb);\n"
+            f"INSERT INTO setup_guides (slug, title, summary, category, target_platforms, estimated_minutes, difficulty, video_url, steps, key_takeaways) VALUES ('{slug}', '{title}', '{summary}', '{category}', '{platforms}'::jsonb, {est_min}, '{diff}', {guide_vid}, '{steps}'::jsonb, '{takeaways}'::jsonb);\n"
         )
 
 print("Generated supabase_seed.sql successfully!")

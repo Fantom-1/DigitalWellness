@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, ShieldCheck, Check } from 'lucide-react';
+import { Clock, ShieldCheck, Check, Play, ExternalLink, Terminal } from 'lucide-react';
 
 export default function SetupGuides({ guides }) {
   const [selectedGuideIndex, setSelectedGuideIndex] = useState(0);
@@ -37,7 +37,7 @@ export default function SetupGuides({ guides }) {
             >
               <div className="flex items-center justify-between mb-3 w-full">
                 <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-                  0{idx + 1}
+                  Protocol 0{idx + 1}
                 </span>
                 <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-zinc-400">
                   {guide.estimated_minutes} min
@@ -67,7 +67,7 @@ export default function SetupGuides({ guides }) {
             <p className="text-sm text-zinc-400 mt-1 font-light leading-relaxed max-w-2xl">{currentGuide.summary}</p>
           </div>
 
-          <div className="flex flex-wrap gap-2 text-xs">
+          <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-zinc-400">
               <Clock size={12} />
               {currentGuide.estimated_minutes} Minutes
@@ -79,19 +79,30 @@ export default function SetupGuides({ guides }) {
             <span className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-zinc-300 font-mono text-[11px]">
               {currentGuide.target_platforms.join(', ')}
             </span>
+            {currentGuide.video_url && (
+              <a
+                href={currentGuide.video_url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black hover:bg-zinc-200 font-medium transition-colors"
+              >
+                <Play size={11} fill="currentColor" />
+                <span>Video Tutorial</span>
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Steps */}
+        {/* Sequential Steps with Visual Wireframes */}
         <div className="mt-8 space-y-4">
           <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-            Sequential Instructions
+            Sequential Instructions & Device Wireframes
           </h4>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {currentGuide.steps.map((step) => (
               <div
                 key={step.step_number}
-                className="bg-white/[0.015] border border-white/5 rounded-2xl p-5"
+                className="bg-white/[0.015] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-xs font-semibold text-white shrink-0 mt-0.5">
@@ -102,6 +113,15 @@ export default function SetupGuides({ guides }) {
                     <p className="text-xs text-zinc-300 font-light mt-1.5 leading-relaxed">
                       {step.description}
                     </p>
+
+                    {/* Device Wireframe Flow */}
+                    {step.wireframe && (
+                      <div className="mt-3 p-2.5 bg-black/40 border border-white/[0.06] rounded-xl flex items-center gap-2 text-[11px] font-mono text-zinc-400 overflow-x-auto apple-scrollbar">
+                        <Terminal size={12} className="text-zinc-500 shrink-0" />
+                        <span className="whitespace-nowrap">{step.wireframe}</span>
+                      </div>
+                    )}
+
                     {step.tip && (
                       <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-xs text-zinc-400 flex items-start gap-2">
                         <span className="font-semibold text-zinc-200">Note:</span>

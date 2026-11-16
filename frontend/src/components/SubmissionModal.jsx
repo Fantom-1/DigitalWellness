@@ -44,7 +44,7 @@ export default function SubmissionModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#0c0c0e] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl text-left overflow-hidden">
+      <div className="relative w-full max-w-lg bg-[#0c0c0e] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl text-left overflow-y-auto max-h-[90vh] apple-scrollbar">
         
         <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
           <div>

@@ -2,6 +2,7 @@
 Comprehensive curated dataset of 12 Student Digital Wellness Resources
 and 3 Practical Student Setup Guides.
 Checked and verified against official product specs as of November 2026.
+Enriched with UI screenshot previews and YouTube video tutorial walkthroughs.
 """
 
 RESOURCES = [
@@ -23,7 +24,9 @@ RESOURCES = [
         "accessibility_features": "High contrast theme, full keyboard navigation shortcuts, clean system font scaling.",
         "limitations": "Desktop only (no iOS or Android companion app). Frozen Turkey mode cannot be undone even by restarting the machine or terminating tasks.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.9
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Cold+Turkey+Blocker+setup+guide+for+students"
     },
     {
         "name": "Freedom",
@@ -43,7 +46,9 @@ RESOURCES = [
         "accessibility_features": "VoiceOver and TalkBack support, custom ambient focus sounds (cafe, library, rain).",
         "limitations": "Strictly requires paid subscription after 7 trial sessions; local VPN loopback can occasionally conflict with campus Wi-Fi authentication portals.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.7
+        "student_rating": 4.7,
+        "image_url": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Freedom+app+blocker+tutorial+walkthrough"
     },
     {
         "name": "One Sec",
@@ -63,7 +68,9 @@ RESOURCES = [
         "accessibility_features": "Haptic pulse cues for breathing pacing, visual expansion animations, high-contrast dark mode.",
         "limitations": "Setup on iOS requires configuring Apple Shortcuts automation; determined users can still tap through after the mandatory breath.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.8
+        "student_rating": 4.8,
+        "image_url": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=One+Sec+app+shortcuts+setup+tutorial+ios"
     },
     {
         "name": "Forest",
@@ -83,7 +90,9 @@ RESOURCES = [
         "accessibility_features": "Relaxing ambient audio (forest rain, camp fire, white noise), large countdown timer.",
         "limitations": "Relies purely on psychological guilt and gamification; does not strictly block phone settings or browser navigation on desktop.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.6
+        "student_rating": 4.6,
+        "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Forest+app+pomodoro+study+tutorial"
     },
     {
         "name": "Opal",
@@ -103,7 +112,9 @@ RESOURCES = [
         "accessibility_features": "Dynamic Island live activity widgets, Apple Watch companion, clean minimalist iOS aesthetic.",
         "limitations": "High Pro subscription pricing; Deep Focus lockout mode cannot be canceled even for legitimate sudden school needs unless a break was pre-configured.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.5
+        "student_rating": 4.5,
+        "image_url": "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Opal+screen+time+deep+focus+tutorial"
     },
     {
         "name": "Unhook - Remove YouTube Distractions",
@@ -123,7 +134,9 @@ RESOURCES = [
         "accessibility_features": "High-contrast dark mode support, individual toggle switches for feeds, comments, and shorts.",
         "limitations": "Browser-only extension (desktop browsers and Firefox for Android); cannot control the native YouTube mobile application on iOS or Android.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.9
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Unhook+youtube+extension+setup+tutorial"
     },
     {
         "name": "uBlock Origin",
@@ -143,7 +156,9 @@ RESOURCES = [
         "accessibility_features": "Keyboard accessible, high-contrast matrix view, clean readable statistics dashboard.",
         "limitations": "Google Chrome Manifest V3 updates have degraded dynamic filtering capabilities on Chrome; best experienced on Firefox.",
         "verified_date": "2026-11-16",
-        "student_rating": 5.0
+        "student_rating": 5.0,
+        "image_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=uBlock+Origin+element+zapper+tutorial+student+guide"
     },
     {
         "name": "StayFree - Screen Time & App Blocker",
@@ -163,7 +178,9 @@ RESOURCES = [
         "accessibility_features": "Color-coded usage categories, large text accessibility, dark mode, CSV data export.",
         "limitations": "On Android, aggressive OEM battery management (Samsung, Xiaomi, Oppo) will terminate background tracking unless manually whitelisted.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.7
+        "student_rating": 4.7,
+        "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=StayFree+screen+time+app+limits+tutorial"
     },
     {
         "name": "LeechBlock NG",
@@ -183,7 +200,9 @@ RESOURCES = [
         "accessibility_features": "Simple tabular interface, keyboard navigation, password/math equation override option.",
         "limitations": "Browser-level only; does not block desktop apps or mobile devices. Determined users can switch to an alternate browser if not locked down.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.7
+        "student_rating": 4.7,
+        "image_url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=LeechBlock+NG+setup+guide+tutorial"
     },
     {
         "name": "Olauncher (Minimal AF Launcher)",
@@ -203,7 +222,9 @@ RESOURCES = [
         "accessibility_features": "Custom font sizing, high-contrast monochrome mode, rapid alphabetical search gestures.",
         "limitations": "Android exclusive. Apple iOS does not allow replacing the native Springboard home screen launcher.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.9
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Olauncher+minimalist+android+setup+walkthrough"
     },
     {
         "name": "Sleep as Android & Apple Sleep Routine",
@@ -223,7 +244,9 @@ RESOURCES = [
         "accessibility_features": "Gentle sunrise light alarm simulation, custom vibration patterns, soothing binaural lullabies.",
         "limitations": "Requires placing the phone near your bed for sonar tracking; aggressive wake-up CAPTCHA tasks can be frustrating during genuine emergencies.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.6
+        "student_rating": 4.6,
+        "image_url": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Sleep+as+Android+smart+alarm+qr+code+setup"
     },
     {
         "name": "Signal Private Messenger",
@@ -243,7 +266,9 @@ RESOURCES = [
         "accessibility_features": "Full screen-reader compatibility, customizable text sizes, voice note speed adjustments (1x, 1.5x, 2x).",
         "limitations": "Requires phone number verification during initial sign-up; all project group members must download the app.",
         "verified_date": "2026-11-16",
-        "student_rating": 4.9
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube.com/results?search_query=Signal+private+messenger+setup+walkthrough"
     }
 ]
 
@@ -256,30 +281,35 @@ GUIDES = [
         "target_platforms": ["iOS", "macOS"],
         "estimated_minutes": 10,
         "difficulty": "Beginner",
+        "video_url": "https://www.youtube.com/results?search_query=How+to+lock+screen+time+on+iphone+without+bypassing",
         "steps": [
             {
                 "step_number": 1,
                 "title": "Establish an External Accountability Passcode",
                 "description": "Go to Settings > Screen Time > Lock Screen Time Settings. Have a roommate, parent, or study partner set a 4-digit PIN you do not know, or write a random PIN on paper and place it inside a sealed envelope across the room.",
-                "tip": "Never use your device unlock PIN, as muscle memory will override it."
+                "tip": "Never use your device unlock PIN, as muscle memory will override it.",
+                "wireframe": "Settings > Screen Time > Lock Screen Time Settings > Set 4-digit PIN"
             },
             {
                 "step_number": 2,
                 "title": "Configure Scheduled Downtime",
                 "description": "In Screen Time > Downtime, turn on 'Scheduled'. Set downtime from 10:30 PM to 7:00 AM every school night. Toggle 'Block at Downtime' ON.",
-                "tip": "During downtime, only phone calls and pre-selected essential apps (Maps, Notes, Calculator) remain open."
+                "tip": "During downtime, only phone calls and pre-selected essential apps (Maps, Notes, Calculator) remain open.",
+                "wireframe": "Screen Time > Downtime > Scheduled (10:30 PM - 7:00 AM) > Block at Downtime: ON"
             },
             {
                 "step_number": 3,
                 "title": "Enforce App Category Limits with Hard Block",
                 "description": "Navigate to App Limits > Add Limit. Select 'Social' and 'Games'. Set daily limit to 45 minutes and critically toggle 'Block at End of Limit' to ON. This disables the 'Ignore Limit for 15 Minutes' bypass option.",
-                "tip": "Without the passcode, iOS will show an impassable time limit screen."
+                "tip": "Without the passcode, iOS will show an impassable time limit screen.",
+                "wireframe": "App Limits > Add Limit > Social & Games > 45 mins > Block at End of Limit: ON"
             },
             {
                 "step_number": 4,
                 "title": "Automate Circadian Grayscale Transition",
                 "description": "Open Apple Shortcuts > Automation > Create Personal Automation > Time of Day (e.g. 10:00 PM). Add action 'Set Color Filters' to ON. Colors become black & white, neutralizing dopamine pulls from late-night feeds.",
-                "tip": "Triple-click the side button via Accessibility Shortcuts to toggle it back when reading diagrams."
+                "tip": "Triple-click the side button via Accessibility Shortcuts to toggle it back when reading diagrams.",
+                "wireframe": "Shortcuts > Automation > 10:00 PM Daily > Action: Set Color Filters to ON"
             }
         ],
         "key_takeaways": [
@@ -296,30 +326,35 @@ GUIDES = [
         "target_platforms": ["macOS", "Windows", "Chrome", "Firefox"],
         "estimated_minutes": 12,
         "difficulty": "Intermediate",
+        "video_url": "https://www.youtube.com/results?search_query=Unhook+and+Cold+Turkey+study+setup+desktop",
         "steps": [
             {
                 "step_number": 1,
                 "title": "Install Unhook Extension for Clean Research",
                 "description": "Install the Unhook extension on your primary browser. Open YouTube and enable: Hide Home Feed, Hide Recommended Videos Sidebar, and Hide Shorts. YouTube is now a pure search engine for lecture materials without recommended clickbait.",
-                "tip": "You can still search for and watch any video without distraction."
+                "tip": "You can still search for and watch any video without distraction.",
+                "wireframe": "Browser Extension > Unhook > Toggle: Hide Home Feed, Hide Sidebar, Hide Shorts"
             },
             {
                 "step_number": 2,
                 "title": "Deploy uBlock Origin & Custom Distraction Filters",
                 "description": "Install uBlock Origin. Open its dashboard, click the 'Element Zapper' (lightning bolt) or 'Element Picker' (dropper) to select and permanently hide sticky headers, distracting news widgets, or comment sections on study websites.",
-                "tip": "uBlock Origin uses zero memory overhead compared to commercial adblockers."
+                "tip": "uBlock Origin uses zero memory overhead compared to commercial adblockers.",
+                "wireframe": "uBlock Origin Dashboard > Element Picker Mode > Select Distracting Banner > Zap"
             },
             {
                 "step_number": 3,
                 "title": "Set Up Cold Turkey Blocker with Locked Pomodoros",
                 "description": "Download Cold Turkey Blocker. Create a blocklist containing your top 5 distraction sites (Reddit, Twitter, Steam, Discord). Set a 90-minute study timer with 'Lock' enabled.",
-                "tip": "Once locked, even restarting your PC will not disable the block."
+                "tip": "Once locked, even restarting your PC will not disable the block.",
+                "wireframe": "Cold Turkey > Block Lists: Study Sprint > Timer: 90 mins > Lock Mode: ON"
             },
             {
                 "step_number": 4,
                 "title": "Configure OS Focus Assist / Do Not Disturb",
                 "description": "On Windows: Settings > System > Focus > Start Focus Session (links to Spotify study playlist and mutes notifications). On Mac: Control Center > Focus > Set a 90-minute Deep Work filter.",
-                "tip": "Whitelisting close family emergency phone calls ensures safety while muting group chats."
+                "tip": "Whitelisting close family emergency phone calls ensures safety while muting group chats.",
+                "wireframe": "OS Settings > System > Focus Session > Mute Notifications > 90 mins"
             }
         ],
         "key_takeaways": [
@@ -336,30 +371,35 @@ GUIDES = [
         "target_platforms": ["Android", "iOS"],
         "estimated_minutes": 8,
         "difficulty": "Beginner",
+        "video_url": "https://www.youtube.com/results?search_query=Sleep+hygiene+phone+grayscale+routine+students",
         "steps": [
             {
                 "step_number": 1,
                 "title": "Schedule Sunset Blue-Light Filtration",
                 "description": "On iOS: Settings > Display & Brightness > Night Shift > Scheduled (Sunset to Sunrise) and set Color Temperature to 'More Warm'. On Android: Settings > Display > Night Light / Eye Comfort Shield > Schedule.",
-                "tip": "Blue light suppresses melatonin synthesis; warming screen temperature protects your sleep drive."
+                "tip": "Blue light suppresses melatonin synthesis; warming screen temperature protects your sleep drive.",
+                "wireframe": "Display Settings > Night Shift / Eye Comfort > Schedule: Sunset to Sunrise > Warm: Max"
             },
             {
                 "step_number": 2,
                 "title": "Configure Bedtime Do Not Disturb Automation",
                 "description": "Enable Bedtime Mode / Sleep Focus. Set it to activate 45 minutes before your target sleep time (e.g. 11:15 PM). Set phone wallpaper to dim and restrict lock screen notification wakeups.",
-                "tip": "Allow 'Repeated Calls' to ring through so urgent family matters can always reach you."
+                "tip": "Allow 'Repeated Calls' to ring through so urgent family matters can always reach you.",
+                "wireframe": "Focus / Do Not Disturb > Sleep Schedule: 11:15 PM - 7:00 AM > Dim Lock Screen: ON"
             },
             {
                 "step_number": 3,
                 "title": "Establish an Out-of-Reach Charging Zone",
                 "description": "Buy a 3-meter phone charging cord or move your existing charger across the bedroom (on a desk or dresser) rather than on your bedside table.",
-                "tip": "Physical separation breaks the impulse to reach for your phone during micro-awakenings."
+                "tip": "Physical separation breaks the impulse to reach for your phone during micro-awakenings.",
+                "wireframe": "Physical Environment > Bedside Table: Clear > Charger: Opposite Corner of Bedroom"
             },
             {
                 "step_number": 4,
                 "title": "Activate Captive QR-Code Wake-Up Alarm",
                 "description": "Use Sleep as Android or Alarmy. Print a small QR code and tape it next to your bathroom sink or coffee machine. Set the morning alarm to require scanning that specific code to shut off.",
-                "tip": "Physical movement to the bathroom immediately dispels morning sleep inertia."
+                "tip": "Physical movement to the bathroom immediately dispels morning sleep inertia.",
+                "wireframe": "Alarm Settings > Dismiss Task: QR Code > Code Location: Bathroom Sink"
             }
         ],
         "key_takeaways": [
@@ -369,4 +409,3 @@ GUIDES = [
         ]
     }
 ]
-

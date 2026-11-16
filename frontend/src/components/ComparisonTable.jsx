@@ -50,7 +50,7 @@ export default function ComparisonTable({ resources, onSelectResource }) {
 
       {/* Table Container */}
       <div className="bg-[#0c0c0e] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto apple-scrollbar">
           <table className="w-full text-xs text-left">
             <thead className="bg-white/[0.02] text-zinc-400 uppercase text-[10px] tracking-wider border-b border-white/10 font-medium">
               <tr>

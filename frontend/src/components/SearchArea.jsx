@@ -347,7 +347,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             </div>
 
             {/* Platform Filter */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 apple-scrollbar">
               {['all', 'macOS', 'iOS', 'Windows', 'Android', 'Chrome'].map((plat) => (
                 <button
                   key={plat}
@@ -394,42 +394,60 @@ export default function SearchArea({ activeTab, setActiveTab }) {
               <div
                 key={item.id}
                 onClick={() => setSelectedTool(item)}
-                className="bg-[#0c0c0e] border border-white/5 hover:border-white/20 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer group shadow-sm"
+                className="bg-[#0c0c0e] border border-white/5 hover:border-white/20 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-200 cursor-pointer group shadow-sm"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-                      {item.category.replace('_', ' ')}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-zinc-400">
-                      {item.pricing_type}
-                    </span>
-                  </div>
-
-                  <h3 className="font-semibold text-white text-base group-hover:text-zinc-200 transition-colors">
-                    {item.name}
-                  </h3>
-                  
-                  <p className="text-xs text-zinc-400 mt-2 line-clamp-2 font-light leading-relaxed">
-                    {item.tagline || item.description}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-3 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-500">
-                  <div className="flex gap-1">
-                    {item.platforms.slice(0, 3).map((p) => (
-                      <span key={p} className="px-1.5 py-0.5 rounded bg-white/5 text-zinc-400 text-[10px]">
-                        {p}
+                {/* Visual Thumbnail Wireframe Preview */}
+                {item.image_url && (
+                  <div className="w-full h-36 relative overflow-hidden bg-zinc-900 border-b border-white/[0.04]">
+                    <img 
+                      src={item.image_url} 
+                      alt={item.name} 
+                      className="w-full h-full object-cover opacity-75 group-hover:opacity-95 group-hover:scale-105 transition-all duration-300"
+                    />
+                    {item.video_tutorial_url && (
+                      <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] text-zinc-300 border border-white/10 font-mono">
+                        Tutorial Video
                       </span>
-                    ))}
-                    {item.platforms.length > 3 && (
-                      <span className="text-[10px] text-zinc-500">+{item.platforms.length - 3}</span>
                     )}
                   </div>
+                )}
 
-                  <span className="group-hover:text-white transition-colors">
-                    Inspect →
-                  </span>
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                        {item.category.replace('_', ' ')}
+                      </span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-zinc-400">
+                        {item.pricing_type}
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold text-white text-base group-hover:text-zinc-200 transition-colors">
+                      {item.name}
+                    </h3>
+                    
+                    <p className="text-xs text-zinc-400 mt-2 line-clamp-2 font-light leading-relaxed">
+                      {item.tagline || item.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 pt-3 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-500">
+                    <div className="flex gap-1">
+                      {item.platforms.slice(0, 3).map((p) => (
+                        <span key={p} className="px-1.5 py-0.5 rounded bg-white/5 text-zinc-400 text-[10px]">
+                          {p}
+                        </span>
+                      ))}
+                      {item.platforms.length > 3 && (
+                        <span className="text-[10px] text-zinc-500">+{item.platforms.length - 3}</span>
+                      )}
+                    </div>
+
+                    <span className="group-hover:text-white transition-colors">
+                      Inspect →
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}

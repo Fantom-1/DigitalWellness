@@ -36,6 +36,8 @@ class WellnessResource(Base):
     limitations = Column(Text, nullable=False)
     verified_date = Column(String, nullable=False, default="2026-11-16")
     student_rating = Column(Numeric(2, 1), default=4.8)
+    image_url = Column(String, nullable=True)
+    video_tutorial_url = Column(String, nullable=True)
     
     # Vector embedding for semantic search & RAG (768-dim for Gemini embeddings)
     if HAS_PGVECTOR:
@@ -54,6 +56,7 @@ class SetupGuide(Base):
     target_platforms = Column(JSONB, nullable=False, default=list)
     estimated_minutes = Column(Integer, default=10)
     difficulty = Column(String, default="Beginner")  # Beginner, Intermediate, Advanced
+    video_url = Column(String, nullable=True)
     steps = Column(JSONB, nullable=False, default=list)  # list of {"step_number": 1, "title": "...", "description": "...", "tip": "..."}
     key_takeaways = Column(JSONB, nullable=False, default=list)
 
