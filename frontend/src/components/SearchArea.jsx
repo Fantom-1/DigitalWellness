@@ -148,6 +148,31 @@ const CAROUSEL_PAGES = [
   DISTRACTION_SOLUTIONS.slice(15, 18),
 ];
 
+function GeminiLogo({ className = "w-3.5 h-3.5" }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="gemini-sparkle-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#1B73E8" />
+          <stop offset="35%" stopColor="#7B56E4" />
+          <stop offset="70%" stopColor="#D946EF" />
+          <stop offset="100%" stopColor="#FA5252" />
+        </linearGradient>
+      </defs>
+      <path 
+        d="M12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24Z" 
+        fill="url(#gemini-sparkle-gradient)" 
+      />
+    </svg>
+  );
+}
+
 function renderInlineMarkdown(text) {
   if (!text) return '';
   const parts = text.split(/(\*\*.*?\*\*)/g);
@@ -460,9 +485,10 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   />
 
                   <div className="flex justify-between items-center mt-3 pt-3 border-t border-black/[0.04] px-1">
-                    <span className="text-[11px] font-mono text-zinc-400">
-                      Powered by Gemini
-                    </span>
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                      <GeminiLogo className="w-3.5 h-3.5 shrink-0" />
+                      <span>Powered by Gemini</span>
+                    </div>
 
                     <button 
                       onClick={() => handleSendChat()}
@@ -766,9 +792,10 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                     />
 
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-black/[0.04]">
-                      <span className="text-[11px] font-mono text-zinc-400">
-                        Powered by Gemini
-                      </span>
+                      <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                        <GeminiLogo className="w-3.5 h-3.5 shrink-0" />
+                        <span>Powered by Gemini</span>
+                      </div>
 
                       <button 
                         onClick={() => handleSendChat()}
