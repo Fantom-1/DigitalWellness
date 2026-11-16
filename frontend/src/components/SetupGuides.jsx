@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, ShieldCheck, Check, Play, X, Terminal } from 'lucide-react';
 import { getYouTubeEmbedUrl } from '../utils';
 
-export default function SetupGuides({ guides }) {
+export default function SetupGuides({ guides, selectedGuideSlug }) {
   const [selectedGuideIndex, setSelectedGuideIndex] = useState(0);
   const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+    if (selectedGuideSlug && guides && guides.length > 0) {
+      const idx = guides.findIndex(g => g.slug === selectedGuideSlug);
+      if (idx !== -1) {
+        setSelectedGuideIndex(idx);
+        setShowVideo(false);
+      }
+    }
+  }, [selectedGuideSlug, guides]);
 
   if (!guides || guides.length === 0) return null;
   const currentGuide = guides[selectedGuideIndex] || guides[0];

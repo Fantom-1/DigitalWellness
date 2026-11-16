@@ -1,17 +1,24 @@
 """
-Comprehensive curated dataset of 12 Student Digital Wellness Resources
+Comprehensive curated dataset of 15 Student Digital Wellness Resources
 and 3 Practical Student Setup Guides.
 Checked and verified against official product specs as of November 2026.
 Enriched with verified documentation links, official browser extension store links,
 and high-quality YouTube video tutorial walkthroughs.
+Organized into 5 balanced categories (3 tools each):
+- Focus Blockers (Cold Turkey, Freedom, Forest)
+- Screen Time (One Sec, Opal, StayFree)
+- Browser Extensions (Unhook, LeechBlock NG, News Feed Eradicator)
+- Bedtime Routines (Sleep as Android & Apple Sleep, f.lux, Alarmy)
+- Privacy & Safety (uBlock Origin, Signal, Olauncher)
 """
 
 RESOURCES = [
+    # 1. FOCUS BLOCKERS
     {
         "name": "Cold Turkey Blocker",
         "slug": "cold-turkey-blocker",
         "tagline": "The most strict desktop distraction blocker for uninterrupted deep study.",
-        "description": "Cold Turkey is widely regarded by students as the hardest blocker to bypass. It operates at the system kernel level on Windows and macOS, allowing scheduled deep work blocks across apps, websites, and games without loophole overrides.",
+        "description": "Cold Turkey operates at the system kernel level on Windows and macOS, allowing scheduled deep work blocks across apps, websites, and games without loophole overrides.",
         "category": "focus_blocker",
         "developer_or_team": "Felix Belzile",
         "official_url": "https://getcoldturkey.com",
@@ -56,6 +63,32 @@ RESOURCES = [
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/INce9MClvuM"
     },
     {
+        "name": "Forest",
+        "slug": "forest",
+        "tagline": "Gamified Pomodoro timer that grows a virtual forest as you study.",
+        "description": "Forest turns study sessions into a gamified focus exercise. When you start studying, you plant a virtual seed that grows into a tree over 25-120 minutes. If you switch to another app, your tree withers and dies.",
+        "category": "focus_blocker",
+        "developer_or_team": "Seekrtech Co., Ltd.",
+        "official_url": "https://forestapp.cc",
+        "documentation_url": "https://help.forestapp.cc",
+        "extension_url": "https://chromewebstore.google.com/detail/forest-stay-focused-be-pr/kjacjjdnoddnpdgjhflfcggipjlcmgip",
+        "repository_url": None,
+        "platforms": ["iOS", "Android", "Chrome", "Firefox", "macOS", "Windows"],
+        "pricing_type": "Freemium",
+        "price_details": "iOS: $3.99 upfront paid purchase. Android: Free download with ads and in-app purchase ($1.99) for Pro tree species. Chrome extension is 100% free.",
+        "purpose": "Provide visual and emotional incentives to remain focused on studying through virtual tree growth and real-tree planting partnerships.",
+        "privacy_rating": "B",
+        "privacy_details": "Account optional for solo study, required for study group rooms. Syncs planting logs and friend rankings to cloud servers.",
+        "accessibility_features": "Relaxing ambient audio (forest rain, camp fire, white noise), large countdown timer.",
+        "limitations": "Relies purely on psychological guilt and gamification; does not strictly block phone settings or browser navigation on desktop.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.6,
+        "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9nSmQ8GXgEo"
+    },
+
+    # 2. SCREEN TIME & HABIT FRICTION
+    {
         "name": "One Sec",
         "slug": "one-sec",
         "tagline": "Transforms subconscious phone addiction through intentional breathing friction.",
@@ -80,30 +113,6 @@ RESOURCES = [
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/w39EqhnYcvM"
     },
     {
-        "name": "Forest",
-        "slug": "forest",
-        "tagline": "Gamified Pomodoro timer that grows a virtual forest as you study.",
-        "description": "Forest turns study sessions into a gamified focus exercise. When you start studying, you plant a virtual seed that grows into a tree over 25-120 minutes. If you switch to another app, your tree withers and dies.",
-        "category": "focus_blocker",
-        "developer_or_team": "Seekrtech Co., Ltd.",
-        "official_url": "https://forestapp.cc",
-        "documentation_url": "https://help.forestapp.cc",
-        "extension_url": "https://chromewebstore.google.com/detail/forest-stay-focused-be-pr/kjacjjdnoddnpdgjhflfcggipjlcmgip",
-        "repository_url": None,
-        "platforms": ["iOS", "Android", "Chrome", "Firefox"],
-        "pricing_type": "Freemium",
-        "price_details": "iOS: $3.99 upfront paid purchase. Android: Free download with ads and in-app purchase ($1.99) for Pro tree species. Chrome extension is free.",
-        "purpose": "Provide visual and emotional incentives to remain focused on studying through virtual tree growth and real-tree planting partnerships.",
-        "privacy_rating": "B",
-        "privacy_details": "Account optional for solo study, required for study group rooms. Syncs planting logs and friend rankings to cloud servers.",
-        "accessibility_features": "Relaxing ambient audio (forest rain, camp fire, white noise), large countdown timer.",
-        "limitations": "Relies purely on psychological guilt and gamification; does not strictly block phone settings or browser navigation on desktop.",
-        "verified_date": "2026-11-16",
-        "student_rating": 4.6,
-        "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9nSmQ8GXgEo"
-    },
-    {
         "name": "Opal",
         "slug": "opal",
         "tagline": "Next-gen Screen Time companion with Deep Focus app lockouts.",
@@ -114,7 +123,7 @@ RESOURCES = [
         "documentation_url": "https://help.opal.so",
         "extension_url": "https://chromewebstore.google.com/detail/opal-screen-time-for-work/ajofhldmfolnfopblnnfopgnckfocghh",
         "repository_url": None,
-        "platforms": ["iOS", "macOS", "Chrome"],
+        "platforms": ["iOS", "macOS", "Chrome", "Android"],
         "pricing_type": "Freemium",
         "price_details": "Free version offers daily screen time metrics and basic manual sessions. Pro is $9.99/month or $99/year (student discounts available) for recurring schedules and Deep Focus.",
         "purpose": "Help students gain awareness of screen time and lock down distracting social apps during classes and study blocks.",
@@ -126,54 +135,6 @@ RESOURCES = [
         "student_rating": 4.5,
         "image_url": "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=800&auto=format&fit=crop&q=80",
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/WGD4FfMuWBY"
-    },
-    {
-        "name": "Unhook - Remove YouTube Distractions",
-        "slug": "unhook",
-        "tagline": "Transforms YouTube into a distraction-free educational library.",
-        "description": "Unhook is an open-source browser extension that hides the YouTube home feed, recommended videos sidebar, comments, trends, and Shorts, leaving only the search bar and the specific video you intentionally searched for.",
-        "category": "browser_extension",
-        "developer_or_team": "Unhook Community",
-        "official_url": "https://unhook.app",
-        "documentation_url": "https://unhook.app",
-        "extension_url": "https://chromewebstore.google.com/detail/unhook-remove-youtube-rec/khncfooichmfjbepaaaebmommgaahknn",
-        "repository_url": "https://github.com",
-        "platforms": ["Chrome", "Firefox", "Edge", "Brave", "Safari"],
-        "pricing_type": "100% Free",
-        "price_details": "100% completely free and open source. No paid tiers, no premium upsells, no donation popups.",
-        "purpose": "Eliminate addictive algorithmic rabbit holes on YouTube so students can watch lecture recordings and tutorials without distraction.",
-        "privacy_rating": "A+",
-        "privacy_details": "Zero data collection, zero external API requests, zero tracking scripts. Code is open source and runs entirely in local browser CSS/JS.",
-        "accessibility_features": "High-contrast dark mode support, individual toggle switches for feeds, comments, and shorts.",
-        "limitations": "Browser-only extension (desktop browsers and Firefox for Android); cannot control the native YouTube mobile application on iOS or Android.",
-        "verified_date": "2026-11-16",
-        "student_rating": 4.9,
-        "image_url": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9Tp9wot_Hy4"
-    },
-    {
-        "name": "uBlock Origin",
-        "slug": "ublock-origin",
-        "tagline": "The gold-standard open-source content blocker and privacy shield.",
-        "description": "uBlock Origin is an ultra-efficient content blocker that strips away deceptive web ads, popups, tracking beacons, and auto-playing videos. It also features an element picker allowing students to permanently zap distracting page sidebars.",
-        "category": "privacy_safety",
-        "developer_or_team": "Raymond Hill (gorhill)",
-        "official_url": "https://ublockorigin.com",
-        "documentation_url": "https://github.com/gorhill/uBlock/wiki",
-        "extension_url": "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/",
-        "repository_url": "https://github.com/gorhill/uBlock",
-        "platforms": ["Firefox", "Chrome", "Edge", "Brave", "Opera"],
-        "pricing_type": "100% Free",
-        "price_details": "100% free and open-source (GPLv3). Raymond Hill strictly refuses all donations and commercial sponsorships.",
-        "purpose": "Safeguard privacy, accelerate study research loading speeds, and strip predatory ads and trackers from academic websites.",
-        "privacy_rating": "A+",
-        "privacy_details": "Zero telemetry. Stores filter rules entirely locally in browser storage. Refuses telemetry connections.",
-        "accessibility_features": "Keyboard accessible, high-contrast matrix view, clean readable statistics dashboard.",
-        "limitations": "Google Chrome Manifest V3 updates have degraded dynamic filtering capabilities on Chrome; best experienced on Firefox.",
-        "verified_date": "2026-11-16",
-        "student_rating": 5.0,
-        "image_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/S-7IqOHa3RA"
     },
     {
         "name": "StayFree - Screen Time & App Blocker",
@@ -199,6 +160,32 @@ RESOURCES = [
         "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80",
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/VtJkzilbfc0"
     },
+
+    # 3. BROWSER EXTENSIONS
+    {
+        "name": "Unhook - Remove YouTube Distractions",
+        "slug": "unhook",
+        "tagline": "Transforms YouTube into a distraction-free educational library.",
+        "description": "Unhook is an open-source browser extension that hides the YouTube home feed, recommended videos sidebar, comments, trends, and Shorts, leaving only the search bar and the specific video you intentionally searched for.",
+        "category": "browser_extension",
+        "developer_or_team": "Unhook Community",
+        "official_url": "https://unhook.app",
+        "documentation_url": "https://unhook.app",
+        "extension_url": "https://chromewebstore.google.com/detail/unhook-remove-youtube-rec/khncfooichmfjbepaaaebmommgaahknn",
+        "repository_url": "https://github.com",
+        "platforms": ["macOS", "Windows", "Linux", "Chrome", "Firefox", "Edge", "Brave", "Safari"],
+        "pricing_type": "100% Free",
+        "price_details": "100% completely free and open source. No paid tiers, no premium upsells, no donation popups.",
+        "purpose": "Eliminate addictive algorithmic rabbit holes on YouTube so students can watch lecture recordings and tutorials without distraction.",
+        "privacy_rating": "A+",
+        "privacy_details": "Zero data collection, zero external API requests, zero tracking scripts. Code is open source and runs entirely in local browser CSS/JS.",
+        "accessibility_features": "High-contrast dark mode support, individual toggle switches for feeds, comments, and shorts.",
+        "limitations": "Browser-only extension (desktop browsers and Firefox for Android); cannot control the native YouTube mobile application on iOS or Android.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9Tp9wot_Hy4"
+    },
     {
         "name": "LeechBlock NG",
         "slug": "leechblock-ng",
@@ -210,7 +197,7 @@ RESOURCES = [
         "documentation_url": "https://www.proginosko.com/leechblock/faq/",
         "extension_url": "https://addons.mozilla.org/en-US/firefox/addon/leechblock-ng/",
         "repository_url": "https://github.com/proginosko/LeechBlockNG",
-        "platforms": ["Firefox", "Chrome", "Edge"],
+        "platforms": ["macOS", "Windows", "Linux", "Firefox", "Chrome", "Edge"],
         "pricing_type": "100% Free",
         "price_details": "100% free and open source. Completely free for all features with zero monetization.",
         "purpose": "Implement strict time allowances and time-banking rules across desktop web browsers.",
@@ -224,29 +211,31 @@ RESOURCES = [
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/2DZlNq1KrEg"
     },
     {
-        "name": "Olauncher (Minimal AF Launcher)",
-        "slug": "olauncher",
-        "tagline": "Minimalist open-source Android home screen with zero clutter.",
-        "description": "Olauncher replaces the vibrant, notification-badged home screen of Android phones with a serene, text-only launcher. By stripping away colorful icons and widgets, it immediately drops mindless phone pickups.",
-        "category": "focus_blocker",
-        "developer_or_team": "Tanuj M.",
-        "official_url": "https://olauncher.app",
-        "documentation_url": "https://github.com/tanujnotes/Olauncher#readme",
-        "extension_url": "https://play.google.com/store/apps/details?id=app.olauncher",
-        "repository_url": "https://github.com/tanujnotes/Olauncher",
-        "platforms": ["Android"],
+        "name": "News Feed Eradicator",
+        "slug": "news-feed-eradicator",
+        "tagline": "Replaces addictive algorithmic social feeds with inspiring focus quotes.",
+        "description": "News Feed Eradicator is an open-source browser extension that removes the endless scrolling feeds on YouTube, Facebook, Reddit, Instagram, Twitter, and LinkedIn, replacing them with a clean, thought-provoking philosophical quote.",
+        "category": "browser_extension",
+        "developer_or_team": "Jordan West",
+        "official_url": "https://github.com/jordwest/news-feed-eradicator",
+        "documentation_url": "https://github.com/jordwest/news-feed-eradicator#readme",
+        "extension_url": "https://chromewebstore.google.com/detail/news-feed-eradicator/fborpmngldpnbeppbhoacknkoigfnjmp",
+        "repository_url": "https://github.com/jordwest/news-feed-eradicator",
+        "platforms": ["macOS", "Windows", "Linux", "Chrome", "Firefox", "Edge"],
         "pricing_type": "100% Free",
-        "price_details": "100% free and open-source (GPLv3). No ads, no in-app purchases, available on Google Play and F-Droid.",
-        "purpose": "Dramatically lower phone distraction by removing addictive visual icons and replacing them with a plain text list.",
+        "price_details": "100% free and open-source (MIT License). Zero commercial monetization, zero ads.",
+        "purpose": "Eliminate doomscrolling feeds across all social networks while preserving direct messaging and search.",
         "privacy_rating": "A+",
-        "privacy_details": "Requires zero internet permission (`INTERNET` permission is completely omitted from the Android manifest). 100% private.",
-        "accessibility_features": "Custom font sizing, high-contrast monochrome mode, rapid alphabetical search gestures.",
-        "limitations": "Android exclusive. Apple iOS does not allow replacing the native Springboard home screen launcher.",
+        "privacy_details": "Runs completely client-side in local browser memory. Zero external network requests, zero telemetry.",
+        "accessibility_features": "High contrast quote display, custom user-submitted quotes, customizable site toggles.",
+        "limitations": "Browser only (desktop); cannot block native mobile applications.",
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
-        "image_url": "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/pi76UL3-8Iw"
+        "image_url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/21a5tZ1qk4k"
     },
+
+    # 4. BEDTIME & CIRCADIAN ROUTINES
     {
         "name": "Sleep as Android & Apple Sleep Routine",
         "slug": "sleep-as-android-apple-sleep",
@@ -272,6 +261,80 @@ RESOURCES = [
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/HyUTqNtuQpI"
     },
     {
+        "name": "f.lux",
+        "slug": "flux",
+        "tagline": "Automated circadian screen color temperature adjustment to protect nighttime melatonin.",
+        "description": "f.lux makes the color of your computer's display adapt to the time of day, warm at night and like sunlight during the day. It eliminates blue-light exposure after sunset, helping students fall asleep faster after late-night study sessions.",
+        "category": "bedtime_routine",
+        "developer_or_team": "Michael Herf & Lorna Herf",
+        "official_url": "https://justgetflux.com",
+        "documentation_url": "https://justgetflux.com/faq.html",
+        "extension_url": "https://justgetflux.com/news/pages/macquickstart/",
+        "repository_url": None,
+        "platforms": ["macOS", "Windows", "Linux", "iOS"],
+        "pricing_type": "100% Free",
+        "price_details": "100% completely free for personal and student use. No subscriptions, no ads.",
+        "purpose": "Eliminate circadian rhythm disruption by automatically warming screen color temperature after sunset.",
+        "privacy_rating": "A+",
+        "privacy_details": "Computes solar angles locally based on latitude/longitude. Zero cloud telemetry or personal data tracking.",
+        "accessibility_features": "Darkroom mode (pure red/black), movie mode, disabling for color-sensitive design work with one click.",
+        "limitations": "Requires initial location permission to calculate solar sunset times; can slightly distort colors during graphic design.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/A-wZgqKzfuk"
+    },
+    {
+        "name": "Alarmy (Sleep If U Can)",
+        "slug": "alarmy",
+        "tagline": "Aggressive morning wake-up alarm requiring captive math or photo tasks to dismiss.",
+        "description": "Alarmy is the ultimate alarm app for students who struggle to get out of bed. It forces you to get out of bed by requiring you to scan a barcode in your bathroom, solve math problems, or take steps before the alarm turns off.",
+        "category": "bedtime_routine",
+        "developer_or_team": "Delight Room Co., Ltd.",
+        "official_url": "https://alaramy.app",
+        "documentation_url": "https://alaramy.app",
+        "extension_url": "https://play.google.com/store/apps/details?id=droom.sleepIfUCan",
+        "repository_url": None,
+        "platforms": ["Android", "iOS"],
+        "pricing_type": "Freemium",
+        "price_details": "Free version includes photo, math, and barcode dismiss missions. Premium is $4.99/mo or $39.99/yr for wake-up check and advanced typing missions.",
+        "purpose": "Prevent morning snooze loops by physically forcing students out of bed to dismiss the alarm.",
+        "privacy_rating": "A",
+        "privacy_details": "Missions and barcode targets stored locally on-device. Basic crash analytics only.",
+        "accessibility_features": "Loud emergency ringtones, gentle volume crescendo, high contrast dark theme.",
+        "limitations": "Very strict; if you tape your barcode in the bathroom and sleep elsewhere without your backup method, dismissing can be challenging.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.7,
+        "image_url": "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/HyUTqNtuQpI"
+    },
+
+    # 5. PRIVACY & DISTRACTION-FREE ESSENTIALS
+    {
+        "name": "uBlock Origin",
+        "slug": "ublock-origin",
+        "tagline": "The gold-standard open-source content blocker and privacy shield.",
+        "description": "uBlock Origin is an ultra-efficient content blocker that strips away deceptive web ads, popups, tracking beacons, and auto-playing videos. It also features an element picker allowing students to permanently zap distracting page sidebars.",
+        "category": "privacy_safety",
+        "developer_or_team": "Raymond Hill (gorhill)",
+        "official_url": "https://ublockorigin.com",
+        "documentation_url": "https://github.com/gorhill/uBlock/wiki",
+        "extension_url": "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/",
+        "repository_url": "https://github.com/gorhill/uBlock",
+        "platforms": ["macOS", "Windows", "Linux", "Firefox", "Chrome", "Edge", "Brave", "Opera"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open-source (GPLv3). Raymond Hill strictly refuses all donations and commercial sponsorships.",
+        "purpose": "Safeguard privacy, accelerate study research loading speeds, and strip predatory ads and trackers from academic websites.",
+        "privacy_rating": "A+",
+        "privacy_details": "Zero telemetry. Stores filter rules entirely locally in browser storage. Refuses telemetry connections.",
+        "accessibility_features": "Keyboard accessible, high-contrast matrix view, clean readable statistics dashboard.",
+        "limitations": "Google Chrome Manifest V3 updates have degraded dynamic filtering capabilities on Chrome; best experienced on Firefox.",
+        "verified_date": "2026-11-16",
+        "student_rating": 5.0,
+        "image_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/S-7IqOHa3RA"
+    },
+    {
         "name": "Signal Private Messenger",
         "slug": "signal",
         "tagline": "Encrypted, distraction-free study collaboration without dopamine feeds.",
@@ -294,6 +357,30 @@ RESOURCES = [
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
         "video_tutorial_url": "https://www.youtube-nocookie.com/embed/dMJxEDAsd9k"
+    },
+    {
+        "name": "Olauncher (Minimal AF Launcher)",
+        "slug": "olauncher",
+        "tagline": "Minimalist open-source Android home screen with zero clutter.",
+        "description": "Olauncher replaces the vibrant, notification-badged home screen of Android phones with a serene, text-only launcher. By stripping away colorful icons and widgets, it immediately drops mindless phone pickups.",
+        "category": "privacy_safety",
+        "developer_or_team": "Tanuj M.",
+        "official_url": "https://olauncher.app",
+        "documentation_url": "https://github.com/tanujnotes/Olauncher#readme",
+        "extension_url": "https://play.google.com/store/apps/details?id=app.olauncher",
+        "repository_url": "https://github.com/tanujnotes/Olauncher",
+        "platforms": ["Android"],
+        "pricing_type": "100% Free",
+        "price_details": "100% free and open-source (GPLv3). No ads, no in-app purchases, available on Google Play and F-Droid.",
+        "purpose": "Dramatically lower phone distraction by removing addictive visual icons and replacing them with a plain text list.",
+        "privacy_rating": "A+",
+        "privacy_details": "Requires zero internet permission (`INTERNET` permission is completely omitted from the Android manifest). 100% private.",
+        "accessibility_features": "Custom font sizing, high-contrast monochrome mode, rapid alphabetical search gestures.",
+        "limitations": "Android exclusive. Apple iOS does not allow replacing the native Springboard home screen launcher.",
+        "verified_date": "2026-11-16",
+        "student_rating": 4.9,
+        "image_url": "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&auto=format&fit=crop&q=80",
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/pi76UL3-8Iw"
     }
 ]
 

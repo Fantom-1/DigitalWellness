@@ -13,9 +13,14 @@ export default function ComparisonTable({ resources, onSelectResource }) {
     { id: 'browser_extension', label: 'Browser Extensions' }
   ];
 
+  const isExtension = (r) => 
+    r.category === 'browser_extension' ||
+    Boolean(r.extension_url && (r.extension_url.includes('chromewebstore') || r.extension_url.includes('addons.mozilla') || r.extension_url.includes('addons.opera'))) ||
+    (r.platforms && r.platforms.some(p => ['Chrome', 'Firefox', 'Edge', 'Safari', 'Brave', 'Opera'].includes(p)));
+
   const filtered = filterCategory === 'all' 
     ? resources 
-    : resources.filter(r => r.category === filterCategory);
+    : resources.filter(r => filterCategory === 'browser_extension' ? (r.category === 'browser_extension' || isExtension(r)) : r.category === filterCategory);
 
   return (
     <div className="w-full max-w-[1000px] text-left animate-in fade-in duration-300">
@@ -27,7 +32,7 @@ export default function ComparisonTable({ resources, onSelectResource }) {
           </p>
         </div>
         <span className="text-xs text-zinc-400 mt-2 md:mt-0 font-mono">
-          12 Verified Resources
+          {filtered.length} of {resources.length} Verified Resources
         </span>
       </div>
 

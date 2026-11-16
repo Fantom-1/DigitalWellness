@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, Shield, ExternalLink, Bot, Filter, Search, Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  ArrowUp, Shield, ExternalLink, Bot, Filter, Search, Play, 
+  ChevronLeft, ChevronRight, BookOpen, AlertCircle, Sparkles, 
+  Puzzle, Download, CheckCircle2 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchStats, fetchResources, sendChatMessage, fetchGuides } from '../api';
 import ComparisonTable from './ComparisonTable';
@@ -90,6 +94,27 @@ const DISTRACTION_SOLUTIONS = [
     solution: 'Zero-distraction group study messaging with end-to-end encryption and no algorithms, ads, or feeds.',
     type: 'Private Messaging App',
     prompt: 'Why is Signal better for focused study group communication than social messaging apps?'
+  },
+  {
+    slug: 'flux',
+    distraction: 'Circadian Blue Light & Late Screentime',
+    solution: 'Automatically warms display color temperature after sunset to prevent melatonin suppression and late-night insomnia.',
+    type: 'Bedtime Routine (Desktop & iOS)',
+    prompt: 'How do I configure f.lux circadian lighting to improve sleep quality while studying late?'
+  },
+  {
+    slug: 'news-feed-eradicator',
+    distraction: 'Infinite Social Feeds on Desktop',
+    solution: 'Replaces endless algorithmic feeds on Facebook, Twitter, Reddit, LinkedIn, and YouTube with inspiring quotes.',
+    type: 'Browser Extension',
+    prompt: 'How does News Feed Eradicator replace social media doomscroll feeds with study quotes?'
+  },
+  {
+    slug: 'alarmy',
+    distraction: 'Morning Oversleeping & Snoozing',
+    solution: 'Forces cognitive missions (math problems, barcode/QR scanning, memory puzzles) before silencing morning alarms.',
+    type: 'Bedtime Routine (Mobile App)',
+    prompt: 'How can I configure Alarmy barcode scanning to force myself out of bed for 8 AM classes?'
   }
 ];
 
@@ -98,14 +123,85 @@ const CAROUSEL_PAGES = [
   DISTRACTION_SOLUTIONS.slice(3, 6),
   DISTRACTION_SOLUTIONS.slice(6, 9),
   DISTRACTION_SOLUTIONS.slice(9, 12),
+  DISTRACTION_SOLUTIONS.slice(12, 15),
 ];
+
+function renderInlineMarkdown(text) {
+  if (!text) return '';
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={i} className="font-semibold text-[#1d1d1f]">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+}
+
+function FormattedAdvisorContent({ content }) {
+  if (!content) return null;
+  const paragraphs = content.split('\n\n');
+
+  return (
+    <div className="space-y-3 font-light text-zinc-700 text-sm md:text-base leading-relaxed">
+      {paragraphs.map((para, pIdx) => {
+        const lines = para.split('\n').filter(Boolean);
+        const isList = lines.length > 0 && lines.every(l => l.trim().startsWith('* ') || l.trim().startsWith('- ') || /^\d+\.\s/.test(l.trim()));
+
+        if (isList) {
+          return (
+            <ul key={pIdx} className="space-y-1.5 pl-1 my-2">
+              {lines.map((l, lIdx) => {
+                const cleaned = l.replace(/^[\*\-]\s+/, '').replace(/^\d+\.\s+/, '');
+                return (
+                  <li key={lIdx} className="flex items-start gap-2 text-xs md:text-sm text-zinc-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+                    <span>{renderInlineMarkdown(cleaned)}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          );
+        }
+
+        if (para.startsWith('### ')) {
+          return (
+            <h4 key={pIdx} className="text-sm md:text-base font-semibold text-[#1d1d1f] mt-3 pt-1">
+              {renderInlineMarkdown(para.replace('### ', ''))}
+            </h4>
+          );
+        }
+
+        return (
+          <p key={pIdx}>
+            {lines.map((line, lineIdx) => (
+              <React.Fragment key={lineIdx}>
+                {renderInlineMarkdown(line)}
+                {lineIdx < lines.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function SearchArea({ activeTab, setActiveTab }) {
   // Data states
-  const [stats, setStats] = useState({ total_resources: 12, total_guides: 3, verified_date: 'November 2026' });
+  const [stats, setStats] = useState({ total_resources: 15, total_guides: 3, verified_date: 'November 2026' });
   const [resources, setResources] = useState([]);
   const [guides, setGuides] = useState([]);
   const [selectedTool, setSelectedTool] = useState(null);
+  const [activeGuideSlug, setActiveGuideSlug] = useState(null);
+
+  const handleOpenGuide = (slug) => {
+    setActiveGuideSlug(slug);
+    setActiveTab('guides');
+  };
 
   // Directory filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -136,14 +232,28 @@ export default function SearchArea({ activeTab, setActiveTab }) {
     fetchGuides().then(setGuides).catch(console.error);
   }, []);
 
+  const isBrowserExtension = (item) => {
+    if (item.category === 'browser_extension') return true;
+    if (item.extension_url && (item.extension_url.includes('chromewebstore') || item.extension_url.includes('addons.mozilla') || item.extension_url.includes('addons.opera'))) return true;
+    if (item.platforms && item.platforms.some(p => ['Chrome', 'Firefox', 'Edge', 'Brave', 'Safari', 'Opera'].includes(p))) return true;
+    return false;
+  };
+
   // Filter resources for directory
   const filteredResources = resources.filter(r => {
     const matchesSearch = !searchQuery.trim() || 
       r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.purpose.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCat = selectedCategory === 'all' || r.category === selectedCategory;
-    const matchesPlat = selectedPlatform === 'all' || r.platforms.includes(selectedPlatform);
+    
+    const matchesCat = selectedCategory === 'all' 
+      ? true 
+      : (selectedCategory === 'browser_extension' ? isBrowserExtension(r) : r.category === selectedCategory);
+    
+    const matchesPlat = selectedPlatform === 'all' || 
+      (r.platforms && r.platforms.includes(selectedPlatform)) ||
+      ((selectedPlatform === 'macOS' || selectedPlatform === 'Windows' || selectedPlatform === 'Chrome') && isBrowserExtension(r));
+
     return matchesSearch && matchesCat && matchesPlat;
   });
 
@@ -480,60 +590,219 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                         {msg.content}
                       </div>
                     ) : (
-                      <div className="w-full bg-white border border-black/[0.06] rounded-3xl p-6 md:p-8 shadow-sm">
-                        <div className="text-zinc-700 text-sm md:text-base leading-relaxed space-y-3 font-light whitespace-pre-line">
-                          {msg.content}
+                      <div className="w-full bg-white border border-black/[0.08] rounded-3xl p-6 md:p-8 shadow-sm">
+                        {/* Advisor Header Bar */}
+                        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black/[0.06]">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-white">
+                              <Bot size={14} />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold text-[#1d1d1f] tracking-tight">Digital Wellness Advisor</span>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-medium">Curated Strategy</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>Student Audited</span>
+                          </div>
                         </div>
 
-                        {/* Recommended Tool Badges */}
+                        {/* Advisor Written Counsel */}
+                        <FormattedAdvisorContent content={msg.content} />
+
+                        {/* Structured Tool Dossiers: Mini Version of the Full Evaluation Matrix */}
                         {msg.recommended_tools && msg.recommended_tools.length > 0 && (
-                          <div className="mt-6 pt-5 border-t border-black/[0.06]">
-                            <h5 className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-3">
-                              Recommended Resources
-                            </h5>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                              {msg.recommended_tools.map((rec) => (
-                                <button
-                                  key={rec.slug}
-                                  onClick={() => handleSelectToolFromSlug(rec.slug)}
-                                  className="p-3.5 rounded-2xl bg-zinc-50 border border-black/[0.04] hover:border-black/15 hover:bg-white transition-all text-left flex flex-col justify-between group shadow-2xs"
-                                >
-                                  <div>
-                                    <div className="flex items-center justify-between mb-1">
-                                      <span className="font-semibold text-xs text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
-                                        {rec.name}
-                                      </span>
-                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-black/[0.06] text-zinc-600">
-                                        {rec.pricing_type}
-                                      </span>
+                          <div className="mt-8 pt-6 border-t border-black/[0.06]">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                                  <Sparkles size={13} className="text-blue-600" />
+                                  Structured Tool Dossiers & Solutions
+                                </h4>
+                                <p className="text-xs text-zinc-500 font-light mt-0.5">
+                                  Evaluated for academic focus, zero telemetry, and bypass resistance.
+                                </p>
+                              </div>
+                              <span className="text-[11px] font-mono text-zinc-400">
+                                {msg.recommended_tools.length} Curated Solution{msg.recommended_tools.length > 1 ? 's' : ''}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {msg.recommended_tools.map((rec) => {
+                                const tool = resources.find(r => r.slug === rec.slug) || {
+                                  name: rec.name,
+                                  slug: rec.slug,
+                                  category: rec.category || 'focus_blocker',
+                                  pricing_type: rec.pricing_type || 'Free',
+                                  platforms: ['macOS', 'Windows', 'Chrome'],
+                                  privacy_rating: 'A+',
+                                  tagline: rec.reason,
+                                  purpose: rec.reason,
+                                  limitations: 'Standard platform permissions required.'
+                                };
+
+                                return (
+                                  <div
+                                    key={rec.slug || tool.slug}
+                                    className="bg-[#fbfbfd] border border-black/[0.06] hover:border-black/15 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 group shadow-2xs hover:shadow-xs"
+                                  >
+                                    <div>
+                                      {/* Top Row: Meta badges */}
+                                      <div className="flex items-start justify-between gap-2 mb-2">
+                                        <div>
+                                          <div className="flex items-center gap-1.5 mb-1.5">
+                                            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/[0.04] text-zinc-600">
+                                              {tool.category.replace('_', ' ')}
+                                            </span>
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-black/[0.06] text-zinc-700 font-medium">
+                                              {tool.pricing_type}
+                                            </span>
+                                          </div>
+                                          <h5 
+                                            onClick={() => setSelectedTool(tool)}
+                                            className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors cursor-pointer"
+                                          >
+                                            {tool.name}
+                                          </h5>
+                                        </div>
+
+                                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-[10px] font-mono font-medium flex items-center gap-1 shrink-0">
+                                          <Shield size={10} />
+                                          {tool.privacy_rating ? `Grade ${tool.privacy_rating}` : 'Grade A'}
+                                        </span>
+                                      </div>
+
+                                      {/* Platforms */}
+                                      {tool.platforms && (
+                                        <div className="flex flex-wrap gap-1 mb-3">
+                                          {tool.platforms.slice(0, 4).map((p) => (
+                                            <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 text-[10px]">
+                                              {p}
+                                            </span>
+                                          ))}
+                                          {tool.platforms.length > 4 && (
+                                            <span className="text-[10px] text-zinc-400 font-mono">+{tool.platforms.length - 4}</span>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {/* Advisor Match Callout */}
+                                      <div className="text-xs text-blue-950 bg-blue-50/80 border border-blue-100/80 rounded-xl p-3 mb-3 leading-relaxed font-light">
+                                        <span className="font-semibold text-blue-900 block text-[11px] mb-0.5">Advisor Assessment:</span>
+                                        {rec.reason}
+                                      </div>
+
+                                      {/* Tool Purpose & Capabilities ("What we have") */}
+                                      <p className="text-xs text-zinc-600 font-light leading-relaxed mb-3">
+                                        <strong className="text-zinc-800 font-medium">What It Does: </strong>
+                                        {tool.tagline || tool.purpose || tool.description}
+                                      </p>
+
+                                      {/* Limitations / Bypass Reality Check */}
+                                      {tool.limitations && (
+                                        <div className="text-[11px] text-amber-900 bg-amber-500/[0.06] border border-amber-500/15 rounded-xl p-2.5 mb-4 flex items-start gap-1.5 font-light leading-relaxed">
+                                          <AlertCircle size={12} className="text-amber-700 shrink-0 mt-0.5" />
+                                          <span>
+                                            <strong className="font-medium text-amber-950">Limitation: </strong>
+                                            {tool.limitations}
+                                          </span>
+                                        </div>
+                                      )}
                                     </div>
-                                    <p className="text-[11px] text-zinc-500 line-clamp-2 font-light">
-                                      {rec.reason}
-                                    </p>
+
+                                    {/* Integrated Actions Toolbar */}
+                                    <div className="pt-3 border-t border-black/[0.04] flex flex-wrap items-center justify-between gap-2">
+                                      <div className="flex items-center gap-1.5">
+                                        {tool.video_tutorial_url && (
+                                          <button
+                                            onClick={() => setSelectedTool(tool)}
+                                            className="px-2.5 py-1.5 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-zinc-700 hover:text-black text-xs font-medium flex items-center gap-1 transition-all cursor-pointer"
+                                            title="Watch Video Walkthrough"
+                                          >
+                                            <Play size={10} fill="currentColor" />
+                                            Video
+                                          </button>
+                                        )}
+                                        {tool.extension_url && (
+                                          <a
+                                            href={tool.extension_url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60 text-xs font-medium flex items-center gap-1 transition-all"
+                                          >
+                                            <Puzzle size={11} />
+                                            {tool.category === 'browser_extension' ? 'Add Extension' : 'Get App'}
+                                          </a>
+                                        )}
+                                        {tool.documentation_url && (
+                                          <a
+                                            href={tool.documentation_url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium flex items-center gap-1 transition-all"
+                                          >
+                                            <BookOpen size={11} />
+                                            Docs
+                                          </a>
+                                        )}
+                                      </div>
+
+                                      <button
+                                        onClick={() => setSelectedTool(tool)}
+                                        className="px-3 py-1.5 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium flex items-center gap-1 transition-all ml-auto cursor-pointer"
+                                      >
+                                        Inspect Full Dossier →
+                                      </button>
+                                    </div>
                                   </div>
-                                  <span className="mt-2 text-[10px] text-zinc-600 group-hover:text-black font-medium transition-colors">
-                                    Watch Video & Inspect →
-                                  </span>
-                                </button>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         )}
 
-                        {/* Guide Referral */}
-                        {msg.relevant_guide_slug && (
-                          <div className="mt-4 p-3 bg-zinc-50 border border-black/[0.04] rounded-2xl flex items-center justify-between">
-                            <span className="text-xs text-zinc-600 font-light">
-                              Related setup protocol available.
-                            </span>
-                            <button
-                              onClick={() => setActiveTab('guides')}
-                              className="text-xs font-semibold text-[#1d1d1f] hover:underline transition-colors"
-                            >
-                              Open Guide →
-                            </button>
-                          </div>
-                        )}
+                        {/* Guide Referral Banner */}
+                        {msg.relevant_guide_slug && (() => {
+                          const guide = guides.find(g => g.slug === msg.relevant_guide_slug);
+                          return (
+                            <div className="mt-5 p-4 rounded-2xl bg-zinc-50 border border-black/[0.05] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2.5 rounded-xl bg-white border border-black/[0.06] text-[#1d1d1f] shrink-0 mt-0.5">
+                                  <BookOpen size={15} />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                                      Related Setup Protocol
+                                    </span>
+                                    {guide && (
+                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/[0.04] text-zinc-600 font-mono">
+                                        {guide.estimated_minutes} min • {guide.difficulty_level}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h5 className="text-xs font-semibold text-[#1d1d1f] mt-0.5">
+                                    {guide ? guide.title : msg.relevant_guide_slug}
+                                  </h5>
+                                  <p className="text-[11px] text-zinc-500 font-light mt-0.5 line-clamp-1">
+                                    {guide ? guide.summary : 'Step-by-step hardened device configuration with zero bypass loopholes.'}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => handleOpenGuide(msg.relevant_guide_slug)}
+                                className="px-3.5 py-2 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium shrink-0 flex items-center gap-1.5 transition-all self-end sm:self-center cursor-pointer"
+                              >
+                                Open Protocol Guide →
+                              </button>
+                            </div>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>
@@ -560,11 +829,11 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             <div>
               <h2 className="text-2xl md:text-3xl font-semibold text-[#1d1d1f] tracking-tight">Curated Directory</h2>
               <p className="text-zinc-500 text-sm mt-1 max-w-xl font-light">
-                Twelve vetted student digital wellness resources. Click any tool to inspect full evaluation criteria and play video tutorials.
+                Fifteen vetted student digital wellness resources. Click any tool to inspect full evaluation criteria and play video tutorials.
               </p>
             </div>
             <span className="text-xs text-zinc-400 mt-2 md:mt-0 font-mono">
-              {filteredResources.length} of 12 Resources
+              {filteredResources.length} of {resources.length} Resources
             </span>
           </div>
 
@@ -703,7 +972,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
       {/* 4. SETUP GUIDES VIEW */}
       {activeTab === 'guides' && (
-        <SetupGuides guides={guides} />
+        <SetupGuides guides={guides} selectedGuideSlug={activeGuideSlug} />
       )}
 
       {/* Detail Modal with Onsite Playable Video */}
