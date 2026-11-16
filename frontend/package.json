@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node -e \"if (process.platform === 'linux' && process.arch === 'x64') { try { require('lightningcss-linux-x64-gnu'); } catch(e) { require('child_process').execSync('npm install --no-save lightningcss-linux-x64-gnu @rollup/rollup-linux-x64-gnu', {stdio:'inherit'}); } }\" && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -30,6 +30,8 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.62.2",
-    "@rollup/rollup-linux-x64-musl": "4.62.2"
+    "@rollup/rollup-linux-x64-musl": "4.62.2",
+    "lightningcss-linux-x64-gnu": "1.32.0",
+    "lightningcss-linux-x64-musl": "1.32.0"
   }
 }
