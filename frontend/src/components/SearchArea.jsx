@@ -265,12 +265,35 @@ export default function SearchArea({ activeTab, setActiveTab }) {
   const chatEndRef = useRef(null);
   const [carouselPage, setCarouselPage] = useState(0);
 
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
+
   const handlePrevCarousel = () => {
     setCarouselPage((prev) => (prev > 0 ? prev - 1 : CAROUSEL_PAGES.length - 1));
   };
 
   const handleNextCarousel = () => {
     setCarouselPage((prev) => (prev < CAROUSEL_PAGES.length - 1 ? prev + 1 : 0));
+  };
+
+  const handleCarouselTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleCarouselTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleCarouselTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const diff = touchStartX.current - touchEndX.current;
+    if (diff > 45) {
+      handleNextCarousel();
+    } else if (diff < -45) {
+      handlePrevCarousel();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   useEffect(() => {
@@ -391,16 +414,16 @@ export default function SearchArea({ activeTab, setActiveTab }) {
           {/* Header */}
           <motion.div 
             animate={{ 
-              marginBottom: chatMessages.length > 0 ? '12px' : '24px'
+              marginBottom: chatMessages.length > 0 ? '12px' : '20px'
             }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center w-full flex flex-col items-center mt-2 md:mt-4"
+            className="text-center w-full flex flex-col items-center mt-1 sm:mt-2 md:mt-4 px-2"
           >
-            <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-2">
+            <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-1.5 sm:mb-2">
               Curated for Student Focus
             </span>
             
-            <h1 className={`${chatMessages.length > 0 ? 'text-3xl md:text-4xl' : 'text-4xl md:text-6xl'} font-semibold mb-2 text-[#1d1d1f] tracking-tight transition-all duration-300`}>
+            <h1 className={`${chatMessages.length > 0 ? 'text-2xl sm:text-3xl md:text-4xl' : 'text-3xl sm:text-5xl md:text-6xl'} font-semibold mb-2 text-[#1d1d1f] tracking-tight transition-all duration-300`}>
               Digital Wellness.
             </h1>
             
@@ -412,7 +435,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
                   transition={{ duration: 0.25 }}
-                  className="text-zinc-500 text-base md:text-lg max-w-xl mx-auto font-light leading-relaxed"
+                  className="text-zinc-500 text-xs sm:text-base md:text-lg max-w-xl mx-auto font-light leading-relaxed px-2"
                 >
                   Practical focus tools, screen time controls, and bedtime device routines.
                 </motion.p>
@@ -423,7 +446,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
           {/* Expanding Glass Chat Box Panel for Light Theme */}
           <motion.div 
             layout
-            className={`w-full max-w-[850px] relative mt-2 ${isFocused ? 'panel-focused' : ''}`}
+            className={`w-full max-w-[850px] relative mt-1 sm:mt-2 ${isFocused ? 'panel-focused' : ''}`}
             animate={{ scale: isFocused ? 1.002 : 1 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -462,7 +485,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             </div>
 
             {/* Inner Content of the Chat Box */}
-            <div className="p-4 md:p-6 flex flex-col justify-between relative z-30 min-h-[140px]">
+            <div className="p-3.5 sm:p-5 md:p-6 flex flex-col justify-between relative z-30 min-h-[130px] sm:min-h-[140px]">
               
               {/* 1. INITIAL EMPTY STATE INPUT */}
               {chatMessages.length === 0 ? (
@@ -480,12 +503,12 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                       }
                     }}
                     placeholder="Describe your habit, device, or study challenge..."
-                    className="w-full bg-transparent text-[#1d1d1f] text-base md:text-lg outline-none resize-none placeholder-zinc-400 px-2 font-light leading-relaxed"
-                    style={{ minHeight: '76px' }}
+                    className="w-full bg-transparent text-[#1d1d1f] text-[16px] sm:text-base md:text-lg outline-none resize-none placeholder-zinc-400 placeholder:text-xs sm:placeholder:text-base px-1 sm:px-2 font-light leading-relaxed"
+                    style={{ minHeight: '68px' }}
                   />
 
-                  <div className="flex justify-between items-center mt-3 pt-3 border-t border-black/[0.04] px-1">
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                  <div className="flex justify-between items-center mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t border-black/[0.04] px-0.5 sm:px-1">
+                    <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-zinc-400">
                       <GeminiLogo className="w-3.5 h-3.5 shrink-0" />
                       <span>Powered by Gemini</span>
                     </div>
@@ -493,7 +516,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                     <button 
                       onClick={() => handleSendChat()}
                       disabled={!chatInput.trim() || chatLoading}
-                      className={`px-4 py-2 rounded-full transition-all flex items-center gap-2 text-xs font-semibold ${
+                      className={`px-3.5 sm:px-4 py-2 rounded-full transition-all flex items-center gap-1.5 sm:gap-2 text-xs font-semibold ${
                         chatInput.trim() && !chatLoading
                           ? 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm cursor-pointer' 
                           : 'text-zinc-400 bg-black/[0.04] opacity-50 cursor-not-allowed'
@@ -534,32 +557,32 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   </div>
 
                   {/* Conversation History */}
-                  <div className="space-y-6 text-left">
+                  <div className="space-y-4 sm:space-y-6 text-left">
                     {chatMessages.map((msg, index) => (
                       <div 
                         key={index} 
                         className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
                         {msg.role === 'user' ? (
-                          <div className="max-w-xl bg-[#1d1d1f] text-white px-5 py-3 rounded-2xl text-sm leading-relaxed font-light shadow-sm">
+                          <div className="max-w-[90%] sm:max-w-xl bg-[#1d1d1f] text-white px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed font-light shadow-sm">
                             {msg.content}
                           </div>
                         ) : (
-                          <div className="w-full bg-[#fbfbfd] border border-black/[0.06] rounded-2xl p-5 md:p-7 shadow-2xs">
+                          <div className="w-full bg-[#fbfbfd] border border-black/[0.06] rounded-2xl p-4 sm:p-5 md:p-7 shadow-2xs">
                             {/* Advisor Header Bar */}
-                            <div className="flex items-center justify-between pb-4 mb-5 border-b border-black/[0.05]">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 sm:pb-4 mb-4 sm:mb-5 border-b border-black/[0.05]">
                               <div className="flex items-center gap-2.5">
-                                <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-white">
+                                <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-white shrink-0">
                                   <Bot size={14} />
                                 </div>
                                 <div>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                                     <span className="text-xs font-semibold text-[#1d1d1f] tracking-tight">Digital Wellness Advisor</span>
                                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-medium">Curated Strategy</span>
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
+                              <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-zinc-400 pl-9 sm:pl-0">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 <span>Student Audited</span>
                               </div>
@@ -570,8 +593,8 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
                             {/* Structured Tool Dossiers: Mini Version of the Full Evaluation Matrix */}
                             {msg.recommended_tools && msg.recommended_tools.length > 0 && (
-                              <div className="mt-8 pt-6 border-t border-black/[0.06]">
-                                <div className="flex items-center justify-between mb-4">
+                              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-black/[0.06]">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
                                   <div>
                                     <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
                                       <Sparkles size={13} className="text-blue-600" />
@@ -581,12 +604,12 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                       Evaluated for academic focus, zero telemetry, and bypass resistance.
                                     </p>
                                   </div>
-                                  <span className="text-[11px] font-mono text-zinc-400">
+                                  <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400">
                                     {msg.recommended_tools.length} Curated Solution{msg.recommended_tools.length > 1 ? 's' : ''}
                                   </span>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
                                   {msg.recommended_tools.map((rec) => {
                                     const tool = resources.find(r => r.slug === rec.slug) || {
                                       name: rec.name,
@@ -603,7 +626,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                     return (
                                       <div
                                         key={rec.slug || tool.slug}
-                                        className="bg-white border border-black/[0.06] hover:border-black/15 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 group shadow-2xs hover:shadow-xs"
+                                        className="bg-white border border-black/[0.06] hover:border-black/15 rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-200 group shadow-2xs hover:shadow-xs"
                                       >
                                         <div>
                                           {/* Top Row: Meta badges */}
@@ -670,12 +693,12 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                         </div>
 
                                         {/* Integrated Actions Toolbar */}
-                                        <div className="pt-3 border-t border-black/[0.04] flex flex-wrap items-center justify-between gap-2">
-                                          <div className="flex items-center gap-1.5">
+                                        <div className="pt-3 border-t border-black/[0.04] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                                          <div className="flex flex-wrap items-center gap-1.5">
                                             {tool.video_tutorial_url && (
                                               <button
                                                 onClick={() => setSelectedTool(tool)}
-                                                className="px-2.5 py-1.5 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-zinc-700 hover:text-black text-xs font-medium flex items-center gap-1 transition-all cursor-pointer"
+                                                className="px-2.5 py-1.5 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-zinc-700 hover:text-black text-xs font-medium flex items-center gap-1 transition-all cursor-pointer min-h-[32px]"
                                                 title="Watch Video Walkthrough"
                                               >
                                                 <Play size={10} fill="currentColor" />
@@ -687,7 +710,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                                 href={tool.extension_url}
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                className="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60 text-xs font-medium flex items-center gap-1 transition-all"
+                                                className="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60 text-xs font-medium flex items-center gap-1 transition-all min-h-[32px]"
                                               >
                                                 <Puzzle size={11} />
                                                 {tool.category === 'browser_extension' ? 'Add Extension' : 'Get App'}
@@ -698,7 +721,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                                 href={tool.documentation_url}
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium flex items-center gap-1 transition-all"
+                                                className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium flex items-center gap-1 transition-all min-h-[32px]"
                                               >
                                                 <BookOpen size={11} />
                                                 Docs
@@ -708,7 +731,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
                                           <button
                                             onClick={() => setSelectedTool(tool)}
-                                            className="px-3 py-1.5 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium flex items-center gap-1 transition-all ml-auto cursor-pointer"
+                                            className="w-full sm:w-auto text-center justify-center px-3.5 py-2 sm:py-1.5 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium flex items-center gap-1 transition-all sm:ml-auto cursor-pointer"
                                           >
                                             Inspect Full Dossier →
                                           </button>
@@ -724,7 +747,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                             {msg.relevant_guide_slug && (() => {
                               const guide = guides.find(g => g.slug === msg.relevant_guide_slug);
                               return (
-                                <div className="mt-5 p-4 rounded-2xl bg-white border border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                                <div className="mt-4 sm:mt-5 p-3.5 sm:p-4 rounded-2xl bg-white border border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
                                   <div className="flex items-start gap-3">
                                     <div className="p-2.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[#1d1d1f] shrink-0 mt-0.5">
                                       <BookOpen size={15} />
@@ -751,7 +774,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
                                   <button
                                     onClick={() => handleOpenGuide(msg.relevant_guide_slug)}
-                                    className="px-3.5 py-2 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium shrink-0 flex items-center gap-1.5 transition-all self-end sm:self-center cursor-pointer"
+                                    className="w-full sm:w-auto text-center justify-center px-3.5 py-2 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium shrink-0 flex items-center gap-1.5 transition-all self-stretch sm:self-center cursor-pointer"
                                   >
                                     Open Protocol Guide →
                                   </button>
@@ -773,7 +796,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   </div>
 
                   {/* Follow-up Prompt Input Bar at Bottom of Expanded Chat Box */}
-                  <div className="pt-4 border-t border-black/[0.06] mt-4">
+                  <div className="pt-3 sm:pt-4 border-t border-black/[0.06] mt-3 sm:mt-4">
                     <textarea
                       ref={textareaRef}
                       value={chatInput}
@@ -787,12 +810,12 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                         }
                       }}
                       placeholder="Ask a follow-up question or explore another challenge..."
-                      className="w-full bg-transparent text-[#1d1d1f] text-sm md:text-base outline-none resize-none placeholder-zinc-400 px-1 font-light leading-relaxed"
+                      className="w-full bg-transparent text-[#1d1d1f] text-[16px] sm:text-sm md:text-base outline-none resize-none placeholder-zinc-400 placeholder:text-xs sm:placeholder:text-sm px-1 font-light leading-relaxed"
                       style={{ minHeight: '52px' }}
                     />
 
                     <div className="flex justify-between items-center mt-2 pt-2 border-t border-black/[0.04]">
-                      <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                      <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-zinc-400">
                         <GeminiLogo className="w-3.5 h-3.5 shrink-0" />
                         <span>Powered by Gemini</span>
                       </div>
@@ -800,7 +823,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                       <button 
                         onClick={() => handleSendChat()}
                         disabled={!chatInput.trim() || chatLoading}
-                        className={`px-4 py-1.5 rounded-full transition-all flex items-center gap-2 text-xs font-semibold ${
+                        className={`px-3.5 sm:px-4 py-1.5 rounded-full transition-all flex items-center gap-1.5 sm:gap-2 text-xs font-semibold ${
                           chatInput.trim() && !chatLoading
                             ? 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm cursor-pointer' 
                             : 'text-zinc-400 bg-black/[0.04] opacity-50 cursor-not-allowed'
@@ -846,7 +869,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     {/* Interactive Dot Indicators */}
                     <div className="flex items-center gap-1.5" role="tablist" aria-label="Remedy slides">
                       {CAROUSEL_PAGES.map((_, idx) => (
@@ -868,7 +891,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={handlePrevCarousel}
-                        className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                        className="p-2 sm:p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
                         title="Previous 3 Tools"
                         aria-label="Previous 3 Tools"
                       >
@@ -876,7 +899,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                       </button>
                       <button
                         onClick={handleNextCarousel}
-                        className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                        className="p-2 sm:p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
                         title="Next 3 Tools"
                         aria-label="Next 3 Tools"
                       >
@@ -886,8 +909,13 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   </div>
                 </div>
 
-                {/* Sliding Container: Exactly 3 full cards per view with zero cut-off edges */}
-                <div className="w-full overflow-hidden rounded-2xl">
+                {/* Sliding Container: With Touch-Swipe Support for Mobile */}
+                <div 
+                  className="w-full overflow-hidden rounded-2xl touch-pan-x"
+                  onTouchStart={handleCarouselTouchStart}
+                  onTouchMove={handleCarouselTouchMove}
+                  onTouchEnd={handleCarouselTouchEnd}
+                >
                   <div 
                     className="flex transition-transform duration-500 ease-out"
                     style={{ transform: `translateX(-${carouselPage * 100}%)` }}
@@ -903,7 +931,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                           return (
                             <div
                               key={item.slug}
-                              className="bg-white border border-black/[0.06] hover:border-black/20 rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-200 group text-left"
+                              className="bg-white border border-black/[0.06] hover:border-black/20 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-200 group text-left"
                             >
                               <div>
                                 <div className="flex items-center justify-between gap-1 mb-2">
@@ -927,16 +955,16 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                 </p>
                               </div>
 
-                              <div className="mt-4 pt-3 border-t border-black/[0.04] flex items-center justify-between text-xs">
+                              <div className="mt-3.5 sm:mt-4 pt-3 border-t border-black/[0.04] flex items-center justify-between text-xs">
                                 <button
                                   onClick={() => handleSelectToolFromSlug(item.slug)}
-                                  className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
+                                  className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer py-1"
                                 >
                                   {isGuide ? 'Inspect Protocol →' : 'Inspect Tool →'}
                                 </button>
                                 <button
                                   onClick={() => handleQuickPrompt(item.prompt)}
-                                  className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[11px] font-medium transition-all cursor-pointer"
+                                  className="px-2.5 py-1.5 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[11px] font-medium transition-all cursor-pointer min-h-[30px]"
                                 >
                                   Ask Advisor
                                 </button>
@@ -961,23 +989,23 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="flex flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-5"
+                className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-5 px-1"
               >
                 <button 
                   onClick={() => handleQuickPrompt("Block YouTube recommendations and shorts while studying on desktop")} 
-                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2.5 sm:py-2 rounded-2xl sm:rounded-full transition-all text-left font-light shadow-xs cursor-pointer min-h-[38px] flex items-center"
                 >
                   Block YouTube recommendations and shorts while studying
                 </button>
                 <button 
                   onClick={() => handleQuickPrompt("Set up strict iOS Downtime without bypass loopholes")} 
-                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2.5 sm:py-2 rounded-2xl sm:rounded-full transition-all text-left font-light shadow-xs cursor-pointer min-h-[38px] flex items-center"
                 >
                   Set up strict iOS Downtime without bypass loopholes
                 </button>
                 <button 
                   onClick={() => handleQuickPrompt("Open-source focus tools with zero data collection")} 
-                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2.5 sm:py-2 rounded-2xl sm:rounded-full transition-all text-left font-light shadow-xs cursor-pointer min-h-[38px] flex items-center"
                 >
                   Open-source focus tools with zero data collection
                 </button>
@@ -1004,7 +1032,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
           </div>
 
           {/* Search & Filter Header */}
-          <div className="flex flex-col md:flex-row gap-3 mb-6">
+          <div className="flex flex-col md:flex-row gap-3 mb-4 sm:mb-6">
             <div className="relative flex-1">
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
@@ -1012,17 +1040,17 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                 placeholder="Search tools, platforms, or capabilities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 bg-white border border-black/10 rounded-2xl text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 font-light shadow-xs"
+                className="w-full pl-9 pr-4 py-2.5 bg-white border border-black/10 rounded-2xl text-[16px] sm:text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 font-light shadow-xs"
               />
             </div>
 
             {/* Platform Filter */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 apple-scrollbar">
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar apple-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-1">
               {['all', 'macOS', 'iOS', 'Windows', 'Android', 'Chrome'].map((plat) => (
                 <button
                   key={plat}
                   onClick={() => setSelectedPlatform(plat)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 min-h-[32px] sm:min-h-0 flex items-center ${
                     selectedPlatform === plat
                       ? 'bg-[#1d1d1f] text-white shadow-sm'
                       : 'bg-white border border-black/[0.06] text-zinc-600 hover:text-black hover:border-black/15'
@@ -1034,8 +1062,8 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             </div>
           </div>
 
-          {/* Category Filter Pills */}
-          <div className="flex flex-wrap gap-2 mb-8">
+          {/* Category Filter Pills (Smooth Edge-to-Edge Touch Scroll on Mobile) */}
+          <div className="flex items-center sm:flex-wrap gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar apple-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-1 mb-6 sm:mb-8">
             {[
               { id: 'all', label: 'All Categories' },
               { id: 'focus_blocker', label: 'Focus Blockers' },
@@ -1047,7 +1075,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${
+                className={`shrink-0 px-3 py-1.5 sm:py-1 rounded-full text-xs sm:text-[11px] font-medium transition-all min-h-[32px] sm:min-h-0 flex items-center ${
                   selectedCategory === cat.id
                     ? 'bg-zinc-800 text-white'
                     : 'bg-white border border-black/[0.05] text-zinc-600 hover:text-black'
@@ -1059,7 +1087,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
           </div>
 
           {/* 3-Column Clean Card Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
             {filteredResources.map((item) => (
               <div
                 key={item.id}

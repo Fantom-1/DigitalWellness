@@ -44,13 +44,13 @@ export default function ComparisonTable({ resources, onSelectResource }) {
         </span>
       </div>
 
-      {/* Category Filter Pills */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* Category Filter Pills (Smooth Edge-to-Edge Touch Scroll on Mobile) */}
+      <div className="flex items-center sm:flex-wrap gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar apple-scrollbar touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0 pb-1 mb-4 sm:mb-6">
         {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setFilterCategory(cat.id)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all min-h-[34px] sm:min-h-0 flex items-center ${
               filterCategory === cat.id
                 ? 'bg-[#1d1d1f] text-white shadow-sm'
                 : 'bg-white border border-black/[0.06] text-zinc-600 hover:text-black hover:border-black/15'
@@ -61,18 +61,26 @@ export default function ComparisonTable({ resources, onSelectResource }) {
         ))}
       </div>
 
+      {/* Mobile Horizontal Scroll Cue */}
+      <div className="sm:hidden flex items-center justify-between text-[11px] text-zinc-400 font-mono mb-2 px-1">
+        <span>← Swipe horizontally to compare</span>
+        <span>Sticky Resource Column</span>
+      </div>
+
       {/* Table Container */}
       <div className="bg-white border border-black/[0.06] rounded-2xl overflow-hidden shadow-sm">
-        <div className="overflow-x-auto apple-scrollbar">
-          <table className="w-full text-xs text-left">
+        <div className="overflow-x-auto apple-scrollbar touch-pan-x">
+          <table className="w-full text-xs text-left border-collapse">
             <thead className="bg-zinc-50 text-zinc-500 uppercase text-[10px] tracking-wider border-b border-black/[0.06] font-medium">
               <tr>
-                <th className="py-4 px-5">Resource</th>
-                <th className="py-4 px-4">Platforms</th>
-                <th className="py-4 px-4">Pricing</th>
-                <th className="py-4 px-4">Privacy</th>
-                <th className="py-4 px-4">Bypass Limitation</th>
-                <th className="py-4 px-4 text-right">Details</th>
+                <th className="py-3.5 sm:py-4 px-4 sm:px-5 sticky left-0 bg-zinc-50 z-20 shadow-[2px_0_6px_rgba(0,0,0,0.04)] sm:shadow-none min-w-[130px] sm:min-w-0">
+                  Resource
+                </th>
+                <th className="py-3.5 sm:py-4 px-3 sm:px-4 min-w-[110px]">Platforms</th>
+                <th className="py-3.5 sm:py-4 px-3 sm:px-4 min-w-[110px]">Pricing</th>
+                <th className="py-3.5 sm:py-4 px-3 sm:px-4 min-w-[100px]">Privacy</th>
+                <th className="py-3.5 sm:py-4 px-3 sm:px-4 min-w-[160px]">Bypass Limitation</th>
+                <th className="py-3.5 sm:py-4 px-3 sm:px-4 text-right min-w-[80px]">Details</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] text-zinc-700 font-light">
@@ -82,15 +90,15 @@ export default function ComparisonTable({ resources, onSelectResource }) {
                   onClick={() => onSelectResource && onSelectResource(item)}
                   className="hover:bg-zinc-50/80 transition-colors cursor-pointer group"
                 >
-                  <td className="py-4 px-5">
+                  <td className="py-3.5 sm:py-4 px-4 sm:px-5 sticky left-0 bg-white group-hover:bg-zinc-50/95 transition-colors z-10 shadow-[2px_0_6px_rgba(0,0,0,0.04)] sm:shadow-none min-w-[130px] sm:min-w-0">
                     <div className="font-semibold text-[#1d1d1f] group-hover:text-blue-600 transition-colors text-sm">
                       {item.name}
                     </div>
-                    <div className="text-[11px] text-zinc-400 mt-0.5 capitalize">
+                    <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-0.5 capitalize truncate max-w-[120px] sm:max-w-none">
                       {item.category.replace('_', ' ')}
                     </div>
                   </td>
-                  <td className="py-4 px-4">
+                  <td className="py-3.5 sm:py-4 px-3 sm:px-4">
                     <div className="flex flex-wrap gap-1 max-w-[150px]">
                       {item.platforms.map((p) => (
                         <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-100 text-[10px] text-zinc-600">
@@ -99,7 +107,7 @@ export default function ComparisonTable({ resources, onSelectResource }) {
                       ))}
                     </div>
                   </td>
-                  <td className="py-4 px-4">
+                  <td className="py-3.5 sm:py-4 px-3 sm:px-4">
                     <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-black/[0.04] text-zinc-800">
                       {item.pricing_type}
                     </span>
@@ -107,7 +115,7 @@ export default function ComparisonTable({ resources, onSelectResource }) {
                       {item.price_details}
                     </p>
                   </td>
-                  <td className="py-4 px-4">
+                  <td className="py-3.5 sm:py-4 px-3 sm:px-4">
                     <div className="flex items-center gap-1 font-mono text-xs text-zinc-800">
                       <Shield size={11} className="text-zinc-500" />
                       <span>{item.privacy_rating}</span>
@@ -116,12 +124,12 @@ export default function ComparisonTable({ resources, onSelectResource }) {
                       {item.privacy_details}
                     </p>
                   </td>
-                  <td className="py-4 px-4">
+                  <td className="py-3.5 sm:py-4 px-3 sm:px-4">
                     <p className="text-[11px] text-zinc-600 line-clamp-2 max-w-[200px]" title={item.limitations}>
                       {item.limitations}
                     </p>
                   </td>
-                  <td className="py-4 px-4 text-right">
+                  <td className="py-3.5 sm:py-4 px-3 sm:px-4 text-right">
                     <span className="text-xs text-zinc-400 group-hover:text-black font-medium transition-colors">
                       Inspect →
                     </span>

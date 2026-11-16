@@ -10,7 +10,26 @@
     -moz-osx-font-smoothing: grayscale;
     background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
     background-size: 20px 20px;
+    -webkit-tap-highlight-color: transparent;
   }
+}
+
+/* ========================================================
+   Mobile Touch & Native Feel Optimizations
+   ======================================================== */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.touch-pan-x {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 /* ========================================================

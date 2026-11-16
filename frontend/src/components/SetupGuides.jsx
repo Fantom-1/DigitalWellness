@@ -35,7 +35,7 @@ export default function SetupGuides({ guides, selectedGuideSlug }) {
       </div>
 
       {/* Guide Tabs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3 mb-6 sm:mb-8">
         {guides.map((guide, idx) => {
           const isSelected = selectedGuideIndex === idx;
           return (
@@ -45,17 +45,17 @@ export default function SetupGuides({ guides, selectedGuideSlug }) {
                 setSelectedGuideIndex(idx);
                 setShowVideo(false);
               }}
-              className={`p-5 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between ${
+              className={`p-4 sm:p-5 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between cursor-pointer ${
                 isSelected
                   ? 'bg-white border-black/15 shadow-md ring-1 ring-black/5'
                   : 'bg-white/60 border-black/[0.04] hover:border-black/10 hover:bg-white'
               }`}
             >
-              <div className="flex items-center justify-between mb-3 w-full">
-                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-2.5 sm:mb-3 w-full">
+                <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
                   Protocol 0{idx + 1}
                 </span>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-black/[0.04] text-zinc-600">
+                <span className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded-full bg-black/[0.04] text-zinc-600">
                   {guide.estimated_minutes} min
                 </span>
               </div>
@@ -63,7 +63,7 @@ export default function SetupGuides({ guides, selectedGuideSlug }) {
                 <h3 className={`font-semibold text-sm leading-snug ${isSelected ? 'text-[#1d1d1f]' : 'text-zinc-700'}`}>
                   {guide.title}
                 </h3>
-                <p className="text-xs text-zinc-500 mt-1.5 line-clamp-2 font-light">
+                <p className="text-xs text-zinc-500 mt-1 sm:mt-1.5 line-clamp-2 font-light">
                   {guide.summary}
                 </p>
               </div>
@@ -73,17 +73,17 @@ export default function SetupGuides({ guides, selectedGuideSlug }) {
       </div>
 
       {/* Active Guide Card */}
-      <div className="bg-white border border-black/[0.06] rounded-3xl p-6 md:p-8 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-black/[0.06]">
+      <div className="bg-white border border-black/[0.06] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-black/[0.06]">
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
               {currentGuide.category}
             </span>
-            <h3 className="text-2xl font-semibold text-[#1d1d1f] mt-1">{currentGuide.title}</h3>
-            <p className="text-sm text-zinc-500 mt-1 font-light leading-relaxed max-w-2xl">{currentGuide.summary}</p>
+            <h3 className="text-xl sm:text-2xl font-semibold text-[#1d1d1f] mt-1">{currentGuide.title}</h3>
+            <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-light leading-relaxed max-w-2xl">{currentGuide.summary}</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-xs">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs w-full sm:w-auto">
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/[0.03] border border-black/[0.04] text-zinc-600">
               <Clock size={12} />
               {currentGuide.estimated_minutes} Minutes
@@ -99,7 +99,7 @@ export default function SetupGuides({ guides, selectedGuideSlug }) {
             {embedUrl && (
               <button
                 onClick={() => setShowVideo(!showVideo)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-medium transition-all ${
+                className={`w-full sm:w-auto justify-center flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl font-medium transition-all min-h-[38px] sm:min-h-0 cursor-pointer ${
                   showVideo 
                     ? 'bg-zinc-200 text-[#1d1d1f]' 
                     : 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm'
