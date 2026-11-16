@@ -3,24 +3,24 @@
 
 @layer base {
   body {
-    background-color: #0a0a0a;
-    color: white;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-    background-size: 16px 16px;
+    background-color: #f5f5f7;
+    color: #1d1d1f;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 
 /* ========================================================
-   Apple macOS-Style Minimalist & Auto-Hiding Scrollbars
+   Apple macOS-Style Minimalist Light Scrollbars
    Invisible by default, smoothly reveals subtle pill on scroll or hover.
    ======================================================== */
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -33,12 +33,12 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.12);
   border-radius: 9999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.28);
+  background-color: rgba(0, 0, 0, 0.28);
 }
 
 /* Visible-when-required auto-scrollbar */
@@ -51,7 +51,7 @@
 .apple-scrollbar:hover,
 .apple-scrollbar:focus,
 .apple-scrollbar:active {
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
 }
 
 .apple-scrollbar::-webkit-scrollbar {
@@ -71,15 +71,15 @@
 
 .apple-scrollbar:hover::-webkit-scrollbar-thumb,
 .apple-scrollbar:focus-within::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.16);
 }
 
 .apple-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(0, 0, 0, 0.32);
 }
 
 @layer components {
-  /* Comet border spinner */
+  /* Apple Ethereal Border Spinner for Light Theme */
   .comet-spinner {
     position: absolute;
     top: 50%;
@@ -91,17 +91,17 @@
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.1) 75%,
-      rgba(255, 255, 255, 0.4) 85%,
-      rgba(255, 255, 255, 0.8) 95%,
-      rgba(255, 255, 255, 1) 98%,
+      transparent 60%,
+      rgba(99, 102, 241, 0.1) 75%,
+      rgba(168, 85, 247, 0.2) 85%,
+      rgba(59, 130, 246, 0.35) 95%,
+      rgba(0, 0, 0, 0.2) 98%,
       transparent 100%
     );
-    animation: spin 6s linear infinite;
+    animation: spin 8s linear infinite;
   }
 
-  /* Inner ambient spreading glow */
+  /* Inner ambient spreading glow for Light Theme */
   .comet-glow {
     position: absolute;
     top: 50%;
@@ -113,15 +113,14 @@
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 50%,
-      rgba(255, 46, 147, 0.05) 75%,
-      rgba(138, 43, 226, 0.1) 85%,
-      rgba(0, 150, 255, 0.15) 95%,
-      rgba(255, 255, 255, 0.2) 98%,
+      transparent 55%,
+      rgba(147, 197, 253, 0.15) 75%,
+      rgba(196, 181, 253, 0.2) 85%,
+      rgba(253, 164, 175, 0.15) 95%,
       transparent 100%
     );
-    animation: spin 6s linear infinite;
-    filter: blur(40px);
+    animation: spin 8s linear infinite;
+    filter: blur(50px);
     pointer-events: none;
     z-index: 0;
   }
@@ -131,11 +130,11 @@
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 60%,
-      rgba(255, 255, 255, 0.2) 85%,
-      rgba(255, 255, 255, 0.6) 92%,
-      rgba(255, 255, 255, 0.9) 96%,
-      rgba(255, 255, 255, 1) 100%
+      transparent 50%,
+      rgba(99, 102, 241, 0.2) 75%,
+      rgba(168, 85, 247, 0.35) 90%,
+      rgba(59, 130, 246, 0.45) 98%,
+      transparent 100%
     );
   }
   
@@ -144,9 +143,9 @@
       from 0deg,
       transparent 0%,
       transparent 50%,
-      rgba(255, 255, 255, 0.05) 75%,
-      rgba(138, 43, 226, 0.15) 90%,
-      rgba(255, 0, 85, 0.25) 100%
+      rgba(147, 197, 253, 0.25) 75%,
+      rgba(196, 181, 253, 0.3) 85%,
+      rgba(253, 164, 175, 0.25) 100%
     );
   }
 }

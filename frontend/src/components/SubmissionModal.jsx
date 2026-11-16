@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2 } from 'lucide-react';
+import { X, CheckCircle2 } from 'lucide-react';
 import { submitStudentFeedback } from '../api';
 
 export default function SubmissionModal({ isOpen, onClose }) {
@@ -43,17 +43,17 @@ export default function SubmissionModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#0c0c0e] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl text-left overflow-y-auto max-h-[90vh] apple-scrollbar">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg bg-white border border-black/[0.08] rounded-3xl p-6 md:p-8 shadow-2xl text-left overflow-y-auto max-h-[90vh] apple-scrollbar">
         
-        <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between pb-4 border-b border-black/[0.06]">
           <div>
-            <h3 className="text-xl font-semibold text-white tracking-tight">Student Contribution</h3>
-            <p className="text-xs text-zinc-400 font-light mt-0.5">Submit feedback, tool corrections, or setup walkthroughs.</p>
+            <h3 className="text-xl font-semibold text-[#1d1d1f] tracking-tight">Student Contribution</h3>
+            <p className="text-xs text-zinc-500 font-light mt-0.5">Submit feedback, tool corrections, or video walkthroughs.</p>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 text-zinc-400 hover:text-white rounded-full hover:bg-white/10 transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-black rounded-full hover:bg-black/5 transition-colors"
           >
             <X size={18} />
           </button>
@@ -61,21 +61,21 @@ export default function SubmissionModal({ isOpen, onClose }) {
 
         {submitted ? (
           <div className="py-12 flex flex-col items-center justify-center text-center">
-            <CheckCircle2 size={40} className="text-zinc-200 mb-3" />
-            <h4 className="text-base font-medium text-white">Thank you for your feedback</h4>
-            <p className="text-xs text-zinc-400 mt-1 max-w-xs font-light">Your contribution helps improve digital wellness guidance for all students.</p>
+            <CheckCircle2 size={40} className="text-[#1d1d1f] mb-3" />
+            <h4 className="text-base font-semibold text-[#1d1d1f]">Thank you for your feedback</h4>
+            <p className="text-xs text-zinc-500 mt-1 max-w-xs font-light">Your contribution helps improve digital wellness guidance for all students.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="mt-5 space-y-4">
             {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-xs">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs">
                 {error}
               </div>
             )}
 
             {/* Type selector */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-2">Contribution Type</label>
+              <label className="block text-xs font-medium text-zinc-500 mb-2">Contribution Type</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { id: 'feedback', label: 'Feedback & Review' },
@@ -91,8 +91,8 @@ export default function SubmissionModal({ isOpen, onClose }) {
                       onClick={() => setSubmissionType(item.id)}
                       className={`p-2.5 rounded-xl border text-xs font-medium transition-all text-left ${
                         active 
-                          ? 'bg-white text-black border-white shadow-sm' 
-                          : 'bg-white/5 border-white/5 text-zinc-400 hover:bg-white/10 hover:text-zinc-200'
+                          ? 'bg-[#1d1d1f] text-white border-black shadow-sm' 
+                          : 'bg-zinc-50 border-black/[0.04] text-zinc-600 hover:bg-zinc-100 hover:text-black'
                       }`}
                     >
                       {item.label}
@@ -105,49 +105,49 @@ export default function SubmissionModal({ isOpen, onClose }) {
             {/* Name & Email row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Name (Optional)</label>
+                <label className="block text-xs font-medium text-zinc-500 mb-1">Name (Optional)</label>
                 <input
                   type="text"
                   placeholder="Anonymous Student"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/30"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-black/10 rounded-xl text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 focus:bg-white"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1">Email (Optional)</label>
+                <label className="block text-xs font-medium text-zinc-500 mb-1">Email (Optional)</label>
                 <input
                   type="email"
                   placeholder="alex@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/30"
+                  className="w-full px-3 py-2 bg-zinc-50 border border-black/10 rounded-xl text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 focus:bg-white"
                 />
               </div>
             </div>
 
             {/* Content area */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Notes / Description</label>
+              <label className="block text-xs font-medium text-zinc-500 mb-1">Notes / Description</label>
               <textarea
                 required
                 rows={3}
                 placeholder="Share your setup tip, tool correction, bypass mitigation, or feedback..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 resize-none font-light"
+                className="w-full px-3 py-2 bg-zinc-50 border border-black/10 rounded-xl text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 focus:bg-white resize-none font-light"
               />
             </div>
 
             {/* Media / Video link */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Link to Video, Screenshot, or Animation (Optional)</label>
+              <label className="block text-xs font-medium text-zinc-500 mb-1">Link to Video, Screenshot, or Animation (Optional)</label>
               <input
                 type="url"
                 placeholder="https://..."
                 value={mediaUrl}
                 onChange={(e) => setMediaUrl(e.target.value)}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/30"
+                className="w-full px-3 py-2 bg-zinc-50 border border-black/10 rounded-xl text-xs text-[#1d1d1f] placeholder-zinc-400 focus:outline-none focus:border-black/30 focus:bg-white"
               />
             </div>
 
@@ -155,14 +155,14 @@ export default function SubmissionModal({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+                className="px-4 py-2 text-xs font-medium text-zinc-500 hover:text-black rounded-xl hover:bg-black/5 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting || !content.trim()}
-                className="px-4 py-2 bg-white text-black hover:bg-zinc-200 disabled:opacity-50 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
+                className="px-4 py-2 bg-[#1d1d1f] text-white hover:bg-black disabled:opacity-50 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
               >
                 {submitting ? 'Submitting...' : 'Submit'}
               </button>

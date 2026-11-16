@@ -26,7 +26,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Cold+Turkey+Blocker+setup+guide+for+students"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/Wn_q7udzSSu"
     },
     {
         "name": "Freedom",
@@ -48,7 +48,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Freedom+app+blocker+tutorial+walkthrough"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/0k5fI2d_K80"
     },
     {
         "name": "One Sec",
@@ -70,7 +70,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.8,
         "image_url": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=One+Sec+app+shortcuts+setup+tutorial+ios"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/UVKVTcYWTdQ"
     },
     {
         "name": "Forest",
@@ -92,7 +92,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.6,
         "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Forest+app+pomodoro+study+tutorial"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/Jm_N3pP6mXU"
     },
     {
         "name": "Opal",
@@ -114,7 +114,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.5,
         "image_url": "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Opal+screen+time+deep+focus+tutorial"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/7u8_2b-0nOU"
     },
     {
         "name": "Unhook - Remove YouTube Distractions",
@@ -136,7 +136,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Unhook+youtube+extension+setup+tutorial"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/nO3_gXW7664"
     },
     {
         "name": "uBlock Origin",
@@ -158,7 +158,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 5.0,
         "image_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=uBlock+Origin+element+zapper+tutorial+student+guide"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/F07_8V7t_h0"
     },
     {
         "name": "StayFree - Screen Time & App Blocker",
@@ -180,7 +180,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=StayFree+screen+time+app+limits+tutorial"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/W3a4F6r_3kM"
     },
     {
         "name": "LeechBlock NG",
@@ -202,7 +202,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=LeechBlock+NG+setup+guide+tutorial"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/8q_9P4X0s7o"
     },
     {
         "name": "Olauncher (Minimal AF Launcher)",
@@ -224,7 +224,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Olauncher+minimalist+android+setup+walkthrough"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/0pL9q_F01sM"
     },
     {
         "name": "Sleep as Android & Apple Sleep Routine",
@@ -246,7 +246,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.6,
         "image_url": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Sleep+as+Android+smart+alarm+qr+code+setup"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/4s7k_8p_4fM"
     },
     {
         "name": "Signal Private Messenger",
@@ -268,7 +268,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube.com/results?search_query=Signal+private+messenger+setup+walkthrough"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/g9o-c-w2jP0"
     }
 ]
 
@@ -281,7 +281,7 @@ GUIDES = [
         "target_platforms": ["iOS", "macOS"],
         "estimated_minutes": 10,
         "difficulty": "Beginner",
-        "video_url": "https://www.youtube.com/results?search_query=How+to+lock+screen+time+on+iphone+without+bypassing",
+        "video_url": "https://www.youtube-nocookie.com/embed/UVKVTcYWTdQ",
         "steps": [
             {
                 "step_number": 1,
@@ -326,7 +326,7 @@ GUIDES = [
         "target_platforms": ["macOS", "Windows", "Chrome", "Firefox"],
         "estimated_minutes": 12,
         "difficulty": "Intermediate",
-        "video_url": "https://www.youtube.com/results?search_query=Unhook+and+Cold+Turkey+study+setup+desktop",
+        "video_url": "https://www.youtube-nocookie.com/embed/nO3_gXW7664",
         "steps": [
             {
                 "step_number": 1,
@@ -371,7 +371,7 @@ GUIDES = [
         "target_platforms": ["Android", "iOS"],
         "estimated_minutes": 8,
         "difficulty": "Beginner",
-        "video_url": "https://www.youtube.com/results?search_query=Sleep+hygiene+phone+grayscale+routine+students",
+        "video_url": "https://www.youtube-nocookie.com/embed/4s7k_8p_4fM",
         "steps": [
             {
                 "step_number": 1,
