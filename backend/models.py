@@ -21,6 +21,8 @@ class WellnessResource(Base):
     category = Column(String, nullable=False, index=True)  # focus_blocker, screen_time, bedtime_routine, privacy_safety, browser_extension
     developer_or_team = Column(String)
     official_url = Column(String)
+    documentation_url = Column(String, nullable=True)
+    extension_url = Column(String, nullable=True)
     repository_url = Column(String, nullable=True)
     platforms = Column(JSONB, nullable=False, default=list)  # ["macOS", "Windows", "iOS", "Android", "Chrome", "Firefox"]
     

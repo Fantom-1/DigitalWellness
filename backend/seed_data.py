@@ -2,7 +2,8 @@
 Comprehensive curated dataset of 12 Student Digital Wellness Resources
 and 3 Practical Student Setup Guides.
 Checked and verified against official product specs as of November 2026.
-Enriched with UI screenshot previews and YouTube video tutorial walkthroughs.
+Enriched with verified documentation links, official browser extension store links,
+and high-quality YouTube video tutorial walkthroughs.
 """
 
 RESOURCES = [
@@ -14,8 +15,10 @@ RESOURCES = [
         "category": "focus_blocker",
         "developer_or_team": "Felix Belzile",
         "official_url": "https://getcoldturkey.com",
+        "documentation_url": "https://getcoldturkey.com/user-manual/",
+        "extension_url": "https://chromewebstore.google.com/detail/cold-turkey-blocker/lpcaedmchfhocbbapmcbpinfpgnhiddi",
         "repository_url": None,
-        "platforms": ["macOS", "Windows"],
+        "platforms": ["macOS", "Windows", "Chrome", "Firefox", "Edge", "Brave"],
         "pricing_type": "Freemium",
         "price_details": "Free version includes basic domain/app blocking and basic timers. Pro is a single one-time lifetime payment of $39 (student discounts frequently 20% off). No recurring subscriptions.",
         "purpose": "Enforce unbreakable study sessions by blocking distracting applications, web domains, and system settings during study sprints.",
@@ -26,7 +29,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/Wn_q7udzSSu"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/hv2oRKOSTuc"
     },
     {
         "name": "Freedom",
@@ -36,8 +39,10 @@ RESOURCES = [
         "category": "focus_blocker",
         "developer_or_team": "Freedom Labs Inc.",
         "official_url": "https://freedom.to",
+        "documentation_url": "https://support.freedom.to",
+        "extension_url": "https://chromewebstore.google.com/detail/freedom-website-blocker/nbjepalnhpncmhcmkcmogmphofdnnbgf",
         "repository_url": None,
-        "platforms": ["iOS", "Android", "macOS", "Windows", "Chrome", "Firefox"],
+        "platforms": ["iOS", "Android", "macOS", "Windows", "Chrome", "Firefox", "Edge"],
         "pricing_type": "Paid",
         "price_details": "Paid service: $3.33/month billed annually ($39.99/year) or $8.99 monthly. Free trial provides 7 block sessions. Not free for long-term use.",
         "purpose": "Prevent multi-device bypass by coordinating synchronized blocking schedules across mobile and desktop environments.",
@@ -48,7 +53,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/0k5fI2d_K80"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/INce9MClvuM"
     },
     {
         "name": "One Sec",
@@ -58,8 +63,10 @@ RESOURCES = [
         "category": "screen_time",
         "developer_or_team": "Frederik Riedel",
         "official_url": "https://one-sec.app",
+        "documentation_url": "https://tutorials.one-sec.app",
+        "extension_url": "https://chromewebstore.google.com/detail/one-sec-take-a-deep-brea/imcfpnapmgjjnlnffgfkpdnpmlngdcik",
         "repository_url": None,
-        "platforms": ["iOS", "Android", "macOS"],
+        "platforms": ["iOS", "Android", "macOS", "Chrome", "Firefox", "Safari"],
         "pricing_type": "Freemium",
         "price_details": "Free forever for 1 target app automation. Pro is $2.99/month, $19.99/year, or $39.99 lifetime (student family sharing supported).",
         "purpose": "Break subconscious compulsive app-opening habits by introducing mindful pause and deep breathing friction.",
@@ -70,7 +77,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.8,
         "image_url": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/UVKVTcYWTdQ"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/w39EqhnYcvM"
     },
     {
         "name": "Forest",
@@ -80,8 +87,10 @@ RESOURCES = [
         "category": "focus_blocker",
         "developer_or_team": "Seekrtech Co., Ltd.",
         "official_url": "https://forestapp.cc",
+        "documentation_url": "https://help.forestapp.cc",
+        "extension_url": "https://chromewebstore.google.com/detail/forest-stay-focused-be-pr/kjacjjdnoddnpdgjhflfcggipjlcmgip",
         "repository_url": None,
-        "platforms": ["iOS", "Android", "Chrome"],
+        "platforms": ["iOS", "Android", "Chrome", "Firefox"],
         "pricing_type": "Freemium",
         "price_details": "iOS: $3.99 upfront paid purchase. Android: Free download with ads and in-app purchase ($1.99) for Pro tree species. Chrome extension is free.",
         "purpose": "Provide visual and emotional incentives to remain focused on studying through virtual tree growth and real-tree planting partnerships.",
@@ -92,7 +101,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.6,
         "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/Jm_N3pP6mXU"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9nSmQ8GXgEo"
     },
     {
         "name": "Opal",
@@ -102,8 +111,10 @@ RESOURCES = [
         "category": "screen_time",
         "developer_or_team": "Opal Technologies Inc.",
         "official_url": "https://opal.so",
+        "documentation_url": "https://help.opal.so",
+        "extension_url": "https://chromewebstore.google.com/detail/opal-screen-time-for-work/ajofhldmfolnfopblnnfopgnckfocghh",
         "repository_url": None,
-        "platforms": ["iOS", "macOS"],
+        "platforms": ["iOS", "macOS", "Chrome"],
         "pricing_type": "Freemium",
         "price_details": "Free version offers daily screen time metrics and basic manual sessions. Pro is $9.99/month or $99/year (student discounts available) for recurring schedules and Deep Focus.",
         "purpose": "Help students gain awareness of screen time and lock down distracting social apps during classes and study blocks.",
@@ -114,7 +125,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.5,
         "image_url": "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/7u8_2b-0nOU"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/WGD4FfMuWBY"
     },
     {
         "name": "Unhook - Remove YouTube Distractions",
@@ -124,8 +135,10 @@ RESOURCES = [
         "category": "browser_extension",
         "developer_or_team": "Unhook Community",
         "official_url": "https://unhook.app",
+        "documentation_url": "https://unhook.app",
+        "extension_url": "https://chromewebstore.google.com/detail/unhook-remove-youtube-rec/khncfooichmfjbepaaaebmommgaahknn",
         "repository_url": "https://github.com",
-        "platforms": ["Chrome", "Firefox", "Edge", "Brave"],
+        "platforms": ["Chrome", "Firefox", "Edge", "Brave", "Safari"],
         "pricing_type": "100% Free",
         "price_details": "100% completely free and open source. No paid tiers, no premium upsells, no donation popups.",
         "purpose": "Eliminate addictive algorithmic rabbit holes on YouTube so students can watch lecture recordings and tutorials without distraction.",
@@ -136,7 +149,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/nO3_gXW7664"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/9Tp9wot_Hy4"
     },
     {
         "name": "uBlock Origin",
@@ -146,8 +159,10 @@ RESOURCES = [
         "category": "privacy_safety",
         "developer_or_team": "Raymond Hill (gorhill)",
         "official_url": "https://ublockorigin.com",
+        "documentation_url": "https://github.com/gorhill/uBlock/wiki",
+        "extension_url": "https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/",
         "repository_url": "https://github.com/gorhill/uBlock",
-        "platforms": ["Firefox", "Chrome", "Edge", "Brave"],
+        "platforms": ["Firefox", "Chrome", "Edge", "Brave", "Opera"],
         "pricing_type": "100% Free",
         "price_details": "100% free and open-source (GPLv3). Raymond Hill strictly refuses all donations and commercial sponsorships.",
         "purpose": "Safeguard privacy, accelerate study research loading speeds, and strip predatory ads and trackers from academic websites.",
@@ -158,7 +173,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 5.0,
         "image_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/F07_8V7t_h0"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/S-7IqOHa3RA"
     },
     {
         "name": "StayFree - Screen Time & App Blocker",
@@ -168,8 +183,10 @@ RESOURCES = [
         "category": "screen_time",
         "developer_or_team": "StayFree Apps Ltd.",
         "official_url": "https://stayfreeapps.com",
+        "documentation_url": "https://stayfreeapps.com/faq",
+        "extension_url": "https://chromewebstore.google.com/detail/stayfree-website-blocker/elfaihghhjjoknimpccccmkioofleaak",
         "repository_url": None,
-        "platforms": ["Android", "iOS", "Windows", "macOS", "Chrome"],
+        "platforms": ["Android", "iOS", "Windows", "macOS", "Chrome", "Firefox"],
         "pricing_type": "Freemium",
         "price_details": "Generous free tier includes all core tracking and limits. Premium is $1.99/month or $11.99/year for cloud sync and advanced export.",
         "purpose": "Provide accurate usage diagnostics and enforce PIN-protected app limits to curb doomscrolling.",
@@ -180,7 +197,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/W3a4F6r_3kM"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/VtJkzilbfc0"
     },
     {
         "name": "LeechBlock NG",
@@ -190,6 +207,8 @@ RESOURCES = [
         "category": "browser_extension",
         "developer_or_team": "James Anderson (Proginosko)",
         "official_url": "https://www.proginosko.com/leechblock",
+        "documentation_url": "https://www.proginosko.com/leechblock/faq/",
+        "extension_url": "https://addons.mozilla.org/en-US/firefox/addon/leechblock-ng/",
         "repository_url": "https://github.com/proginosko/LeechBlockNG",
         "platforms": ["Firefox", "Chrome", "Edge"],
         "pricing_type": "100% Free",
@@ -202,7 +221,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.7,
         "image_url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/8q_9P4X0s7o"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/2DZlNq1KrEg"
     },
     {
         "name": "Olauncher (Minimal AF Launcher)",
@@ -212,6 +231,8 @@ RESOURCES = [
         "category": "focus_blocker",
         "developer_or_team": "Tanuj M.",
         "official_url": "https://olauncher.app",
+        "documentation_url": "https://github.com/tanujnotes/Olauncher#readme",
+        "extension_url": "https://play.google.com/store/apps/details?id=app.olauncher",
         "repository_url": "https://github.com/tanujnotes/Olauncher",
         "platforms": ["Android"],
         "pricing_type": "100% Free",
@@ -224,7 +245,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/0pL9q_F01sM"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/pi76UL3-8Iw"
     },
     {
         "name": "Sleep as Android & Apple Sleep Routine",
@@ -234,6 +255,8 @@ RESOURCES = [
         "category": "bedtime_routine",
         "developer_or_team": "Urbandroid & Apple Inc.",
         "official_url": "https://sleep.urbandroid.org",
+        "documentation_url": "https://docs.sleep.urbandroid.org",
+        "extension_url": "https://play.google.com/store/apps/details?id=com.urbandroid.sleep",
         "repository_url": None,
         "platforms": ["Android", "iOS"],
         "pricing_type": "Freemium",
@@ -246,7 +269,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.6,
         "image_url": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/4s7k_8p_4fM"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/HyUTqNtuQpI"
     },
     {
         "name": "Signal Private Messenger",
@@ -256,6 +279,8 @@ RESOURCES = [
         "category": "privacy_safety",
         "developer_or_team": "Signal Technology Foundation",
         "official_url": "https://signal.org",
+        "documentation_url": "https://support.signal.org",
+        "extension_url": "https://signal.org/download/",
         "repository_url": "https://github.com/signalapp",
         "platforms": ["iOS", "Android", "macOS", "Windows", "Linux"],
         "pricing_type": "100% Free",
@@ -268,7 +293,7 @@ RESOURCES = [
         "verified_date": "2026-11-16",
         "student_rating": 4.9,
         "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
-        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/g9o-c-w2jP0"
+        "video_tutorial_url": "https://www.youtube-nocookie.com/embed/dMJxEDAsd9k"
     }
 ]
 
@@ -281,7 +306,7 @@ GUIDES = [
         "target_platforms": ["iOS", "macOS"],
         "estimated_minutes": 10,
         "difficulty": "Beginner",
-        "video_url": "https://www.youtube-nocookie.com/embed/UVKVTcYWTdQ",
+        "video_url": "https://www.youtube-nocookie.com/embed/CKzT5DzeB98",
         "steps": [
             {
                 "step_number": 1,
@@ -326,7 +351,7 @@ GUIDES = [
         "target_platforms": ["macOS", "Windows", "Chrome", "Firefox"],
         "estimated_minutes": 12,
         "difficulty": "Intermediate",
-        "video_url": "https://www.youtube-nocookie.com/embed/nO3_gXW7664",
+        "video_url": "https://www.youtube-nocookie.com/embed/9Tp9wot_Hy4",
         "steps": [
             {
                 "step_number": 1,
@@ -371,7 +396,7 @@ GUIDES = [
         "target_platforms": ["Android", "iOS"],
         "estimated_minutes": 8,
         "difficulty": "Beginner",
-        "video_url": "https://www.youtube-nocookie.com/embed/4s7k_8p_4fM",
+        "video_url": "https://www.youtube-nocookie.com/embed/HyUTqNtuQpI",
         "steps": [
             {
                 "step_number": 1,

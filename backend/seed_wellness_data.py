@@ -13,6 +13,8 @@ async def seed():
         # Ensure new columns exist on existing tables
         await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS image_url TEXT;"))
         await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS video_tutorial_url TEXT;"))
+        await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS documentation_url TEXT;"))
+        await conn.execute(text("ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS extension_url TEXT;"))
         await conn.execute(text("ALTER TABLE setup_guides ADD COLUMN IF NOT EXISTS video_url TEXT;"))
 
     async with AsyncSessionLocal() as session:
@@ -45,6 +47,8 @@ async def seed():
                 student_rating=r["student_rating"],
                 image_url=r.get("image_url"),
                 video_tutorial_url=r.get("video_tutorial_url"),
+                documentation_url=r.get("documentation_url"),
+                extension_url=r.get("extension_url"),
                 embedding=None
             )
             session.add(resource)

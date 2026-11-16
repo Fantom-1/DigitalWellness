@@ -11,6 +11,8 @@ class WellnessResourceBase(BaseModel):
     category: str
     developer_or_team: Optional[str] = None
     official_url: Optional[str] = None
+    documentation_url: Optional[str] = None
+    extension_url: Optional[str] = None
     repository_url: Optional[str] = None
     platforms: List[str]
     pricing_type: str

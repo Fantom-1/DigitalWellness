@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS wellness_resources (
     category VARCHAR(100) NOT NULL,
     developer_or_team VARCHAR(255),
     official_url TEXT,
+    documentation_url TEXT,
+    extension_url TEXT,
     repository_url TEXT,
     platforms JSONB NOT NULL DEFAULT '[]'::jsonb,
     pricing_type VARCHAR(100) NOT NULL,

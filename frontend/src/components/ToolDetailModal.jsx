@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ExternalLink, Shield, AlertCircle, Play, Image, Film } from 'lucide-react';
+import { X, ExternalLink, Shield, AlertCircle, Play, Image, Film, BookOpen, Puzzle } from 'lucide-react';
 import { getYouTubeEmbedUrl } from '../utils';
 
 export default function ToolDetailModal({ tool, onClose }) {
@@ -164,19 +164,41 @@ export default function ToolDetailModal({ tool, onClose }) {
           </div>
         </div>
 
-        {/* Footer Actions */}
+        {/* Footer Actions & Reference Links */}
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-black/[0.06]">
           <span className="text-[11px] text-zinc-400 font-mono">
             Verified {tool.verified_date}
           </span>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {tool.documentation_url && (
+              <a
+                href={tool.documentation_url}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-black rounded-xl bg-zinc-100 hover:bg-zinc-200 transition-colors flex items-center gap-1.5"
+              >
+                <BookOpen size={12} />
+                Docs & Setup
+              </a>
+            )}
+            {tool.extension_url && (
+              <a
+                href={tool.extension_url}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/60 rounded-xl transition-colors flex items-center gap-1.5"
+              >
+                <Puzzle size={12} />
+                Extension / Store
+              </a>
+            )}
             {tool.repository_url && (
               <a
                 href={tool.repository_url}
                 target="_blank"
                 rel="noreferrer"
-                className="px-3.5 py-2 text-xs font-medium text-zinc-600 hover:text-black rounded-xl bg-zinc-100 hover:bg-zinc-200 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium text-zinc-600 hover:text-black rounded-xl bg-zinc-100 hover:bg-zinc-200 transition-colors"
               >
                 Source Code
               </a>
@@ -186,9 +208,9 @@ export default function ToolDetailModal({ tool, onClose }) {
                 href={tool.official_url}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 bg-[#1d1d1f] text-white hover:bg-black text-xs font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
+                className="px-3.5 py-1.5 bg-[#1d1d1f] text-white hover:bg-black text-xs font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
               >
-                Visit Official Site
+                Official Site
                 <ExternalLink size={12} />
               </a>
             )}

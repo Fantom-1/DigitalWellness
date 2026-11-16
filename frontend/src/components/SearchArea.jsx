@@ -451,7 +451,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-black/[0.04] flex items-center justify-between text-[11px] text-zinc-500">
-                    <div className="flex gap-1">
+                    <div className="flex items-center gap-1">
                       {item.platforms.slice(0, 3).map((p) => (
                         <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 text-[10px]">
                           {p}
@@ -459,6 +459,11 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                       ))}
                       {item.platforms.length > 3 && (
                         <span className="text-[10px] text-zinc-400">+{item.platforms.length - 3}</span>
+                      )}
+                      {item.extension_url && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-medium">
+                          Ext
+                        </span>
                       )}
                     </div>
 
