@@ -325,24 +325,43 @@ export default function SearchArea({ activeTab, setActiveTab }) {
         <div className="w-full flex flex-col items-center animate-in fade-in duration-300">
           
           {/* Header */}
-          <div className="text-center mb-6 w-full flex flex-col items-center mt-2 md:mt-4">
-            <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-3">
+          <motion.div 
+            animate={{ 
+              marginBottom: chatMessages.length > 0 ? '12px' : '24px'
+            }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center w-full flex flex-col items-center mt-2 md:mt-4"
+          >
+            <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest mb-2">
               Curated for Student Focus
             </span>
             
-            <h1 className="text-4xl md:text-6xl font-semibold mb-3 text-[#1d1d1f] tracking-tight">
+            <h1 className={`${chatMessages.length > 0 ? 'text-3xl md:text-4xl' : 'text-4xl md:text-6xl'} font-semibold mb-2 text-[#1d1d1f] tracking-tight transition-all duration-300`}>
               Digital Wellness.
             </h1>
-            <p className="text-zinc-500 text-base md:text-lg max-w-xl mx-auto font-light leading-relaxed">
-              Practical focus tools, screen time controls, and bedtime device routines.
-            </p>
-          </div>
+            
+            <AnimatePresence>
+              {chatMessages.length === 0 && (
+                <motion.p 
+                  key="hero-subtitle"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                  transition={{ duration: 0.25 }}
+                  className="text-zinc-500 text-base md:text-lg max-w-xl mx-auto font-light leading-relaxed"
+                >
+                  Practical focus tools, screen time controls, and bedtime device routines.
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
-          {/* Glass Prompt Panel for Light Theme */}
+          {/* Expanding Glass Chat Box Panel for Light Theme */}
           <motion.div 
-            className={`w-full relative mt-3 ${isFocused ? 'panel-focused' : ''}`}
+            layout
+            className={`w-full max-w-[850px] relative mt-2 ${isFocused ? 'panel-focused' : ''}`}
             animate={{ scale: isFocused ? 1.002 : 1 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Ambient Aura behind the panel: softly radiates outside with radial falloff */}
             <div 
@@ -360,7 +379,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             {/* Main Card Shell */}
             <div className="absolute inset-0 rounded-[22px] z-10 pointer-events-none">
               {/* Card surface: inset by border track width */}
-              <div className="absolute inset-[2.5px] bg-white/92 backdrop-blur-[24px] rounded-[19.5px] shadow-[0_12px_36px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] z-10" />
+              <div className="absolute inset-[2.5px] bg-white/94 backdrop-blur-[24px] rounded-[19.5px] shadow-[0_12px_36px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] z-10" />
               
               {/* 2.5px Prominent Border Track with Moving Comet Beam */}
               <div 
@@ -378,446 +397,526 @@ export default function SearchArea({ activeTab, setActiveTab }) {
               </div>
             </div>
 
-            <div className="p-4 md:p-5 flex flex-col justify-between relative z-30 min-h-[140px]">
-              <textarea
-                ref={textareaRef}
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendChat();
-                  }
-                }}
-                placeholder="Describe your habit, device, or study challenge..."
-                className="w-full bg-transparent text-[#1d1d1f] text-base md:text-lg outline-none resize-none placeholder-zinc-400 px-2 font-light leading-relaxed"
-                style={{ minHeight: '76px' }}
-              />
+            {/* Inner Content of the Chat Box */}
+            <div className="p-4 md:p-6 flex flex-col justify-between relative z-30 min-h-[140px]">
+              
+              {/* 1. INITIAL EMPTY STATE INPUT */}
+              {chatMessages.length === 0 ? (
+                <div>
+                  <textarea
+                    ref={textareaRef}
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendChat();
+                      }
+                    }}
+                    placeholder="Describe your habit, device, or study challenge..."
+                    className="w-full bg-transparent text-[#1d1d1f] text-base md:text-lg outline-none resize-none placeholder-zinc-400 px-2 font-light leading-relaxed"
+                    style={{ minHeight: '76px' }}
+                  />
 
-              <div className="flex justify-between items-center mt-3 pt-3 border-t border-black/[0.04] px-1">
-                <span className="text-[11px] font-mono text-zinc-400">
-                  Powered by Gemini
-                </span>
+                  <div className="flex justify-between items-center mt-3 pt-3 border-t border-black/[0.04] px-1">
+                    <span className="text-[11px] font-mono text-zinc-400">
+                      Powered by Gemini
+                    </span>
 
-                <button 
-                  onClick={() => handleSendChat()}
-                  disabled={!chatInput.trim() || chatLoading}
-                  className={`px-4 py-2 rounded-full transition-all flex items-center gap-2 text-xs font-semibold ${
-                    chatInput.trim() && !chatLoading
-                      ? 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm' 
-                      : 'text-zinc-400 bg-black/[0.04] opacity-50 cursor-not-allowed'
-                  }`}
-                >
-                  {chatLoading ? (
-                    <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  ) : (
-                    <>
-                      <span>Ask Advisor</span>
-                      <ArrowUp size={14} />
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Targeted Distraction Remedies: 3-Card Carousel Deck */}
-          <div className="w-full max-w-[850px] mt-8 text-left animate-in fade-in duration-300">
-            {/* Carousel Header & Apple Paginator */}
-            <div className="flex items-center justify-between mb-3 px-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                  Targeted Remedies
-                </span>
-                <span className="text-zinc-300 font-mono text-[10px]">•</span>
-                <span className="text-[10px] font-mono text-zinc-400">
-                  Set {carouselPage + 1} of {CAROUSEL_PAGES.length}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                {/* 4 Interactive Dot Indicators */}
-                <div className="flex items-center gap-1.5" role="tablist" aria-label="Remedy slides">
-                  {CAROUSEL_PAGES.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCarouselPage(idx)}
-                      className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
-                        carouselPage === idx
-                          ? 'w-5 bg-[#1d1d1f]'
-                          : 'w-1.5 bg-black/15 hover:bg-black/35'
+                    <button 
+                      onClick={() => handleSendChat()}
+                      disabled={!chatInput.trim() || chatLoading}
+                      className={`px-4 py-2 rounded-full transition-all flex items-center gap-2 text-xs font-semibold ${
+                        chatInput.trim() && !chatLoading
+                          ? 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm cursor-pointer' 
+                          : 'text-zinc-400 bg-black/[0.04] opacity-50 cursor-not-allowed'
                       }`}
-                      title={`Go to set ${idx + 1}`}
-                      aria-label={`Go to set ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Arrow Controls */}
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={handlePrevCarousel}
-                    className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
-                    title="Previous 3 Tools"
-                    aria-label="Previous 3 Tools"
-                  >
-                    <ChevronLeft size={14} />
-                  </button>
-                  <button
-                    onClick={handleNextCarousel}
-                    className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
-                    title="Next 3 Tools"
-                    aria-label="Next 3 Tools"
-                  >
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Sliding Container: Exactly 3 full cards per view with zero cut-off edges */}
-            <div className="w-full overflow-hidden rounded-2xl">
-              <div 
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${carouselPage * 100}%)` }}
-              >
-                {CAROUSEL_PAGES.map((pageCards, pageIdx) => (
-                  <div 
-                    key={pageIdx} 
-                    className="w-full shrink-0 grid grid-cols-1 md:grid-cols-3 gap-3"
-                  >
-                    {pageCards.map((item) => {
-                      const matchedTool = resources.find(r => r.slug === item.slug);
-                      return (
-                        <div
-                          key={item.slug}
-                          className="bg-white border border-black/[0.06] hover:border-black/20 rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-200 group text-left"
-                        >
-                          <div>
-                            <div className="flex items-center justify-between gap-1 mb-2">
-                              <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md truncate max-w-[170px]" title={item.distraction}>
-                                {item.distraction}
-                              </span>
-                              <span className="text-[9px] font-mono text-zinc-400 shrink-0">
-                                {item.type.split(' ')[0]}
-                              </span>
-                            </div>
-
-                            <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
-                              {matchedTool ? matchedTool.name : item.slug}
-                            </h5>
-                            <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
-                              {item.type}
-                            </p>
-
-                            <p className="text-xs text-zinc-500 font-light mt-2 line-clamp-3 leading-relaxed">
-                              {item.solution}
-                            </p>
-                          </div>
-
-                          <div className="mt-4 pt-3 border-t border-black/[0.04] flex items-center justify-between text-xs">
-                            <button
-                              onClick={() => handleSelectToolFromSlug(item.slug)}
-                              className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
-                            >
-                              Inspect Tool →
-                            </button>
-                            <button
-                              onClick={() => handleQuickPrompt(item.prompt)}
-                              className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[11px] font-medium transition-all cursor-pointer"
-                            >
-                              Ask Advisor
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    >
+                      {chatLoading ? (
+                        <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                      ) : (
+                        <>
+                          <span>Ask Advisor</span>
+                          <ArrowUp size={14} />
+                        </>
+                      )}
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                </div>
+              ) : (
+                /* 2. EXPANDED ACTIVE CONSULTATION VIEW */
+                <div className="flex flex-col">
+                  {/* Top Session Bar */}
+                  <div className="flex items-center justify-between pb-3 mb-5 border-b border-black/[0.06]">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-xs font-semibold text-[#1d1d1f] tracking-tight">Active Consultation</span>
+                      <span className="text-[10px] font-mono text-zinc-400">• Student Focused</span>
+                    </div>
 
-          {/* Quick Prompts (Only if no messages) */}
-          {chatMessages.length === 0 && (
-            <div className="flex flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-5 animate-in fade-in duration-300">
-              <button 
-                onClick={() => handleQuickPrompt("Block YouTube recommendations and shorts while studying on desktop")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
-              >
-                Block YouTube recommendations and shorts while studying
-              </button>
-              <button 
-                onClick={() => handleQuickPrompt("Set up strict iOS Downtime without bypass loopholes")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
-              >
-                Set up strict iOS Downtime without bypass loopholes
-              </button>
-              <button 
-                onClick={() => handleQuickPrompt("Open-source focus tools with zero data collection")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
-              >
-                Open-source focus tools with zero data collection
-              </button>
-            </div>
-          )}
+                    <button
+                      onClick={() => {
+                        setChatMessages([]);
+                        setChatInput('');
+                      }}
+                      className="text-xs text-zinc-500 hover:text-black font-medium px-2.5 py-1 rounded-full hover:bg-black/[0.04] transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>New Consultation</span>
+                      <span className="text-zinc-400 text-sm">×</span>
+                    </button>
+                  </div>
 
-          {/* Conversation Stream */}
-          {chatMessages.length > 0 && (
-            <div className="w-full max-w-[850px] flex flex-col gap-6 mt-8 text-left">
-              <div className="flex items-center justify-between pb-2 border-b border-black/[0.06]">
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400">
-                  Advisor Response
-                </span>
-                <button
-                  onClick={() => setChatMessages([])}
-                  className="text-xs text-zinc-400 hover:text-black transition-colors"
-                >
-                  Clear
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {chatMessages.map((msg, index) => (
-                  <div 
-                    key={index} 
-                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
-                  >
-                    {msg.role === 'user' ? (
-                      <div className="max-w-xl bg-[#1d1d1f] text-white px-5 py-3 rounded-2xl text-sm leading-relaxed font-light shadow-sm">
-                        {msg.content}
-                      </div>
-                    ) : (
-                      <div className="w-full bg-white border border-black/[0.08] rounded-3xl p-6 md:p-8 shadow-sm">
-                        {/* Advisor Header Bar */}
-                        <div className="flex items-center justify-between pb-4 mb-5 border-b border-black/[0.06]">
-                          <div className="flex items-center gap-2.5">
-                            <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-white">
-                              <Bot size={14} />
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold text-[#1d1d1f] tracking-tight">Digital Wellness Advisor</span>
-                                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-medium">Curated Strategy</span>
-                              </div>
-                            </div>
+                  {/* Conversation History */}
+                  <div className="space-y-6 text-left">
+                    {chatMessages.map((msg, index) => (
+                      <div 
+                        key={index} 
+                        className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                      >
+                        {msg.role === 'user' ? (
+                          <div className="max-w-xl bg-[#1d1d1f] text-white px-5 py-3 rounded-2xl text-sm leading-relaxed font-light shadow-sm">
+                            {msg.content}
                           </div>
-                          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>Student Audited</span>
-                          </div>
-                        </div>
-
-                        {/* Advisor Written Counsel */}
-                        <FormattedAdvisorContent content={msg.content} />
-
-                        {/* Structured Tool Dossiers: Mini Version of the Full Evaluation Matrix */}
-                        {msg.recommended_tools && msg.recommended_tools.length > 0 && (
-                          <div className="mt-8 pt-6 border-t border-black/[0.06]">
-                            <div className="flex items-center justify-between mb-4">
-                              <div>
-                                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                                  <Sparkles size={13} className="text-blue-600" />
-                                  Structured Tool Dossiers & Solutions
-                                </h4>
-                                <p className="text-xs text-zinc-500 font-light mt-0.5">
-                                  Evaluated for academic focus, zero telemetry, and bypass resistance.
-                                </p>
-                              </div>
-                              <span className="text-[11px] font-mono text-zinc-400">
-                                {msg.recommended_tools.length} Curated Solution{msg.recommended_tools.length > 1 ? 's' : ''}
-                              </span>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {msg.recommended_tools.map((rec) => {
-                                const tool = resources.find(r => r.slug === rec.slug) || {
-                                  name: rec.name,
-                                  slug: rec.slug,
-                                  category: rec.category || 'focus_blocker',
-                                  pricing_type: rec.pricing_type || 'Free',
-                                  platforms: ['macOS', 'Windows', 'Chrome'],
-                                  privacy_rating: 'A+',
-                                  tagline: rec.reason,
-                                  purpose: rec.reason,
-                                  limitations: 'Standard platform permissions required.'
-                                };
-
-                                return (
-                                  <div
-                                    key={rec.slug || tool.slug}
-                                    className="bg-[#fbfbfd] border border-black/[0.06] hover:border-black/15 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 group shadow-2xs hover:shadow-xs"
-                                  >
-                                    <div>
-                                      {/* Top Row: Meta badges */}
-                                      <div className="flex items-start justify-between gap-2 mb-2">
-                                        <div>
-                                          <div className="flex items-center gap-1.5 mb-1.5">
-                                            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/[0.04] text-zinc-600">
-                                              {tool.category.replace('_', ' ')}
-                                            </span>
-                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-black/[0.06] text-zinc-700 font-medium">
-                                              {tool.pricing_type}
-                                            </span>
-                                          </div>
-                                          <h5 
-                                            onClick={() => setSelectedTool(tool)}
-                                            className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors cursor-pointer"
-                                          >
-                                            {tool.name}
-                                          </h5>
-                                        </div>
-
-                                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-[10px] font-mono font-medium flex items-center gap-1 shrink-0">
-                                          <Shield size={10} />
-                                          {tool.privacy_rating ? `Grade ${tool.privacy_rating}` : 'Grade A'}
-                                        </span>
-                                      </div>
-
-                                      {/* Platforms */}
-                                      {tool.platforms && (
-                                        <div className="flex flex-wrap gap-1 mb-3">
-                                          {tool.platforms.slice(0, 4).map((p) => (
-                                            <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 text-[10px]">
-                                              {p}
-                                            </span>
-                                          ))}
-                                          {tool.platforms.length > 4 && (
-                                            <span className="text-[10px] text-zinc-400 font-mono">+{tool.platforms.length - 4}</span>
-                                          )}
-                                        </div>
-                                      )}
-
-                                      {/* Advisor Match Callout */}
-                                      <div className="text-xs text-blue-950 bg-blue-50/80 border border-blue-100/80 rounded-xl p-3 mb-3 leading-relaxed font-light">
-                                        <span className="font-semibold text-blue-900 block text-[11px] mb-0.5">Advisor Assessment:</span>
-                                        {rec.reason}
-                                      </div>
-
-                                      {/* Tool Purpose & Capabilities ("What we have") */}
-                                      <p className="text-xs text-zinc-600 font-light leading-relaxed mb-3">
-                                        <strong className="text-zinc-800 font-medium">What It Does: </strong>
-                                        {tool.tagline || tool.purpose || tool.description}
-                                      </p>
-
-                                      {/* Limitations / Bypass Reality Check */}
-                                      {tool.limitations && (
-                                        <div className="text-[11px] text-amber-900 bg-amber-500/[0.06] border border-amber-500/15 rounded-xl p-2.5 mb-4 flex items-start gap-1.5 font-light leading-relaxed">
-                                          <AlertCircle size={12} className="text-amber-700 shrink-0 mt-0.5" />
-                                          <span>
-                                            <strong className="font-medium text-amber-950">Limitation: </strong>
-                                            {tool.limitations}
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Integrated Actions Toolbar */}
-                                    <div className="pt-3 border-t border-black/[0.04] flex flex-wrap items-center justify-between gap-2">
-                                      <div className="flex items-center gap-1.5">
-                                        {tool.video_tutorial_url && (
-                                          <button
-                                            onClick={() => setSelectedTool(tool)}
-                                            className="px-2.5 py-1.5 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-zinc-700 hover:text-black text-xs font-medium flex items-center gap-1 transition-all cursor-pointer"
-                                            title="Watch Video Walkthrough"
-                                          >
-                                            <Play size={10} fill="currentColor" />
-                                            Video
-                                          </button>
-                                        )}
-                                        {tool.extension_url && (
-                                          <a
-                                            href={tool.extension_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60 text-xs font-medium flex items-center gap-1 transition-all"
-                                          >
-                                            <Puzzle size={11} />
-                                            {tool.category === 'browser_extension' ? 'Add Extension' : 'Get App'}
-                                          </a>
-                                        )}
-                                        {tool.documentation_url && (
-                                          <a
-                                            href={tool.documentation_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium flex items-center gap-1 transition-all"
-                                          >
-                                            <BookOpen size={11} />
-                                            Docs
-                                          </a>
-                                        )}
-                                      </div>
-
-                                      <button
-                                        onClick={() => setSelectedTool(tool)}
-                                        className="px-3 py-1.5 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium flex items-center gap-1 transition-all ml-auto cursor-pointer"
-                                      >
-                                        Inspect Full Dossier →
-                                      </button>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Guide Referral Banner */}
-                        {msg.relevant_guide_slug && (() => {
-                          const guide = guides.find(g => g.slug === msg.relevant_guide_slug);
-                          return (
-                            <div className="mt-5 p-4 rounded-2xl bg-zinc-50 border border-black/[0.05] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                              <div className="flex items-start gap-3">
-                                <div className="p-2.5 rounded-xl bg-white border border-black/[0.06] text-[#1d1d1f] shrink-0 mt-0.5">
-                                  <BookOpen size={15} />
+                        ) : (
+                          <div className="w-full bg-[#fbfbfd] border border-black/[0.06] rounded-2xl p-5 md:p-7 shadow-2xs">
+                            {/* Advisor Header Bar */}
+                            <div className="flex items-center justify-between pb-4 mb-5 border-b border-black/[0.05]">
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-7 h-7 rounded-full bg-[#1d1d1f] flex items-center justify-center text-white">
+                                  <Bot size={14} />
                                 </div>
                                 <div>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                                      Related Setup Protocol
-                                    </span>
-                                    {guide && (
-                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/[0.04] text-zinc-600 font-mono">
-                                        {guide.estimated_minutes} min • {guide.difficulty_level}
-                                      </span>
-                                    )}
+                                    <span className="text-xs font-semibold text-[#1d1d1f] tracking-tight">Digital Wellness Advisor</span>
+                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 font-medium">Curated Strategy</span>
                                   </div>
-                                  <h5 className="text-xs font-semibold text-[#1d1d1f] mt-0.5">
-                                    {guide ? guide.title : msg.relevant_guide_slug}
-                                  </h5>
-                                  <p className="text-[11px] text-zinc-500 font-light mt-0.5 line-clamp-1">
-                                    {guide ? guide.summary : 'Step-by-step hardened device configuration with zero bypass loopholes.'}
-                                  </p>
                                 </div>
                               </div>
-
-                              <button
-                                onClick={() => handleOpenGuide(msg.relevant_guide_slug)}
-                                className="px-3.5 py-2 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium shrink-0 flex items-center gap-1.5 transition-all self-end sm:self-center cursor-pointer"
-                              >
-                                Open Protocol Guide →
-                              </button>
+                              <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span>Student Audited</span>
+                              </div>
                             </div>
-                          );
-                        })()}
+
+                            {/* Advisor Written Counsel */}
+                            <FormattedAdvisorContent content={msg.content} />
+
+                            {/* Structured Tool Dossiers: Mini Version of the Full Evaluation Matrix */}
+                            {msg.recommended_tools && msg.recommended_tools.length > 0 && (
+                              <div className="mt-8 pt-6 border-t border-black/[0.06]">
+                                <div className="flex items-center justify-between mb-4">
+                                  <div>
+                                    <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                                      <Sparkles size={13} className="text-blue-600" />
+                                      Structured Tool Dossiers & Solutions
+                                    </h4>
+                                    <p className="text-xs text-zinc-500 font-light mt-0.5">
+                                      Evaluated for academic focus, zero telemetry, and bypass resistance.
+                                    </p>
+                                  </div>
+                                  <span className="text-[11px] font-mono text-zinc-400">
+                                    {msg.recommended_tools.length} Curated Solution{msg.recommended_tools.length > 1 ? 's' : ''}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {msg.recommended_tools.map((rec) => {
+                                    const tool = resources.find(r => r.slug === rec.slug) || {
+                                      name: rec.name,
+                                      slug: rec.slug,
+                                      category: rec.category || 'focus_blocker',
+                                      pricing_type: rec.pricing_type || 'Free',
+                                      platforms: ['macOS', 'Windows', 'Chrome'],
+                                      privacy_rating: 'A+',
+                                      tagline: rec.reason,
+                                      purpose: rec.reason,
+                                      limitations: 'Standard platform permissions required.'
+                                    };
+
+                                    return (
+                                      <div
+                                        key={rec.slug || tool.slug}
+                                        className="bg-white border border-black/[0.06] hover:border-black/15 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 group shadow-2xs hover:shadow-xs"
+                                      >
+                                        <div>
+                                          {/* Top Row: Meta badges */}
+                                          <div className="flex items-start justify-between gap-2 mb-2">
+                                            <div>
+                                              <div className="flex items-center gap-1.5 mb-1.5">
+                                                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/[0.04] text-zinc-600">
+                                                  {tool.category.replace('_', ' ')}
+                                                </span>
+                                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-black/[0.06] text-zinc-700 font-medium">
+                                                  {tool.pricing_type}
+                                                </span>
+                                              </div>
+                                              <h5 
+                                                onClick={() => setSelectedTool(tool)}
+                                                className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors cursor-pointer"
+                                              >
+                                                {tool.name}
+                                              </h5>
+                                            </div>
+
+                                            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-[10px] font-mono font-medium flex items-center gap-1 shrink-0">
+                                              <Shield size={10} />
+                                              {tool.privacy_rating ? `Grade ${tool.privacy_rating}` : 'Grade A'}
+                                            </span>
+                                          </div>
+
+                                          {/* Platforms */}
+                                          {tool.platforms && (
+                                            <div className="flex flex-wrap gap-1 mb-3">
+                                              {tool.platforms.slice(0, 4).map((p) => (
+                                                <span key={p} className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 text-[10px]">
+                                                  {p}
+                                                </span>
+                                              ))}
+                                              {tool.platforms.length > 4 && (
+                                                <span className="text-[10px] text-zinc-400 font-mono">+{tool.platforms.length - 4}</span>
+                                              )}
+                                            </div>
+                                          )}
+
+                                          {/* Advisor Match Callout */}
+                                          <div className="text-xs text-blue-950 bg-blue-50/80 border border-blue-100/80 rounded-xl p-3 mb-3 leading-relaxed font-light">
+                                            <span className="font-semibold text-blue-900 block text-[11px] mb-0.5">Advisor Assessment:</span>
+                                            {rec.reason}
+                                          </div>
+
+                                          {/* Tool Purpose & Capabilities ("What we have") */}
+                                          <p className="text-xs text-zinc-600 font-light leading-relaxed mb-3">
+                                            <strong className="text-zinc-800 font-medium">What It Does: </strong>
+                                            {tool.tagline || tool.purpose || tool.description}
+                                          </p>
+
+                                          {/* Limitations / Bypass Reality Check */}
+                                          {tool.limitations && (
+                                            <div className="text-[11px] text-amber-900 bg-amber-500/[0.06] border border-amber-500/15 rounded-xl p-2.5 mb-4 flex items-start gap-1.5 font-light leading-relaxed">
+                                              <AlertCircle size={12} className="text-amber-700 shrink-0 mt-0.5" />
+                                              <span>
+                                                <strong className="font-medium text-amber-950">Limitation: </strong>
+                                                {tool.limitations}
+                                              </span>
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        {/* Integrated Actions Toolbar */}
+                                        <div className="pt-3 border-t border-black/[0.04] flex flex-wrap items-center justify-between gap-2">
+                                          <div className="flex items-center gap-1.5">
+                                            {tool.video_tutorial_url && (
+                                              <button
+                                                onClick={() => setSelectedTool(tool)}
+                                                className="px-2.5 py-1.5 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-zinc-700 hover:text-black text-xs font-medium flex items-center gap-1 transition-all cursor-pointer"
+                                                title="Watch Video Walkthrough"
+                                              >
+                                                <Play size={10} fill="currentColor" />
+                                                Video
+                                              </button>
+                                            )}
+                                            {tool.extension_url && (
+                                              <a
+                                                href={tool.extension_url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60 text-xs font-medium flex items-center gap-1 transition-all"
+                                              >
+                                                <Puzzle size={11} />
+                                                {tool.category === 'browser_extension' ? 'Add Extension' : 'Get App'}
+                                              </a>
+                                            )}
+                                            {tool.documentation_url && (
+                                              <a
+                                                href={tool.documentation_url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="px-2.5 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium flex items-center gap-1 transition-all"
+                                              >
+                                                <BookOpen size={11} />
+                                                Docs
+                                              </a>
+                                            )}
+                                          </div>
+
+                                          <button
+                                            onClick={() => setSelectedTool(tool)}
+                                            className="px-3 py-1.5 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium flex items-center gap-1 transition-all ml-auto cursor-pointer"
+                                          >
+                                            Inspect Full Dossier →
+                                          </button>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Guide Referral Banner */}
+                            {msg.relevant_guide_slug && (() => {
+                              const guide = guides.find(g => g.slug === msg.relevant_guide_slug);
+                              return (
+                                <div className="mt-5 p-4 rounded-2xl bg-white border border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                                  <div className="flex items-start gap-3">
+                                    <div className="p-2.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[#1d1d1f] shrink-0 mt-0.5">
+                                      <BookOpen size={15} />
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                                          Related Setup Protocol
+                                        </span>
+                                        {guide && (
+                                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/[0.04] text-zinc-600 font-mono">
+                                            {guide.estimated_minutes} min • {guide.difficulty_level}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <h5 className="text-xs font-semibold text-[#1d1d1f] mt-0.5">
+                                        {guide ? guide.title : msg.relevant_guide_slug}
+                                      </h5>
+                                      <p className="text-[11px] text-zinc-500 font-light mt-0.5 line-clamp-1">
+                                        {guide ? guide.summary : 'Step-by-step hardened device configuration with zero bypass loopholes.'}
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  <button
+                                    onClick={() => handleOpenGuide(msg.relevant_guide_slug)}
+                                    className="px-3.5 py-2 rounded-xl bg-[#1d1d1f] hover:bg-black text-white text-xs font-medium shrink-0 flex items-center gap-1.5 transition-all self-end sm:self-center cursor-pointer"
+                                  >
+                                    Open Protocol Guide →
+                                  </button>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    {chatLoading && (
+                      <div className="flex items-center gap-2.5 text-xs text-zinc-500 py-3">
+                        <span className="w-3.5 h-3.5 rounded-full border-2 border-zinc-500 border-t-transparent animate-spin" />
+                        <span>Analyzing wellness catalog & academic constraints...</span>
                       </div>
                     )}
+                    <div ref={chatEndRef} />
                   </div>
-                ))}
 
-                {chatLoading && (
-                  <div className="flex items-center gap-2.5 text-xs text-zinc-500 py-2">
-                    <span className="w-3 h-3 rounded-full border-2 border-zinc-500 border-t-transparent animate-spin" />
-                    <span>Analyzing wellness catalog...</span>
+                  {/* Follow-up Prompt Input Bar at Bottom of Expanded Chat Box */}
+                  <div className="pt-4 border-t border-black/[0.06] mt-4">
+                    <textarea
+                      ref={textareaRef}
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendChat();
+                        }
+                      }}
+                      placeholder="Ask a follow-up question or explore another challenge..."
+                      className="w-full bg-transparent text-[#1d1d1f] text-sm md:text-base outline-none resize-none placeholder-zinc-400 px-1 font-light leading-relaxed"
+                      style={{ minHeight: '52px' }}
+                    />
+
+                    <div className="flex justify-between items-center mt-2 pt-2 border-t border-black/[0.04]">
+                      <span className="text-[11px] font-mono text-zinc-400">
+                        Powered by Gemini
+                      </span>
+
+                      <button 
+                        onClick={() => handleSendChat()}
+                        disabled={!chatInput.trim() || chatLoading}
+                        className={`px-4 py-1.5 rounded-full transition-all flex items-center gap-2 text-xs font-semibold ${
+                          chatInput.trim() && !chatLoading
+                            ? 'bg-[#1d1d1f] text-white hover:bg-black shadow-sm cursor-pointer' 
+                            : 'text-zinc-400 bg-black/[0.04] opacity-50 cursor-not-allowed'
+                        }`}
+                      >
+                        {chatLoading ? (
+                          <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        ) : (
+                          <>
+                            <span>Ask Advisor</span>
+                            <ArrowUp size={14} />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-                )}
-                <div ref={chatEndRef} />
-              </div>
+                </div>
+              )}
+
             </div>
-          )}
+          </motion.div>
+
+          {/* Targeted Distraction Remedies: 3-Card Carousel Deck (Removed when chat starts) */}
+          <AnimatePresence>
+            {chatMessages.length === 0 && (
+              <motion.div 
+                key="targeted-remedies-deck"
+                initial={{ opacity: 0, height: 0, scale: 0.98 }}
+                animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                exit={{ opacity: 0, height: 0, scale: 0.98, overflow: 'hidden' }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-[850px] mt-8 text-left"
+              >
+                {/* Carousel Header & Apple Paginator */}
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                      Targeted Remedies
+                    </span>
+                    <span className="text-zinc-300 font-mono text-[10px]">•</span>
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      Set {carouselPage + 1} of {CAROUSEL_PAGES.length}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    {/* Interactive Dot Indicators */}
+                    <div className="flex items-center gap-1.5" role="tablist" aria-label="Remedy slides">
+                      {CAROUSEL_PAGES.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCarouselPage(idx)}
+                          className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+                            carouselPage === idx
+                              ? 'w-5 bg-[#1d1d1f]'
+                              : 'w-1.5 bg-black/15 hover:bg-black/35'
+                          }`}
+                          title={`Go to set ${idx + 1}`}
+                          aria-label={`Go to set ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Arrow Controls */}
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={handlePrevCarousel}
+                        className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                        title="Previous 3 Tools"
+                        aria-label="Previous 3 Tools"
+                      >
+                        <ChevronLeft size={14} />
+                      </button>
+                      <button
+                        onClick={handleNextCarousel}
+                        className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                        title="Next 3 Tools"
+                        aria-label="Next 3 Tools"
+                      >
+                        <ChevronRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sliding Container: Exactly 3 full cards per view with zero cut-off edges */}
+                <div className="w-full overflow-hidden rounded-2xl">
+                  <div 
+                    className="flex transition-transform duration-500 ease-out"
+                    style={{ transform: `translateX(-${carouselPage * 100}%)` }}
+                  >
+                    {CAROUSEL_PAGES.map((pageCards, pageIdx) => (
+                      <div 
+                        key={pageIdx} 
+                        className="w-full shrink-0 grid grid-cols-1 md:grid-cols-3 gap-3"
+                      >
+                        {pageCards.map((item) => {
+                          const matchedTool = resources.find(r => r.slug === item.slug);
+                          return (
+                            <div
+                              key={item.slug}
+                              className="bg-white border border-black/[0.06] hover:border-black/20 rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-200 group text-left"
+                            >
+                              <div>
+                                <div className="flex items-center justify-between gap-1 mb-2">
+                                  <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md truncate max-w-[170px]" title={item.distraction}>
+                                    {item.distraction}
+                                  </span>
+                                  <span className="text-[9px] font-mono text-zinc-400 shrink-0">
+                                    {item.type.split(' ')[0]}
+                                  </span>
+                                </div>
+
+                                <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
+                                  {matchedTool ? matchedTool.name : item.slug}
+                                </h5>
+                                <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
+                                  {item.type}
+                                </p>
+
+                                <p className="text-xs text-zinc-500 font-light mt-2 line-clamp-3 leading-relaxed">
+                                  {item.solution}
+                                </p>
+                              </div>
+
+                              <div className="mt-4 pt-3 border-t border-black/[0.04] flex items-center justify-between text-xs">
+                                <button
+                                  onClick={() => handleSelectToolFromSlug(item.slug)}
+                                  className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
+                                >
+                                  Inspect Tool →
+                                </button>
+                                <button
+                                  onClick={() => handleQuickPrompt(item.prompt)}
+                                  className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[11px] font-medium transition-all cursor-pointer"
+                                >
+                                  Ask Advisor
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Quick Prompts (Only if no messages, removed when chat starts) */}
+          <AnimatePresence>
+            {chatMessages.length === 0 && (
+              <motion.div 
+                key="quick-prompts-row"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="flex flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-5"
+              >
+                <button 
+                  onClick={() => handleQuickPrompt("Block YouTube recommendations and shorts while studying on desktop")} 
+                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                >
+                  Block YouTube recommendations and shorts while studying
+                </button>
+                <button 
+                  onClick={() => handleQuickPrompt("Set up strict iOS Downtime without bypass loopholes")} 
+                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                >
+                  Set up strict iOS Downtime without bypass loopholes
+                </button>
+                <button 
+                  onClick={() => handleQuickPrompt("Open-source focus tools with zero data collection")} 
+                  className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
+                >
+                  Open-source focus tools with zero data collection
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         </div>
       )}
