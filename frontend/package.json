@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node -e \"if (process.platform === 'linux' && process.arch === 'x64') { try { require('lightningcss-linux-x64-gnu'); } catch(e) { require('child_process').execSync('npm install --no-save lightningcss-linux-x64-gnu @rollup/rollup-linux-x64-gnu', {stdio:'inherit'}); } }\" && vite build",
+    "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.5",
     "digital-wellness-root": "file:..",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.23.0",
