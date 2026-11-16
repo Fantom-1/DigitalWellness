@@ -28,6 +28,10 @@ async def lifespan(app: FastAPI):
     print(f"[INFO] Initializing database at host: {db_host} (database: {engine.url.database})...")
     try:
         async with engine.begin() as conn:
+            try:
+                await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+            except Exception:
+                pass
             await conn.run_sync(Base.metadata.create_all)
             for col_sql in [
                 "ALTER TABLE wellness_resources ADD COLUMN IF NOT EXISTS image_url TEXT;",

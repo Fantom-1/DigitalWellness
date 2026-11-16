@@ -41,11 +41,8 @@ class WellnessResource(Base):
     image_url = Column(String, nullable=True)
     video_tutorial_url = Column(String, nullable=True)
     
-    # Vector embedding for semantic search & RAG (768-dim for Gemini embeddings)
-    if HAS_PGVECTOR:
-        embedding = Column(Vector(768), nullable=True)
-    else:
-        embedding = Column(JSONB, nullable=True)
+    # Vector embedding stored as JSONB for universal database compatibility across Supabase/Neon
+    embedding = Column(JSONB, nullable=True)
 
 class SetupGuide(Base):
     __tablename__ = "setup_guides"

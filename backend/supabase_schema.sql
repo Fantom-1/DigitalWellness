@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS wellness_resources (
     student_rating NUMERIC(2, 1) DEFAULT 4.8,
     image_url TEXT,
     video_tutorial_url TEXT,
-    embedding vector(768)
+    embedding JSONB
 );
 
 CREATE INDEX IF NOT EXISTS idx_wellness_resources_slug ON wellness_resources(slug);
