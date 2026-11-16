@@ -190,7 +190,7 @@ export default function ToolDetailModal({ tool, onClose }) {
                 className="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/60 rounded-xl transition-colors flex items-center gap-1.5"
               >
                 <Puzzle size={12} />
-                Extension / Store
+                {tool.category === 'browser_extension' ? 'Add Extension' : 'Get App / Download'}
               </a>
             )}
             {tool.repository_url && (

@@ -1,10 +1,97 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, Shield, ExternalLink, Bot, Filter, Search, Play } from 'lucide-react';
+import { ArrowUp, Shield, ExternalLink, Bot, Filter, Search, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchStats, fetchResources, sendChatMessage, fetchGuides } from '../api';
 import ComparisonTable from './ComparisonTable';
 import SetupGuides from './SetupGuides';
 import ToolDetailModal from './ToolDetailModal';
+
+const DISTRACTION_SOLUTIONS = [
+  {
+    slug: 'unhook',
+    distraction: 'YouTube Algorithm & Shorts',
+    solution: 'Hides YouTube recommendations, sidebar feeds, and Shorts so it acts purely as an educational search engine.',
+    type: 'Browser Extension',
+    prompt: 'How do I use Unhook to block YouTube recommendations and shorts while studying?'
+  },
+  {
+    slug: 'cold-turkey-blocker',
+    distraction: 'Desktop App & Game Bypasses',
+    solution: 'Operates at the system kernel level to enforce un-bypassable blocks on apps, games, and domains during study blocks.',
+    type: 'Desktop App (Mac & PC)',
+    prompt: 'How does Cold Turkey Blocker prevent me from bypassing website limits during exam prep?'
+  },
+  {
+    slug: 'one-sec',
+    distraction: 'Compulsive Social Media Opens',
+    solution: 'Forces a mandatory 3-second guided breath before opening Instagram or TikTok, cutting compulsive opens by 57%.',
+    type: 'Mobile App (iOS & Android)',
+    prompt: 'How does One Sec use mindful breathing friction to reduce impulsive phone pickups?'
+  },
+  {
+    slug: 'sleep-as-android-apple-sleep',
+    distraction: 'Bedtime Doomscrolling & Snoozing',
+    solution: 'Automates sunset blue-light filtration and requires scanning a bathroom QR code to stop morning alarms.',
+    type: 'Bedtime Routine (Mobile)',
+    prompt: 'What is the best way to set up captive QR-code alarms and sleep routines before exams?'
+  },
+  {
+    slug: 'freedom',
+    distraction: 'Multi-Device Procrastination',
+    solution: 'Blocks distracting apps and sites across Mac, iPhone, Windows, and Android in unified lockstep.',
+    type: 'Multi-Device Sync',
+    prompt: 'How does Freedom sync block sessions across laptop and phone simultaneously?'
+  },
+  {
+    slug: 'ublock-origin',
+    distraction: 'Intrusive Ads & Web Clutter',
+    solution: 'Zero-telemetry content blocker with an element picker to permanently zap distracting banners on study sites.',
+    type: 'Browser Extension (Open Source)',
+    prompt: 'How do I use uBlock Origin element picker to zap distracting banners on study websites?'
+  },
+  {
+    slug: 'olauncher',
+    distraction: 'Home Screen Icon Dopamine',
+    solution: 'Replaces flashy, notification-badged Android home screens with a serene, monochrome text-only launcher.',
+    type: 'Android Launcher (FOSS)',
+    prompt: 'How does switching to Olauncher minimal launcher reduce phone pickups?'
+  },
+  {
+    slug: 'stayfree',
+    distraction: 'Uncontrolled Screen Time Hours',
+    solution: 'Detailed screen time analytics with PIN-protected app limits that an accountability partner can lock for you.',
+    type: 'Screen Time App',
+    prompt: 'How can I set PIN-locked daily app limits with StayFree?'
+  },
+  {
+    slug: 'forest',
+    distraction: 'Study Motivation Slumps',
+    solution: 'Visual Pomodoro timer that grows virtual trees as you study, withering them if you leave the study app.',
+    type: 'Gamified Focus App',
+    prompt: 'How do I use Forest Pomodoro to stay focused during 90-minute study blocks?'
+  },
+  {
+    slug: 'opal',
+    distraction: 'Study Session App Overrides',
+    solution: 'Uses Apple Screen Time API to automate scheduled Deep Focus lockouts where overrides and uninstalls are blocked.',
+    type: 'iOS & macOS Focus',
+    prompt: 'How does Opal Deep Focus lockout mode prevent canceling focus sessions?'
+  },
+  {
+    slug: 'leechblock-ng',
+    distraction: 'Excessive Web Time Allowances',
+    solution: 'Enforces daily time banks (e.g. max 15 minutes of social sites per day) directly inside desktop web browsers.',
+    type: 'Browser Extension',
+    prompt: 'How do I set up 15-minute daily website time limits with LeechBlock NG?'
+  },
+  {
+    slug: 'signal',
+    distraction: 'Noisy Group Chats & Feeds',
+    solution: 'Zero-distraction group study messaging with end-to-end encryption and no algorithms, ads, or feeds.',
+    type: 'Private Messaging App',
+    prompt: 'Why is Signal better for focused study group communication than social messaging apps?'
+  }
+];
 
 export default function SearchArea({ activeTab, setActiveTab }) {
   // Data states
@@ -26,6 +113,15 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
+  const sliderRef = useRef(null);
+
+  const slideLeft = () => {
+    sliderRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
+  };
+
+  const slideRight = () => {
+    sliderRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     fetchStats().then(setStats).catch(console.error);
@@ -210,24 +306,107 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             </div>
           </motion.div>
 
+          {/* Tools by Distraction Slider */}
+          <div className="w-full max-w-[850px] mt-8 text-left animate-in fade-in duration-300">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
+                  Targeted Distraction Remedies
+                </span>
+                <h4 className="text-sm font-semibold text-[#1d1d1f]">
+                  Available Tools & Specific Distractions
+                </h4>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={slideLeft}
+                  className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                  title="Previous Tools"
+                  aria-label="Previous Tools"
+                >
+                  <ChevronLeft size={14} />
+                </button>
+                <button
+                  onClick={slideRight}
+                  className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                  title="Next Tools"
+                  aria-label="Next Tools"
+                >
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+
+            {/* Horizontal Scroll Track */}
+            <div 
+              ref={sliderRef}
+              className="flex gap-3 overflow-x-auto apple-scrollbar pb-3 pt-1 scroll-smooth"
+            >
+              {DISTRACTION_SOLUTIONS.map((item) => {
+                const matchedTool = resources.find(r => r.slug === item.slug);
+                return (
+                  <div
+                    key={item.slug}
+                    className="min-w-[270px] max-w-[280px] bg-white border border-black/[0.06] hover:border-black/15 rounded-2xl p-4 flex flex-col justify-between shrink-0 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-1 mb-2">
+                        <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md truncate max-w-[170px]" title={item.distraction}>
+                          {item.distraction}
+                        </span>
+                        <span className="text-[9px] font-mono text-zinc-400">
+                          {item.type.split(' ')[0]}
+                        </span>
+                      </div>
+
+                      <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
+                        {matchedTool ? matchedTool.name : item.slug}
+                      </h5>
+
+                      <p className="text-[11px] text-zinc-500 font-light mt-1.5 line-clamp-3 leading-relaxed">
+                        {item.solution}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-2.5 border-t border-black/[0.04] flex items-center justify-between text-[11px]">
+                      <button
+                        onClick={() => handleSelectToolFromSlug(item.slug)}
+                        className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
+                      >
+                        Inspect Tool →
+                      </button>
+                      <button
+                        onClick={() => handleQuickPrompt(item.prompt)}
+                        className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[10px] font-medium transition-all cursor-pointer"
+                      >
+                        Ask Advisor
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Quick Prompts (Only if no messages) */}
           {chatMessages.length === 0 && (
-            <div className="flex flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-6 animate-in fade-in duration-300">
+            <div className="flex flex-wrap justify-center gap-2 text-xs w-full max-w-2xl mt-5 animate-in fade-in duration-300">
               <button 
                 onClick={() => handleQuickPrompt("Block YouTube recommendations and shorts while studying on desktop")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs"
+                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
               >
                 Block YouTube recommendations and shorts while studying
               </button>
               <button 
                 onClick={() => handleQuickPrompt("Set up strict iOS Downtime without bypass loopholes")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs"
+                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
               >
                 Set up strict iOS Downtime without bypass loopholes
               </button>
               <button 
                 onClick={() => handleQuickPrompt("Open-source focus tools with zero data collection")} 
-                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs"
+                className="bg-white/80 hover:bg-white text-zinc-600 hover:text-black border border-black/[0.05] px-4 py-2 rounded-full transition-all text-left font-light shadow-xs cursor-pointer"
               >
                 Open-source focus tools with zero data collection
               </button>
@@ -459,11 +638,6 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                       ))}
                       {item.platforms.length > 3 && (
                         <span className="text-[10px] text-zinc-400">+{item.platforms.length - 3}</span>
-                      )}
-                      {item.extension_url && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-medium">
-                          Ext
-                        </span>
                       )}
                     </div>
 

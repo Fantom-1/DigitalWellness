@@ -73,15 +73,8 @@ export default function ComparisonTable({ resources, onSelectResource }) {
                     <div className="font-semibold text-[#1d1d1f] group-hover:text-blue-600 transition-colors text-sm">
                       {item.name}
                     </div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[11px] text-zinc-400 capitalize">
-                        {item.category.replace('_', ' ')}
-                      </span>
-                      {item.extension_url && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-medium">
-                          Extension
-                        </span>
-                      )}
+                    <div className="text-[11px] text-zinc-400 mt-0.5 capitalize">
+                      {item.category.replace('_', ' ')}
                     </div>
                   </td>
                   <td className="py-4 px-4">
