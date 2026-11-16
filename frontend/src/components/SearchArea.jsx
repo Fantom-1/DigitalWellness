@@ -93,6 +93,13 @@ const DISTRACTION_SOLUTIONS = [
   }
 ];
 
+const CAROUSEL_PAGES = [
+  DISTRACTION_SOLUTIONS.slice(0, 3),
+  DISTRACTION_SOLUTIONS.slice(3, 6),
+  DISTRACTION_SOLUTIONS.slice(6, 9),
+  DISTRACTION_SOLUTIONS.slice(9, 12),
+];
+
 export default function SearchArea({ activeTab, setActiveTab }) {
   // Data states
   const [stats, setStats] = useState({ total_resources: 12, total_guides: 3, verified_date: 'November 2026' });
@@ -113,14 +120,14 @@ export default function SearchArea({ activeTab, setActiveTab }) {
 
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
-  const sliderRef = useRef(null);
+  const [carouselPage, setCarouselPage] = useState(0);
 
-  const slideLeft = () => {
-    sliderRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
+  const handlePrevCarousel = () => {
+    setCarouselPage((prev) => (prev > 0 ? prev - 1 : CAROUSEL_PAGES.length - 1));
   };
 
-  const slideRight = () => {
-    sliderRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
+  const handleNextCarousel = () => {
+    setCarouselPage((prev) => (prev < CAROUSEL_PAGES.length - 1 ? prev + 1 : 0));
   };
 
   useEffect(() => {
@@ -306,86 +313,120 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             </div>
           </motion.div>
 
-          {/* Tools by Distraction Slider */}
+          {/* Targeted Distraction Remedies: 3-Card Carousel Deck */}
           <div className="w-full max-w-[850px] mt-8 text-left animate-in fade-in duration-300">
+            {/* Carousel Header & Apple Paginator */}
             <div className="flex items-center justify-between mb-3 px-1">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
-                  Targeted Distraction Remedies
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                  Targeted Remedies
                 </span>
-                <h4 className="text-sm font-semibold text-[#1d1d1f]">
-                  Available Tools & Specific Distractions
-                </h4>
+                <span className="text-zinc-300 font-mono text-[10px]">•</span>
+                <span className="text-[10px] font-mono text-zinc-400">
+                  Set {carouselPage + 1} of {CAROUSEL_PAGES.length}
+                </span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={slideLeft}
-                  className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
-                  title="Previous Tools"
-                  aria-label="Previous Tools"
-                >
-                  <ChevronLeft size={14} />
-                </button>
-                <button
-                  onClick={slideRight}
-                  className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
-                  title="Next Tools"
-                  aria-label="Next Tools"
-                >
-                  <ChevronRight size={14} />
-                </button>
+              <div className="flex items-center gap-3">
+                {/* 4 Interactive Dot Indicators */}
+                <div className="flex items-center gap-1.5" role="tablist" aria-label="Remedy slides">
+                  {CAROUSEL_PAGES.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCarouselPage(idx)}
+                      className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+                        carouselPage === idx
+                          ? 'w-5 bg-[#1d1d1f]'
+                          : 'w-1.5 bg-black/15 hover:bg-black/35'
+                      }`}
+                      title={`Go to set ${idx + 1}`}
+                      aria-label={`Go to set ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Arrow Controls */}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handlePrevCarousel}
+                    className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                    title="Previous 3 Tools"
+                    aria-label="Previous 3 Tools"
+                  >
+                    <ChevronLeft size={14} />
+                  </button>
+                  <button
+                    onClick={handleNextCarousel}
+                    className="p-1.5 rounded-full bg-white border border-black/[0.06] text-zinc-500 hover:text-black hover:border-black/20 shadow-xs transition-all cursor-pointer"
+                    title="Next 3 Tools"
+                    aria-label="Next 3 Tools"
+                  >
+                    <ChevronRight size={14} />
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Horizontal Scroll Track */}
-            <div 
-              ref={sliderRef}
-              className="flex gap-3 overflow-x-auto apple-scrollbar pb-3 pt-1 scroll-smooth"
-            >
-              {DISTRACTION_SOLUTIONS.map((item) => {
-                const matchedTool = resources.find(r => r.slug === item.slug);
-                return (
-                  <div
-                    key={item.slug}
-                    className="min-w-[270px] max-w-[280px] bg-white border border-black/[0.06] hover:border-black/15 rounded-2xl p-4 flex flex-col justify-between shrink-0 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all group"
+            {/* Sliding Container: Exactly 3 full cards per view with zero cut-off edges */}
+            <div className="w-full overflow-hidden rounded-2xl">
+              <div 
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${carouselPage * 100}%)` }}
+              >
+                {CAROUSEL_PAGES.map((pageCards, pageIdx) => (
+                  <div 
+                    key={pageIdx} 
+                    className="w-full shrink-0 grid grid-cols-1 md:grid-cols-3 gap-3"
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-1 mb-2">
-                        <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md truncate max-w-[170px]" title={item.distraction}>
-                          {item.distraction}
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-400">
-                          {item.type.split(' ')[0]}
-                        </span>
-                      </div>
+                    {pageCards.map((item) => {
+                      const matchedTool = resources.find(r => r.slug === item.slug);
+                      return (
+                        <div
+                          key={item.slug}
+                          className="bg-white border border-black/[0.06] hover:border-black/20 rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all duration-200 group text-left"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-1 mb-2">
+                              <span className="text-[10px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md truncate max-w-[170px]" title={item.distraction}>
+                                {item.distraction}
+                              </span>
+                              <span className="text-[9px] font-mono text-zinc-400 shrink-0">
+                                {item.type.split(' ')[0]}
+                              </span>
+                            </div>
 
-                      <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
-                        {matchedTool ? matchedTool.name : item.slug}
-                      </h5>
+                            <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
+                              {matchedTool ? matchedTool.name : item.slug}
+                            </h5>
+                            <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
+                              {item.type}
+                            </p>
 
-                      <p className="text-[11px] text-zinc-500 font-light mt-1.5 line-clamp-3 leading-relaxed">
-                        {item.solution}
-                      </p>
-                    </div>
+                            <p className="text-xs text-zinc-500 font-light mt-2 line-clamp-3 leading-relaxed">
+                              {item.solution}
+                            </p>
+                          </div>
 
-                    <div className="mt-4 pt-2.5 border-t border-black/[0.04] flex items-center justify-between text-[11px]">
-                      <button
-                        onClick={() => handleSelectToolFromSlug(item.slug)}
-                        className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
-                      >
-                        Inspect Tool →
-                      </button>
-                      <button
-                        onClick={() => handleQuickPrompt(item.prompt)}
-                        className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[10px] font-medium transition-all cursor-pointer"
-                      >
-                        Ask Advisor
-                      </button>
-                    </div>
+                          <div className="mt-4 pt-3 border-t border-black/[0.04] flex items-center justify-between text-xs">
+                            <button
+                              onClick={() => handleSelectToolFromSlug(item.slug)}
+                              className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
+                            >
+                              Inspect Tool →
+                            </button>
+                            <button
+                              onClick={() => handleQuickPrompt(item.prompt)}
+                              className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-[#1d1d1f] hover:text-white text-zinc-700 text-[11px] font-medium transition-all cursor-pointer"
+                            >
+                              Ask Advisor
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
 
