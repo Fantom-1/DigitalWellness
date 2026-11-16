@@ -131,22 +131,37 @@ export default function SearchArea({ activeTab, setActiveTab }) {
             animate={{ scale: isFocused ? 1.002 : 1 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute inset-0 rounded-[20px] z-0">
-              <div className="absolute inset-[1px] bg-white/80 backdrop-blur-[24px] rounded-[19px] shadow-[0_10px_35px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,0.8)] z-10" />
+            {/* Ambient Aura behind the panel: softly radiates outside with radial falloff */}
+            <div 
+              className={`absolute -inset-3.5 rounded-[28px] overflow-hidden pointer-events-none z-0 transition-opacity duration-300 ${
+                isFocused ? 'opacity-85' : 'opacity-55'
+              }`}
+              style={{
+                WebkitMask: 'radial-gradient(ellipse at center, black 65%, transparent 98%)',
+                mask: 'radial-gradient(ellipse at center, black 65%, transparent 98%)'
+              }}
+            >
+              <div className="comet-glow" />
+            </div>
+
+            {/* Main Card Shell */}
+            <div className="absolute inset-0 rounded-[22px] z-10 pointer-events-none">
+              {/* Card surface: inset by border track width */}
+              <div className="absolute inset-[2.5px] bg-white/92 backdrop-blur-[24px] rounded-[19.5px] shadow-[0_12px_36px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] z-10" />
               
+              {/* 2.5px Prominent Border Track with Moving Comet Beam */}
               <div 
-                className="absolute inset-0 rounded-[20px] p-[1px] overflow-hidden z-20" 
+                className="absolute inset-0 rounded-[22px] p-[2.5px] overflow-hidden z-20" 
                 style={{
                   WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                   WebkitMaskComposite: 'xor',
                   maskComposite: 'exclude'
                 }}
               >
+                {/* Resting subtle border line so structure is always crisp */}
+                <div className="absolute inset-0 bg-black/[0.08]" />
+                {/* Dynamic vibrant illuminated border beam */}
                 <div className="comet-spinner" />
-              </div>
-
-              <div className="absolute inset-0 overflow-hidden rounded-[20px] z-0">
-                <div className="comet-glow" />
               </div>
             </div>
 

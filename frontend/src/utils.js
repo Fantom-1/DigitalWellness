@@ -35,3 +35,4 @@ export function getYouTubeEmbedUrl(url, fallbackQuery = '') {
 
   return url;
 }
+

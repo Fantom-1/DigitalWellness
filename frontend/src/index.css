@@ -91,17 +91,21 @@
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 60%,
-      rgba(99, 102, 241, 0.1) 75%,
-      rgba(168, 85, 247, 0.2) 85%,
-      rgba(59, 130, 246, 0.35) 95%,
-      rgba(0, 0, 0, 0.2) 98%,
+      transparent 38%,
+      rgba(14, 165, 233, 0) 40%,
+      rgba(14, 165, 233, 0.45) 52%,
+      rgba(99, 102, 241, 0.75) 66%,
+      rgba(168, 85, 247, 0.85) 78%,
+      rgba(236, 72, 153, 0.95) 88%,
+      rgba(244, 63, 94, 1) 95%,
+      rgba(251, 113, 133, 1) 98%,
+      rgba(255, 255, 255, 1) 99.4%,
       transparent 100%
     );
     animation: spin 8s linear infinite;
   }
 
-  /* Inner ambient spreading glow for Light Theme */
+  /* Inner and outer ambient spreading glow for Light Theme */
   .comet-glow {
     position: absolute;
     top: 50%;
@@ -113,40 +117,51 @@
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 55%,
-      rgba(147, 197, 253, 0.15) 75%,
-      rgba(196, 181, 253, 0.2) 85%,
-      rgba(253, 164, 175, 0.15) 95%,
+      transparent 42%,
+      rgba(14, 165, 233, 0.3) 56%,
+      rgba(99, 102, 241, 0.45) 68%,
+      rgba(168, 85, 247, 0.55) 80%,
+      rgba(236, 72, 153, 0.55) 90%,
+      rgba(244, 63, 94, 0.45) 98%,
       transparent 100%
     );
     animation: spin 8s linear infinite;
-    filter: blur(50px);
+    filter: blur(28px);
     pointer-events: none;
-    z-index: 0;
   }
 
-  /* Boosted glow on focus */
+  /* Boosted glow and beam brilliance on focus */
   .panel-focused .comet-spinner {
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 50%,
-      rgba(99, 102, 241, 0.2) 75%,
-      rgba(168, 85, 247, 0.35) 90%,
-      rgba(59, 130, 246, 0.45) 98%,
+      transparent 32%,
+      rgba(14, 165, 233, 0.2) 36%,
+      rgba(14, 165, 233, 0.65) 50%,
+      rgba(99, 102, 241, 0.9) 64%,
+      rgba(168, 85, 247, 0.95) 76%,
+      rgba(236, 72, 153, 1) 88%,
+      rgba(244, 63, 94, 1) 96%,
+      rgba(255, 255, 255, 1) 99.5%,
       transparent 100%
     );
+    animation: spin 6s linear infinite;
   }
   
   .panel-focused .comet-glow {
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      transparent 50%,
-      rgba(147, 197, 253, 0.25) 75%,
-      rgba(196, 181, 253, 0.3) 85%,
-      rgba(253, 164, 175, 0.25) 100%
+      transparent 36%,
+      rgba(14, 165, 233, 0.45) 52%,
+      rgba(99, 102, 241, 0.6) 66%,
+      rgba(168, 85, 247, 0.7) 78%,
+      rgba(236, 72, 153, 0.65) 90%,
+      rgba(244, 63, 94, 0.55) 98%,
+      transparent 100%
     );
+    filter: blur(32px);
+    animation: spin 6s linear infinite;
   }
 }
 
