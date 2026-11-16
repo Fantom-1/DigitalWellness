@@ -1,5 +1,6 @@
 import os
 import re
+import urllib.parse
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
@@ -20,12 +21,14 @@ elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+
 
 # Handle SSL and statement cache parameters for asyncpg
 connect_args = {}
-if "supabase.com" in raw_url or "supabase.co" in raw_url or "neon.tech" in raw_url or "ssl=require" in raw_url:
-    # Strip query parameters from URL for clean asyncpg connect
-    cleaned_url = raw_url.split("?")[0]
-    DATABASE_URL = cleaned_url
+if any(k in raw_url for k in ["supabase.com", "supabase.co", "neon.tech", "ssl=require"]):
+    try:
+        parsed = urllib.parse.urlsplit(raw_url)
+        DATABASE_URL = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "", ""))
+    except Exception:
+        DATABASE_URL = raw_url.split("?")[0]
     connect_args["ssl"] = "require"
-    # Disable prepared statement caching for Supabase connection poolers (Supavisor / PgBouncer on port 6543)
+    # Disable prepared statement caching for Supabase connection poolers (Supavisor / PgBouncer)
     if "pooler.supabase.com" in raw_url or ":6543" in raw_url:
         connect_args["statement_cache_size"] = 0
 else:
