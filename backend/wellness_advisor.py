@@ -140,13 +140,27 @@ class WellnessAdvisor:
             })
             guide_slug = "unbreakable-apple-downtime"
 
-        if "sleep" in q_lower or "night" in q_lower or "bed" in q_lower or "alarm" in q_lower:
+        if "sleep" in q_lower or "night" in q_lower or "bed" in q_lower or "alarm" in q_lower or "routine" in q_lower:
             matched_tools.append({
                 "slug": "sleep-as-android-apple-sleep",
                 "name": "Sleep as Android & Apple Sleep",
                 "pricing_type": "Freemium",
                 "category": "bedtime_routine",
                 "reason": "Automates bedtime wind-down and forces captive QR-code alarms to get you out of bed."
+            })
+            matched_tools.append({
+                "slug": "flux",
+                "name": "f.lux",
+                "pricing_type": "100% Free",
+                "category": "bedtime_routine",
+                "reason": "Adapts screen color temperature to the solar cycle to prevent blue-light melatonin suppression."
+            })
+            matched_tools.append({
+                "slug": "dark-reader",
+                "name": "Dark Reader (Circadian Night Filter)",
+                "pricing_type": "100% Free",
+                "category": "bedtime_routine",
+                "reason": "Inverts blinding white study web pages and LMS portals into soothing, eye-friendly night mode."
             })
             guide_slug = "circadian-bedtime-wind-down"
 

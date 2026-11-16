@@ -18,9 +18,17 @@ export default function ComparisonTable({ resources, onSelectResource }) {
     Boolean(r.extension_url && (r.extension_url.includes('chromewebstore') || r.extension_url.includes('addons.mozilla') || r.extension_url.includes('addons.opera'))) ||
     (r.platforms && r.platforms.some(p => ['Chrome', 'Firefox', 'Edge', 'Safari', 'Brave', 'Opera'].includes(p)));
 
+  const isBedtime = (r) =>
+    r.category === 'bedtime_routine' ||
+    ['flux', 'alarmy', 'sleep-as-android-apple-sleep', 'dark-reader', 'twilight', 'freedom', 'one-sec'].includes(r.slug);
+
   const filtered = filterCategory === 'all' 
     ? resources 
-    : resources.filter(r => filterCategory === 'browser_extension' ? (r.category === 'browser_extension' || isExtension(r)) : r.category === filterCategory);
+    : resources.filter(r => {
+        if (filterCategory === 'browser_extension') return isExtension(r);
+        if (filterCategory === 'bedtime_routine') return isBedtime(r);
+        return r.category === filterCategory;
+      });
 
   return (
     <div className="w-full max-w-[1000px] text-left animate-in fade-in duration-300">

@@ -115,6 +115,27 @@ const DISTRACTION_SOLUTIONS = [
     solution: 'Forces cognitive missions (math problems, barcode/QR scanning, memory puzzles) before silencing morning alarms.',
     type: 'Bedtime Routine (Mobile App)',
     prompt: 'How can I configure Alarmy barcode scanning to force myself out of bed for 8 AM classes?'
+  },
+  {
+    slug: 'dark-reader',
+    distraction: 'Melatonin Suppression & Blinding Night Screens',
+    solution: 'Inverts harsh white glare on LMS portals, PDFs, and study sites into warm circadian dark mode at bedtime.',
+    type: 'Bedtime Routine (Open Source Extension)',
+    prompt: 'How do I use Dark Reader to protect circadian melatonin levels during late-night studying?'
+  },
+  {
+    slug: 'twilight',
+    distraction: 'Late-Night Phone Glare & Circadian Disruption',
+    solution: 'Adapts mobile display color temperature to the solar cycle, filtering harsh blue spectra below sunset.',
+    type: 'Bedtime Routine (Android & Chrome)',
+    prompt: 'How does Twilight help adapt screen warmth to my local sunset for deeper sleep?'
+  },
+  {
+    slug: 'circadian-bedtime-wind-down',
+    distraction: 'Bedtime Device Looping & Sleep Debt',
+    solution: 'Enforces a 3-stage sleep protocol: hardware blue-light cutoffs, router-level screen curfew, and captive morning alarms.',
+    type: 'Bedtime Protocol Guide',
+    prompt: 'What is the full 3-stage protocol for circadian bedtime wind-down and captive alarms?'
   }
 ];
 
@@ -124,6 +145,7 @@ const CAROUSEL_PAGES = [
   DISTRACTION_SOLUTIONS.slice(6, 9),
   DISTRACTION_SOLUTIONS.slice(9, 12),
   DISTRACTION_SOLUTIONS.slice(12, 15),
+  DISTRACTION_SOLUTIONS.slice(15, 18),
 ];
 
 function renderInlineMarkdown(text) {
@@ -192,7 +214,7 @@ function FormattedAdvisorContent({ content }) {
 
 export default function SearchArea({ activeTab, setActiveTab }) {
   // Data states
-  const [stats, setStats] = useState({ total_resources: 15, total_guides: 3, verified_date: 'November 2026' });
+  const [stats, setStats] = useState({ total_resources: 17, total_guides: 3, verified_date: 'November 2026' });
   const [resources, setResources] = useState([]);
   const [guides, setGuides] = useState([]);
   const [selectedTool, setSelectedTool] = useState(null);
@@ -239,6 +261,13 @@ export default function SearchArea({ activeTab, setActiveTab }) {
     return false;
   };
 
+  const isBedtimeRoutine = (item) => {
+    if (item.category === 'bedtime_routine') return true;
+    if (['flux', 'alarmy', 'sleep-as-android-apple-sleep', 'dark-reader', 'twilight'].includes(item.slug)) return true;
+    if (['freedom', 'one-sec'].includes(item.slug)) return true;
+    return false;
+  };
+
   // Filter resources for directory
   const filteredResources = resources.filter(r => {
     const matchesSearch = !searchQuery.trim() || 
@@ -248,11 +277,16 @@ export default function SearchArea({ activeTab, setActiveTab }) {
     
     const matchesCat = selectedCategory === 'all' 
       ? true 
-      : (selectedCategory === 'browser_extension' ? isBrowserExtension(r) : r.category === selectedCategory);
+      : (selectedCategory === 'browser_extension' 
+          ? isBrowserExtension(r) 
+          : (selectedCategory === 'bedtime_routine' 
+              ? isBedtimeRoutine(r) 
+              : r.category === selectedCategory));
     
     const matchesPlat = selectedPlatform === 'all' || 
       (r.platforms && r.platforms.includes(selectedPlatform)) ||
-      ((selectedPlatform === 'macOS' || selectedPlatform === 'Windows' || selectedPlatform === 'Chrome') && isBrowserExtension(r));
+      ((selectedPlatform === 'macOS' || selectedPlatform === 'Windows' || selectedPlatform === 'Chrome') && isBrowserExtension(r)) ||
+      ((selectedPlatform === 'macOS' || selectedPlatform === 'Windows' || selectedPlatform === 'Chrome') && isBedtimeRoutine(r) && (r.slug === 'flux' || r.slug === 'dark-reader' || r.slug === 'twilight' || r.slug === 'freedom' || r.slug === 'one-sec'));
 
     return matchesSearch && matchesCat && matchesPlat;
   });
@@ -314,6 +348,11 @@ export default function SearchArea({ activeTab, setActiveTab }) {
     const found = resources.find(r => r.slug === slug);
     if (found) {
       setSelectedTool(found);
+      return;
+    }
+    const foundGuide = guides.find(g => g.slug === slug);
+    if (foundGuide) {
+      handleOpenGuide(slug);
     }
   };
 
@@ -832,7 +871,8 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                         className="w-full shrink-0 grid grid-cols-1 md:grid-cols-3 gap-3"
                       >
                         {pageCards.map((item) => {
-                          const matchedTool = resources.find(r => r.slug === item.slug);
+                          const matchedTool = resources.find(r => r.slug === item.slug) || guides.find(g => g.slug === item.slug);
+                          const isGuide = Boolean(matchedTool && matchedTool.difficulty_level);
                           return (
                             <div
                               key={item.slug}
@@ -849,7 +889,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                 </div>
 
                                 <h5 className="font-semibold text-sm text-[#1d1d1f] group-hover:text-blue-600 transition-colors">
-                                  {matchedTool ? matchedTool.name : item.slug}
+                                  {matchedTool ? (matchedTool.name || matchedTool.title) : item.slug}
                                 </h5>
                                 <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
                                   {item.type}
@@ -865,7 +905,7 @@ export default function SearchArea({ activeTab, setActiveTab }) {
                                   onClick={() => handleSelectToolFromSlug(item.slug)}
                                   className="text-zinc-500 hover:text-black font-medium transition-colors cursor-pointer"
                                 >
-                                  Inspect Tool →
+                                  {isGuide ? 'Inspect Protocol →' : 'Inspect Tool →'}
                                 </button>
                                 <button
                                   onClick={() => handleQuickPrompt(item.prompt)}
