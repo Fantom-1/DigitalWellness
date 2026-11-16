@@ -7,6 +7,10 @@
   "scripts": {
     "build": "npm --prefix frontend run build && node -e \"const fs=require('fs'); fs.cpSync('frontend/dist', 'dist', {recursive:true});\"",
     "dev": "npm --prefix frontend run dev"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.62.2",
+    "@rollup/rollup-linux-x64-musl": "4.62.2"
   }
 }
 
