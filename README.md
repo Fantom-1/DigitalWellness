@@ -166,3 +166,4 @@ To run both backend and frontend locally:
 ## 📜 License & Acknowledgments
 
 Curated for students. Built with React 19, Tailwind CSS, Framer Motion, FastAPI, SQLAlchemy, and Google Gemini AI.
+

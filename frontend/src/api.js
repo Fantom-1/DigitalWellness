@@ -49,3 +49,4 @@ export async function submitStudentFeedback(payload) {
   if (!res.ok) throw new Error('Failed to submit feedback');
   return res.json();
 }
+

@@ -54,3 +54,4 @@ with open(output_path, "w", encoding="utf-8") as f:
         )
 
 print("Generated supabase_seed.sql successfully!")
+

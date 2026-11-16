@@ -83,3 +83,4 @@ DO $$ BEGIN
         CREATE POLICY "Public can insert submissions" ON student_submissions FOR INSERT WITH CHECK (true);
     END IF;
 END $$;
+
